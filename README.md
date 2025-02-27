@@ -72,7 +72,7 @@ Software Hub ist eine Anwendung zur Verwaltung und Präsentation von Software-Re
 
 1. Repository klonen:
    ```bash
-   git clone https://github.com/alexandernoack/software-hub.git
+   git clone https://github.com/noack-digital/software-hub.git
    cd software-hub
    ```
 

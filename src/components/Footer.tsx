@@ -9,7 +9,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
             <p className="text-sm text-gray-600">
-              © {currentYear} Software Hub. Entwickelt von Alexander Noack für die Hochschule für Nachhaltige Entwicklung Eberswalde (HNEE).
+              {currentYear} Software Hub. Entwickelt von Alexander Noack für die Hochschule für Nachhaltige Entwicklung Eberswalde (HNEE).
             </p>
           </div>
           <div className="flex space-x-6">
@@ -20,7 +20,7 @@ export function Footer() {
               Datenschutz
             </Link>
             <a 
-              href="https://github.com/alexandernoack/software-hub" 
+              href="https://github.com/noack-digital/software-hub" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-sm text-gray-600 hover:text-gray-900"

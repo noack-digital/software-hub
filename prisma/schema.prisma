@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = []
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Benutzermodell für die Authentifizierung und Benutzerverwaltung
+model User {
+  id              String    @id @default(cuid())
+  name            String?
+  email           String    @unique
+  password        String
+  role            UserRole  @default(USER)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  resetToken      String?   // Token für Passwort-Reset
+  resetTokenExpiry DateTime? // Ablaufdatum des Reset-Tokens
+  softwareItems   Software[] // Beziehung zu erstellten Software-Einträgen
+}
+
+// Rolle des Benutzers
+enum UserRole {
+  USER
+  ADMIN
+}
+
+// Software-Einträge
+model Software {
+  id               String   @id @default(cuid())
+  name             String
+  url              String?   // URL zur Software
+  logo             String?   // Logo URL
+  shortDescription String?   @db.Text  // Kurze Beschreibung für die Karten
+  description      String   @db.Text  // Lange Beschreibung für die Detailansicht
+  types            String[]  // Typen der Software (z.B. Web, Desktop, Mobile)
+  costs            String   // Kostenmodell
+  features         String?  @db.Text  // Hauptfunktionen
+  alternatives     String?  @db.Text  // Alternative Software
+  notes            String?  @db.Text  // Anmerkungen
+  available        Boolean  @default(true)  // Verfügbarkeit
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  createdBy        User?    @relation(fields: [userId], references: [id])
+  userId           String?
+  
+  // Beziehung zu Kategorien (many-to-many)
+  categories       SoftwareCategory[]
+}
+
+// Kategorien für Software
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique // Name der Kategorie
+  description String?  @db.Text // Optionale Beschreibung
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Beziehung zu Software (many-to-many)
+  software    SoftwareCategory[]
+}
+
+// Verbindungstabelle für die many-to-many Beziehung zwischen Software und Kategorien
+model SoftwareCategory {
+  software      Software @relation(fields: [softwareId], references: [id], onDelete: Cascade)
+  softwareId    String
+  category      Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId    String
+  
+  @@id([softwareId, categoryId])
+}
+
+// Audit-Log für Änderungen
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String   // Art der Änderung (create, update, delete)
+  model     String   // Betroffenes Modell
+  recordId  String   // ID des betroffenen Datensatzes
+  changes   String   @db.Text // JSON der Änderungen
+  createdAt DateTime @default(now())
+  userId    String?  // Optional: Benutzer, der die Änderung vorgenommen hat
+}
+
+// Anwendungseinstellungen
+model Settings {
+  id              String   @id @default(cuid())
+  key             String   @unique // Einstellungsschlüssel
+  value           String   @db.Text // Einstellungswert
+  description     String?  @db.Text // Beschreibung der Einstellung
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

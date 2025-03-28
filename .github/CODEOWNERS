@@ -1,0 +1,5 @@
+# Diese Datei definiert, wer für Code-Reviews verantwortlich ist
+# Weitere Informationen: https://help.github.com/articles/about-codeowners/
+
+# Standardmäßig ist Alexander Noack für alle Dateien verantwortlich
+* @alexandernoack

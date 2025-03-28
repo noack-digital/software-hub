@@ -1,0 +1,66 @@
+[
+  {
+    "id": "1",
+    "key": "availableBadgeText",
+    "value": "hatta",
+    "description": "Text, der auf dem Badge für verfügbare Software angezeigt wird",
+    "createdAt": "2025-02-26T17:09:59.585Z",
+    "updatedAt": "2025-02-26T17:59:28.645Z"
+  },
+  {
+    "id": "2",
+    "key": "showBadges",
+    "value": "false",
+    "description": "Aktiviert oder deaktiviert die Anzeige von Badges (true/false)",
+    "createdAt": "2025-02-26T17:09:59.585Z",
+    "updatedAt": "2025-02-26T18:00:08.561Z"
+  },
+  {
+    "id": "3",
+    "key": "badgeBackgroundColor",
+    "value": "#1016bc",
+    "description": "Hintergrundfarbe für Badges (HEX-Farbcode)",
+    "createdAt": "2025-02-26T17:09:59.585Z",
+    "updatedAt": "2025-02-26T17:59:41.067Z"
+  },
+  {
+    "id": "4",
+    "key": "badgeTextColor",
+    "value": "#f50000",
+    "description": "Textfarbe für Badges (HEX-Farbcode)",
+    "createdAt": "2025-02-26T17:09:59.585Z",
+    "updatedAt": "2025-02-26T17:59:48.364Z"
+  },
+  {
+    "id": "setting_1743157764719",
+    "key": "impressumUrl",
+    "value": "https://www.hnee.de/impressum",
+    "description": "URL zur Impressum-Seite",
+    "createdAt": "2025-03-28T10:29:24.719Z",
+    "updatedAt": "2025-03-28T10:32:43.805Z"
+  },
+  {
+    "id": "setting_1743157765483",
+    "key": "datenschutzUrl",
+    "value": "https://www.hnee.de/datenschutzerklaerung",
+    "description": "URL zur Datenschutz-Seite",
+    "createdAt": "2025-03-28T10:29:25.483Z",
+    "updatedAt": "2025-03-28T10:32:44.014Z"
+  },
+  {
+    "id": "setting_1743157765837",
+    "key": "openLinksInNewTab",
+    "value": "true",
+    "description": "Links in neuem Tab öffnen",
+    "createdAt": "2025-03-28T10:29:25.837Z",
+    "updatedAt": "2025-03-28T10:32:55.637Z"
+  },
+  {
+    "id": "setting_1743157766002",
+    "key": "showFooterLinks",
+    "value": "false",
+    "description": "Footer-Links anzeigen",
+    "createdAt": "2025-03-28T10:29:26.002Z",
+    "updatedAt": "2025-03-28T10:33:29.266Z"
+  }
+]

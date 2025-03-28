@@ -58,9 +58,9 @@
   {
     "id": "setting_1743157766002",
     "key": "showFooterLinks",
-    "value": "false",
+    "value": "true",
     "description": "Footer-Links anzeigen",
     "createdAt": "2025-03-28T10:29:26.002Z",
-    "updatedAt": "2025-03-28T10:33:29.266Z"
+    "updatedAt": "2025-03-28T12:18:56.001Z"
   }
 ]

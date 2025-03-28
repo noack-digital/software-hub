@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Package, Upload, Users, Settings, Home, Code } from "lucide-react";
+import { Package, Upload, Users, Settings, Home, Code, Tags } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -14,6 +14,11 @@ const menuItems = [
     title: "Software",
     icon: Package,
     href: "/admin/software",
+  },
+  {
+    title: "Kategorien",
+    icon: Tags,
+    href: "/admin/categories",
   },
   {
     title: "Import/Export",
@@ -44,7 +49,7 @@ export function Sidebar() {
     <div className="fixed left-0 top-0 z-40 h-screen w-64 border-r bg-white/50 backdrop-blur-xl">
       <div className="flex h-14 items-center border-b px-6">
         <Link 
-          href="/admin" 
+          href="/" 
           className="flex items-center gap-2 font-semibold"
         >
           <Package className="h-6 w-6" />

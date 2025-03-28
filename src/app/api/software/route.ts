@@ -61,6 +61,8 @@ export async function GET(request: NextRequest) {
           }
         }
       };
+      
+      console.log('Kategorie-Filter angewendet:', categoryId);
     }
     
     // Abfrage ausführen

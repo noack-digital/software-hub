@@ -92,6 +92,27 @@ export default function HomePage() {
   const [badgeBackgroundColor, setBadgeBackgroundColor] = useState('#10b981');
   const [badgeTextColor, setBadgeTextColor] = useState('#ffffff');
 
+  // URL-Parameter beim Laden verarbeiten
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      
+      // Kategorie-Parameter verarbeiten
+      const categoryParam = params.get('categoryId');
+      if (categoryParam) {
+        console.log('URL-Parameter für Kategorie gefunden:', categoryParam);
+        setSelectedCategory(categoryParam);
+      }
+      
+      // Suchbegriff-Parameter verarbeiten
+      const searchParam = params.get('q');
+      if (searchParam) {
+        console.log('URL-Parameter für Suche gefunden:', searchParam);
+        setSearchQuery(searchParam);
+      }
+    }
+  }, []);
+
   // Lade Badge-Einstellungen aus den Einstellungen
   useEffect(() => {
     const fetchBadgeSettings = async () => {

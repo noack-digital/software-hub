@@ -1,0 +1,91 @@
+{
+  "navigation": {
+    "dashboard": "Dashboard",
+    "software": "Software",
+    "categories": "Kategorien",
+    "importExport": "Import/Export",
+    "settings": "Einstellungen",
+    "users": "Benutzer",
+    "embed": "Einbetten",
+    "badgeSettings": "Badge-Einstellungen",
+    "linkSettings": "Link-Einstellungen",
+    "misc": "Sonstiges",
+    "adminArea": "Admin-Bereich",
+    "logout": "Abmelden",
+    "login": "Anmelden"
+  },
+  "common": {
+    "search": "Suchen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "create": "Erstellen",
+    "loading": "Lade...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "on": "Ein",
+    "off": "Aus",
+    "yes": "Ja",
+    "no": "Nein",
+    "available": "Verfügbar",
+    "notAvailable": "Nicht verfügbar",
+    "more": "Mehr",
+    "open": "Öffnen",
+    "allRightsReserved": "Alle Rechte vorbehalten",
+    "total": "Gesamt",
+    "views": "Aufrufe"
+  },
+  "settings": {
+    "stickyHeader": "Sticky Header im Frontend",
+    "stickyHeaderDescription": "Wenn aktiviert, bleibt der Header beim Scrollen oben fixiert."
+  },
+  "software": {
+    "title": "Software",
+    "name": "Name",
+    "description": "Beschreibung",
+    "shortDescription": "Kurzbeschreibung",
+    "url": "URL",
+    "types": "Typen",
+    "costs": "Kosten",
+    "available": "Verfügbar",
+    "categories": "Kategorien",
+    "addSoftware": "Software hinzufügen",
+    "editSoftware": "Software bearbeiten",
+    "deleteSoftware": "Software löschen",
+    "web": "Web",
+    "desktop": "Desktop",
+    "mobile": "Mobil",
+    "search": "Software suchen...",
+    "showDetails": "Details anzeigen",
+    "type": "Typ",
+    "availability": "Verfügbarkeit"
+  },
+  "categories": {
+    "title": "Kategorien",
+    "name": "Name",
+    "addCategory": "Kategorie hinzufügen",
+    "editCategory": "Kategorie bearbeiten",
+    "deleteCategory": "Kategorie löschen"
+  },
+  "users": {
+    "title": "Benutzer",
+    "name": "Name",
+    "email": "E-Mail",
+    "role": "Rolle",
+    "addUser": "Benutzer hinzufügen",
+    "editUser": "Benutzer bearbeiten",
+    "deleteUser": "Benutzer löschen",
+    "admin": "Administrator",
+    "user": "Benutzer"
+  },
+  "auth": {
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "register": "Registrieren",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "forgotPassword": "Passwort vergessen?",
+    "resetPassword": "Passwort zurücksetzen"
+  }
+}

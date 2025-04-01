@@ -35,7 +35,7 @@ export default function LoginPage() {
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
+              <div className="space-y-2" suppressHydrationWarning>
                 <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor="email">
                   E-Mail
                 </label>
@@ -48,9 +48,10 @@ export default function LoginPage() {
                   autoComplete="email"
                   autoCorrect="off"
                   required
+                  suppressHydrationWarning
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2" suppressHydrationWarning>
                 <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor="password">
                   Passwort
                 </label>
@@ -61,6 +62,7 @@ export default function LoginPage() {
                   autoCapitalize="none"
                   autoComplete="current-password"
                   required
+                  suppressHydrationWarning
                 />
               </div>
             </CardContent>

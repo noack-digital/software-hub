@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
     },
     async redirect({ url, baseUrl }) {
       // Nach erfolgreicher Anmeldung zum Admin-Bereich weiterleiten
-      return `${baseUrl}/admin`;
+      return `https://software-hub.noack.digital/admin`;
     },
   },
 };

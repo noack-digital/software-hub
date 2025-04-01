@@ -8,7 +8,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://softhub:softhub123@db:5432/software_hub
       - NODE_ENV=development
-      - NEXTAUTH_URL=http://localhost:3002
+      - NEXTAUTH_URL=https://software-hub.noack.digital
       - NEXTAUTH_SECRET=mein_geheimer_nextauth_schluessel
     depends_on:
       db:

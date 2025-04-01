@@ -1,0 +1,91 @@
+{
+  "navigation": {
+    "dashboard": "Dashboard",
+    "software": "Software",
+    "categories": "Categories",
+    "importExport": "Import/Export",
+    "settings": "Settings",
+    "users": "Users",
+    "embed": "Embed",
+    "badgeSettings": "Badge Settings",
+    "linkSettings": "Link Settings",
+    "misc": "Miscellaneous",
+    "adminArea": "Admin Area",
+    "logout": "Logout",
+    "login": "Login"
+  },
+  "common": {
+    "search": "Search",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "on": "On",
+    "off": "Off",
+    "yes": "Yes",
+    "no": "No",
+    "available": "Available",
+    "notAvailable": "Not available",
+    "more": "More",
+    "open": "Open",
+    "allRightsReserved": "All rights reserved",
+    "total": "Total",
+    "views": "Views"
+  },
+  "settings": {
+    "stickyHeader": "Sticky Header in Frontend",
+    "stickyHeaderDescription": "When enabled, the header remains fixed at the top when scrolling."
+  },
+  "software": {
+    "title": "Software",
+    "name": "Name",
+    "description": "Description",
+    "shortDescription": "Short Description",
+    "url": "URL",
+    "types": "Types",
+    "costs": "Costs",
+    "available": "Available",
+    "categories": "Categories",
+    "addSoftware": "Add Software",
+    "editSoftware": "Edit Software",
+    "deleteSoftware": "Delete Software",
+    "web": "Web",
+    "desktop": "Desktop",
+    "mobile": "Mobile",
+    "search": "Search software...",
+    "showDetails": "Show details",
+    "type": "Type",
+    "availability": "Availability"
+  },
+  "categories": {
+    "title": "Categories",
+    "name": "Name",
+    "addCategory": "Add Category",
+    "editCategory": "Edit Category",
+    "deleteCategory": "Delete Category"
+  },
+  "users": {
+    "title": "Users",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "addUser": "Add User",
+    "editUser": "Edit User",
+    "deleteUser": "Delete User",
+    "admin": "Administrator",
+    "user": "User"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot Password?",
+    "resetPassword": "Reset Password"
+  }
+}

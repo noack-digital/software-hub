@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { CategoryFilter } from '@/components/CategoryFilter';
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from '@/lib/LanguageContext';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import {
   Dialog,
   DialogContent,
@@ -85,12 +87,14 @@ const containerVariants = {
 };
 
 export default function HomePage() {
+  const { t, language } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [badgeText, setBadgeText] = useState('Verfügbar');
+  const [badgeText, setBadgeText] = useState(t('common.available'));
   const [showBadges, setShowBadges] = useState(true);
   const [badgeBackgroundColor, setBadgeBackgroundColor] = useState('#10b981');
   const [badgeTextColor, setBadgeTextColor] = useState('#ffffff');
+  const [stickyHeader, setStickyHeader] = useState(true);
 
   // URL-Parameter beim Laden verarbeiten
   useEffect(() => {
@@ -113,9 +117,9 @@ export default function HomePage() {
     }
   }, []);
 
-  // Lade Badge-Einstellungen aus den Einstellungen
+  // Lade Badge-Einstellungen und andere Einstellungen aus der API
   useEffect(() => {
-    const fetchBadgeSettings = async () => {
+    const fetchSettings = async () => {
       try {
         // Badge-Text laden
         const textResponse = await fetch('/api/settings?key=availableBadgeText');
@@ -152,12 +156,21 @@ export default function HomePage() {
             setBadgeTextColor(data.value);
           }
         }
+
+        // Sticky Header Einstellung laden
+        const stickyHeaderResponse = await fetch('/api/settings?key=stickyHeader');
+        if (stickyHeaderResponse.ok) {
+          const data = await stickyHeaderResponse.json();
+          if (data && data.value) {
+            setStickyHeader(data.value.toLowerCase() !== 'false');
+          }
+        }
       } catch (error) {
-        console.error('Fehler beim Laden der Badge-Einstellungen:', error);
+        console.error('Fehler beim Laden der Einstellungen:', error);
       }
     };
 
-    fetchBadgeSettings();
+    fetchSettings();
   }, []);
 
   const { data: softwareData = [], isLoading, error } = useQuery<Software[]>({
@@ -200,7 +213,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50/50">
       {/* Header */}
-      <header className="sticky top-0 z-40 w-full border-b bg-white/50 backdrop-blur-lg">
+      <header className={`${stickyHeader ? 'sticky top-0' : ''} z-40 w-full border-b bg-white/50 backdrop-blur-lg`}>
         <div className="container mx-auto px-4">
           <div className="flex h-14 items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -208,6 +221,7 @@ export default function HomePage() {
               <h1 className="text-xl font-semibold">Software Hub</h1>
             </div>
             <div className="flex items-center space-x-4">
+              <LanguageSwitcher />
               <UserNav />
             </div>
           </div>
@@ -223,7 +237,7 @@ export default function HomePage() {
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
               <input
                 type="search"
-                placeholder="Software suchen..."
+                placeholder={t('software.search')}
                 className="h-10 w-full rounded-md border pl-9 pr-4 focus:outline-none focus:ring-2 focus:ring-primary"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -238,7 +252,7 @@ export default function HomePage() {
 
         {/* Software Grid */}
         {isLoading ? (
-          <div className="text-center py-8">Lade Software...</div>
+          <div className="text-center py-8">{t('common.loading')}</div>
         ) : (
           <motion.div 
             className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
@@ -303,7 +317,7 @@ export default function HomePage() {
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button className="w-auto px-8">
-                            Details anzeigen
+                            {t('software.showDetails')}
                           </Button>
                         </DialogTrigger>
                         <DialogContent>
@@ -322,11 +336,11 @@ export default function HomePage() {
                           </DialogHeader>
                           <div className="space-y-4">
                             <div>
-                              <h4 className="font-medium mb-1">Beschreibung</h4>
+                              <h4 className="font-medium mb-1">{t('software.description')}</h4>
                               <p className="text-sm text-gray-600">{software.description}</p>
                             </div>
                             <div>
-                              <h4 className="font-medium mb-1">Kategorien</h4>
+                              <h4 className="font-medium mb-1">{t('categories.title')}</h4>
                               <div className="flex flex-wrap gap-2">
                                 {software.categories.map((category, index) => (
                                   <Badge key={index} variant="secondary">
@@ -336,7 +350,7 @@ export default function HomePage() {
                               </div>
                             </div>
                             <div>
-                              <h4 className="font-medium mb-1">Typ</h4>
+                              <h4 className="font-medium mb-1">{t('software.type')}</h4>
                               <div className="flex gap-2">
                                 {software.types.map((type, index) => (
                                   <div key={index} className="flex items-center gap-1">
@@ -347,12 +361,12 @@ export default function HomePage() {
                               </div>
                             </div>
                             <div>
-                              <h4 className="font-medium mb-1">Kosten</h4>
+                              <h4 className="font-medium mb-1">{t('software.costs')}</h4>
                               <p className="text-sm text-gray-600">{software.costs}</p>
                             </div>
                             <div>
-                              <h4 className="font-medium mb-1">Verfügbarkeit</h4>
-                              <p className="text-sm text-gray-600">{software.available ? 'Verfügbar' : 'Nicht verfügbar'}</p>
+                              <h4 className="font-medium mb-1">{t('software.availability')}</h4>
+                              <p className="text-sm text-gray-600">{software.available ? t('common.available') : t('common.notAvailable')}</p>
                             </div>
                           </div>
                         </DialogContent>

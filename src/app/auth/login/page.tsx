@@ -60,7 +60,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
               {/* Email Input */}
-              <div className="space-y-2">
+              <div className="space-y-2" suppressHydrationWarning>
                 <label
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   htmlFor="email"
@@ -73,13 +73,14 @@ export default function LoginPage() {
                   type="email"
                   autoComplete="email"
                   required
+                  suppressHydrationWarning
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   placeholder="m.mustermann@beispiel.de"
                 />
               </div>
 
               {/* Password Input */}
-              <div className="space-y-2">
+              <div className="space-y-2" suppressHydrationWarning>
                 <label
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   htmlFor="password"
@@ -92,6 +93,7 @@ export default function LoginPage() {
                   type="password"
                   autoComplete="current-password"
                   required
+                  suppressHydrationWarning
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 />
               </div>

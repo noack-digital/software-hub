@@ -13,7 +13,7 @@
     "value": "false",
     "description": "Aktiviert oder deaktiviert die Anzeige von Badges (true/false)",
     "createdAt": "2025-02-26T17:09:59.585Z",
-    "updatedAt": "2025-02-26T18:00:08.561Z"
+    "updatedAt": "2025-03-31T12:12:06.673Z"
   },
   {
     "id": "3",
@@ -62,5 +62,13 @@
     "description": "Footer-Links anzeigen",
     "createdAt": "2025-03-28T10:29:26.002Z",
     "updatedAt": "2025-03-28T12:18:56.001Z"
+  },
+  {
+    "id": "setting_1743157766003",
+    "key": "stickyHeader",
+    "value": "false",
+    "description": "Aktiviert oder deaktiviert den sticky Header im Frontend (true/false)",
+    "createdAt": "2025-03-31T12:28:00.000Z",
+    "updatedAt": "2025-03-31T12:29:34.950Z"
   }
 ]

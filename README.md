@@ -18,6 +18,9 @@ Software Hub ist eine Anwendung zur Verwaltung und Präsentation von Software-Re
 - Einbettungsmöglichkeiten für externe Webseiten (iFrame, JavaScript, WordPress, TYPO3, Moodle)
 - Konfigurierbare Footer-Links (Impressum, Datenschutz)
 - Export-Funktion für Software-Daten
+- **Mehrsprachigkeitsunterstützung** (Deutsch und Englisch)
+- **Sprachumschalter** für einfachen Wechsel zwischen den verfügbaren Sprachen
+- **Konfigurierbare UI-Einstellungen** (z.B. Sticky Header ein-/ausschalten)
 
 ## Technologien
 
@@ -25,6 +28,7 @@ Software Hub ist eine Anwendung zur Verwaltung und Präsentation von Software-Re
 - **Backend**: Next.js API Routes
 - **Datenbank**: PostgreSQL mit Prisma ORM
 - **Authentifizierung**: NextAuth.js
+- **Internationalisierung**: Eigene i18n-Implementierung mit JSON-Dateien
 
 ## Entwicklung starten
 
@@ -111,6 +115,19 @@ Der Admin-Bereich bietet folgende Funktionen:
   - URLs für Impressum und Datenschutz konfigurieren
   - Links in neuem Tab öffnen
   - Footer-Links ein-/ausblenden
+- UI-Einstellungen:
+  - Sticky Header ein-/ausschalten
+- Spracheinstellungen:
+  - Standardsprache festlegen
+  - Verfügbare Sprachen verwalten
+
+## Mehrsprachigkeit
+
+Die Anwendung unterstützt mehrere Sprachen. Aktuell verfügbar sind:
+- Deutsch (de)
+- Englisch (en)
+
+Die Übersetzungen befinden sich im Verzeichnis `messages/` und können bei Bedarf erweitert oder angepasst werden.
 
 ## Lizenz
 

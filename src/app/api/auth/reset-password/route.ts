@@ -53,30 +53,33 @@ export async function PUT(request: Request) {
   try {
     const { token, newPassword } = await request.json();
 
-    // Finde Benutzer mit gültigem Reset-Token
-    const user = await prisma.user.findFirst({
-      where: {
-        resetTokenExpiry: {
-          gt: new Date(),
-        },
-      },
-    });
+  // Suche den Benutzer, dessen Reset-Token noch gültig ist und zum gesendeten
+  // Token passt. Da der Token mit bcrypt gehasht wird, kann er nicht direkt in
+  // der Datenbank abgefragt werden.
+  const candidates = await prisma.user.findMany({
+    where: {
+      resetToken: { not: null },
+      resetTokenExpiry: { gt: new Date() },
+    },
+  });
 
-    if (!user || !user.resetToken) {
-      return NextResponse.json(
-        { error: "Ungültiger oder abgelaufener Token" },
-        { status: 400 }
-      );
+  let user = null;
+  for (const candidate of candidates) {
+    if (
+      candidate.resetToken &&
+      (await bcrypt.compare(token, candidate.resetToken))
+    ) {
+      user = candidate;
+      break;
     }
+  }
 
-    // Überprüfe Token
-    const isValidToken = await bcrypt.compare(token, user.resetToken);
-    if (!isValidToken) {
-      return NextResponse.json(
-        { error: "Ungültiger oder abgelaufener Token" },
-        { status: 400 }
-      );
-    }
+  if (!user) {
+    return NextResponse.json(
+      { error: "Ungültiger oder abgelaufener Token" },
+      { status: 400 }
+    );
+  }
 
     // Hash neues Passwort und update Benutzer
     const hashedPassword = await bcrypt.hash(newPassword, 10);

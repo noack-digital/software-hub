@@ -85,43 +85,33 @@ export function SoftwareList() {
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className="font-semibold">{item.name}</h3>
-                    <p className="text-sm text-gray-500 mt-1">{item.publisher}</p>
+                    <p className="text-sm text-gray-500 mt-1">{item.shortDescription}</p>
                   </div>
-                  {item.platform.includes('Web') ? (
+                  {item.types.includes('Web') ? (
                     <Globe className="h-5 w-5 text-primary" />
                   ) : (
                     <Monitor className="h-5 w-5 text-primary" />
                   )}
                 </div>
-                <p className="mt-2 text-sm line-clamp-2">{item.shortDescription}</p>
+                <p className="mt-2 text-sm line-clamp-2">{item.description}</p>
                 <div className="mt-4 space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Version:</span>
-                    <span>{item.version}</span>
+                    <span className="text-gray-500">Kosten:</span>
+                    <span>{item.costs}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Kategorie:</span>
-                    <span>{item.category}</span>
+                    <span className="text-gray-500">Verfügbar:</span>
+                    <span>{item.available ? 'Ja' : 'Nein'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Lizenz:</span>
-                    <span>{item.license}</span>
+                    <span className="text-gray-500">Typ:</span>
+                    <span>{item.types.join(', ')}</span>
                   </div>
-                </div>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {item.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800"
-                    >
-                      {tag}
-                    </span>
-                  ))}
                 </div>
                 <div className="mt-4 flex gap-2">
                   <Button
                     className="flex-1"
-                    onClick={() => window.open(item.website, '_blank')}
+                    onClick={() => window.open(item.url, '_blank')}
                   >
                     Website öffnen
                   </Button>
@@ -139,23 +129,23 @@ export function SoftwareList() {
                         </DialogDescription>
                       </DialogHeader>
                       <div className="mt-4">
-                        <h4 className="font-semibold mb-2">Technische Details</h4>
+                        <h4 className="font-semibold mb-2">Details</h4>
                         <dl className="space-y-2">
                           <div className="flex justify-between">
-                            <dt className="text-gray-500">Version</dt>
-                            <dd>{item.version}</dd>
+                            <dt className="text-gray-500">Kosten</dt>
+                            <dd>{item.costs}</dd>
                           </div>
                           <div className="flex justify-between">
-                            <dt className="text-gray-500">Publisher</dt>
-                            <dd>{item.publisher}</dd>
+                            <dt className="text-gray-500">Verfügbar</dt>
+                            <dd>{item.available ? 'Ja' : 'Nein'}</dd>
                           </div>
                           <div className="flex justify-between">
-                            <dt className="text-gray-500">Plattform</dt>
-                            <dd>{item.platform.join(', ')}</dd>
+                            <dt className="text-gray-500">Typ</dt>
+                            <dd>{item.types.join(', ')}</dd>
                           </div>
                           <div className="flex justify-between">
-                            <dt className="text-gray-500">Lizenz</dt>
-                            <dd>{item.license}</dd>
+                            <dt className="text-gray-500">URL</dt>
+                            <dd><a href={item.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{item.url}</a></dd>
                           </div>
                         </dl>
                       </div>

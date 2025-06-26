@@ -31,7 +31,7 @@ export default function AdminSoftwarePage() {
 
       <main className="p-4 sm:p-6 lg:p-8">
         {showImport ? (
-          <ImportExport onBack={() => setShowImport(false)} />
+          <ImportExport onClose={() => setShowImport(false)} />
         ) : (
           <div className="space-y-4">
             <div className="flex justify-end">

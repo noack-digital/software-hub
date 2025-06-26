@@ -5,12 +5,13 @@ import bcrypt from 'bcryptjs';
 // GET-Anfrage für einen einzelnen Benutzer
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
   try {
     const user = await prisma.user.findUnique({
       where: {
-        id: params.id,
+        id: resolvedParams.id,
       },
       select: {
         id: true,
@@ -41,8 +42,9 @@ export async function GET(
 // PATCH-Anfrage zum Aktualisieren eines Benutzers
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
   try {
     const body = await request.json();
     const { name, email, role, password } = body;
@@ -60,7 +62,7 @@ export async function PATCH(
       where: {
         email,
         id: {
-          not: params.id,
+          not: resolvedParams.id,
         },
       },
     });
@@ -88,7 +90,7 @@ export async function PATCH(
     // Benutzer aktualisieren
     const updatedUser = await prisma.user.update({
       where: {
-        id: params.id,
+        id: resolvedParams.id,
       },
       data: updateData,
       select: {
@@ -113,13 +115,14 @@ export async function PATCH(
 // DELETE-Anfrage zum Löschen eines Benutzers
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
   try {
     // Überprüfen, ob der Benutzer existiert
     const user = await prisma.user.findUnique({
       where: {
-        id: params.id,
+        id: resolvedParams.id,
       },
     });
 
@@ -133,7 +136,7 @@ export async function DELETE(
     // Benutzer löschen
     await prisma.user.delete({
       where: {
-        id: params.id,
+        id: resolvedParams.id,
       },
     });
 

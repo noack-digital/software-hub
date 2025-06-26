@@ -1,0 +1,46 @@
+services:
+  app:
+    # Für Produktion: image: username/software-hub:latest
+    # Ersetzen Sie 'username' durch Ihren Docker Hub Benutzernamen
+    # Baue das Image lokal
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      - DATABASE_URL=postgresql://softhub:softhub123@db:5432/software_hub
+      - NODE_ENV=development
+      - NEXTAUTH_URL=http://localhost:3001
+      - NEXTAUTH_SECRET=mein_geheimer_nextauth_schluessel
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: softhub
+      POSTGRES_PASSWORD: softhub123
+      POSTGRES_DB: software_hub
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U softhub"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

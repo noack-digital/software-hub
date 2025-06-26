@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Embed URL</title>
+</head>
+<body>
+    <h1>Test der Embed-URL</h1>
+    <p>Diese Seite testet, ob die Embed-Codes die korrekte Base-URL verwenden.</p>
+    
+    <h2>Iframe Test</h2>
+    <iframe 
+        src="http://localhost:3005/?embed=true&hideHeader=true&hideFooter=true" 
+        width="100%" 
+        height="600px" 
+        frameborder="0">
+    </iframe>
+    
+    <h2>JavaScript Test</h2>
+    <div id="software-hub-embed"></div>
+    <script>
+        (function() {
+            var iframe = document.createElement('iframe');
+            iframe.src = 'http://localhost:3005/?embed=true&hideHeader=true&hideFooter=true';
+            iframe.width = '100%';
+            iframe.height = '600px';
+            iframe.frameBorder = '0';
+            document.getElementById('software-hub-embed').appendChild(iframe);
+        })();
+    </script>
+</body>
+</html>

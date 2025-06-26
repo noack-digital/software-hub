@@ -1,0 +1,113 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = []
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String     @id @default(cuid())
+  name             String?
+  email            String     @unique
+  password         String
+  role             UserRole   @default(USER)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  softwareItems    Software[]
+}
+
+model Software {
+  id               String                @id @default(cuid())
+  name             String
+  url              String?
+  shortDescription String?
+  description      String
+  costs            String
+  available        Boolean               @default(true)
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  userId           String?
+  alternatives     String?
+  features         String?
+  logo             String?
+  notes            String?
+  types            String[]
+  createdBy        User?                 @relation(fields: [userId], references: [id])
+  categories       SoftwareCategory[]
+  targetGroups     SoftwareTargetGroup[]
+}
+
+model Category {
+  id          String             @id @default(cuid())
+  name        String             @unique
+  description String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  software    SoftwareCategory[]
+}
+
+model TargetGroup {
+  id          String                @id @default(cuid())
+  name        String                @unique
+  description String?
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+  software    SoftwareTargetGroup[]
+}
+
+model SoftwareCategory {
+  softwareId String
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  software   Software @relation(fields: [softwareId], references: [id], onDelete: Cascade)
+
+  @@id([softwareId, categoryId])
+}
+
+model SoftwareTargetGroup {
+  softwareId    String
+  targetGroupId String
+  software      Software    @relation(fields: [softwareId], references: [id], onDelete: Cascade)
+  targetGroup   TargetGroup @relation(fields: [targetGroupId], references: [id], onDelete: Cascade)
+
+  @@id([softwareId, targetGroupId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  model     String
+  recordId  String
+  changes   String
+  createdAt DateTime @default(now())
+  userId    String?
+}
+
+model Settings {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model FooterLink {
+  id        String   @id @default(cuid())
+  text      String
+  url       String
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}

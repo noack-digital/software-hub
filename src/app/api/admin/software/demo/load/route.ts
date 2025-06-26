@@ -197,11 +197,10 @@ export async function POST() {
         name: item.name,
         url: item.url,
         shortDescription: item.shortDescription,
-        longDescription: item.longDescription,
-        category: item.category,
-        platform: item.platform,
-        license: item.license,
-        isActive: item.isActive,
+        description: item.longDescription,
+        costs: item.license === 'free' ? 'Kostenlos' : 'Kostenpflichtig',
+        available: item.isActive,
+        types: item.platform,
       })),
     });
 

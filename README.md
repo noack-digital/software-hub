@@ -1,314 +1,260 @@
-# Software Hub 🚀
+# Software-Hub 🚀
 
-Ein modernes, webbasiertes Software-Katalog-System für Unternehmen und Bildungseinrichtungen. Verwalten Sie Ihre Software-Landschaft zentral und stellen Sie sie über Embed-Codes in andere Systeme wie Moodle, TYPO3 oder WordPress zur Verfügung.
+Ein modernes Web-Portal zur Verwaltung und Präsentation von Software-Tools für Bildungseinrichtungen. Entwickelt für die Hochschule für Nachhaltige Entwicklung Eberswalde (HNEE).
 
-## ✨ Features
+![Software-Hub Screenshot](docs/screenshot.png)
 
-### 📊 Software-Verwaltung
-- **Vollständige CRUD-Operationen** für Software-Einträge
-- **Kategorisierung** und **Zielgruppen-Zuordnung**
-- **Import/Export** von Software-Daten (CSV)
-- **Erweiterte Suchfunktionen** und Filter
-- **Verfügbarkeits-Status** mit konfigurierbaren Badges
+## 🌟 Features
 
-### 🎨 Anpassbare Benutzeroberfläche
-- **Responsive Design** für alle Geräte
-- **Konfigurierbare Badges** (Farben, Texte, Sichtbarkeit)
-- **Anpassbare Footer-Links**
-- **Zielgruppen-Anzeige** (optional)
+### 📊 **Software-Verwaltung**
+- Vollständige CRUD-Operationen für Software-Einträge
+- Kategorisierung und Zielgruppen-Zuordnung
+- Import/Export-Funktionalität (CSV)
+- Verfügbarkeits-Status mit konfigurierbaren Badges
 
-### 🔗 Embed-Funktionalität
-- **Iframe-Integration** für externe Websites
-- **JavaScript-Embed-Codes** für dynamische Integration
-- **WordPress-Shortcodes** für einfache CMS-Integration
-- **Konfigurierbare Parameter** (Header/Footer ausblenden, Filter)
-- **Automatische Base-URL-Erkennung**
+### 🎨 **Anpassbare Benutzeroberfläche**
+- Responsive Design für alle Geräte
+- Konfigurierbare Badge-Farben und -Texte
+- Anpassbare Footer-Links
+- Suchfunktion mit erweiterten Filtern
 
-### 👥 Benutzer- und Rechteverwaltung
-- **NextAuth.js** Integration
-- **Rollenbasierte Zugriffskontrolle**
-- **Admin-Dashboard** mit Statistiken
-- **Aktivitäts-Protokollierung**
+### 🔧 **Admin-Bereich**
+- Benutzer- und Rollenverwaltung
+- Kategorien- und Zielgruppen-Management
+- Einstellungen für Frontend-Anzeige
+- Embed-Code-Generator für externe Websites
 
-### 📈 Analytics & Monitoring
-- **Software-Statistiken** nach Kategorien
-- **Aktivitäts-Dashboard**
-- **Benutzer-Aktivitäten** Tracking
+### 🌐 **Integration & Deployment**
+- **Docker-Container** für einfache Bereitstellung
+- **Embed-Funktionalität** für Moodle, TYPO3, WordPress
+- **PostgreSQL** Datenbank mit automatischen Migrationen
+- **NextAuth.js** für sichere Authentifizierung
 
-## 🐳 Docker Installation (Empfohlen)
+## 🚀 Quick Start mit Docker
 
 ### Voraussetzungen
-- Docker & Docker Compose installiert
-- Git installiert
+- Docker & Docker Compose
+- Git
 
-### Schnellstart
+### Installation
 
-1. **Repository klonen:**
+1. **Repository klonen**
 ```bash
 git clone https://github.com/noack-digital/software-hub.git
 cd software-hub
 ```
 
-2. **Umgebungsvariablen konfigurieren:**
-```bash
-cp .env.example .env
-# Bearbeiten Sie die .env Datei nach Ihren Bedürfnissen
-```
-
-3. **Mit Docker Compose starten:**
+2. **Mit Docker starten**
 ```bash
 docker-compose up -d
 ```
 
-4. **Anwendung öffnen:**
+3. **Anwendung öffnen**
 - Frontend: http://localhost:3000
-- Admin-Bereich: http://localhost:3000/admin
+- Admin-Login: Wird beim ersten Start erstellt
 
-### Docker Compose Services
+Das war's! 🎉 Der Software-Hub läuft jetzt vollständig in Docker-Containern.
 
-- **app**: Next.js Anwendung (Port 3000)
-- **postgres**: PostgreSQL Datenbank (Port 5432)
+## 📋 Detaillierte Dokumentation
 
-## 🛠️ Manuelle Installation
+### 🐳 Docker Deployment
 
-### Voraussetzungen
-- Node.js 18+ 
-- PostgreSQL 15+
-- npm oder yarn
-
-### Installation
-
-1. **Repository klonen:**
-```bash
-git clone https://github.com/noack-digital/software-hub.git
-cd software-hub
-```
-
-2. **Abhängigkeiten installieren:**
-```bash
-npm install
-```
-
-3. **Umgebungsvariablen konfigurieren:**
-```bash
-cp .env.example .env
-# Bearbeiten Sie die .env Datei
-```
-
-4. **Datenbank einrichten:**
-```bash
-npx prisma migrate deploy
-npx prisma db seed
-```
-
-5. **Entwicklungsserver starten:**
-```bash
-npm run dev
-```
-
-## ⚙️ Konfiguration
-
-### Umgebungsvariablen
+Der Software-Hub ist vollständig containerisiert und kann mit einem einzigen Befehl gestartet werden:
 
 ```bash
-# Datenbank
-DATABASE_URL="postgresql://user:password@localhost:5432/software_hub"
+# Alle Services starten
+docker-compose up -d
 
-# NextAuth
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-secret-key"
+# Logs anzeigen
+docker-compose logs -f
 
-# Base URL für Embed-Codes
-NEXT_PUBLIC_BASE_URL="http://localhost:3000"
+# Services stoppen
+docker-compose down
 
-# Node Environment
-NODE_ENV="production"
+# Mit Datenbank-Reset
+docker-compose down -v
+docker-compose up -d
 ```
 
-### Base-URL Konfiguration
+### 🔧 Konfiguration
 
-Die Base-URL für Embed-Codes wird automatisch erkannt. Für explizite Kontrolle:
+#### Umgebungsvariablen
+Die wichtigsten Einstellungen werden über Docker Compose konfiguriert:
 
-```bash
-# In .env setzen
-NEXT_PUBLIC_BASE_URL="https://ihre-domain.de"
-```
-
-Weitere Details: [BASE_URL_CONFIG.md](BASE_URL_CONFIG.md)
-
-## 🔗 Embed-Integration
-
-### Iframe Integration
-```html
-<iframe 
-  src="https://ihre-domain.de/?embed=true&hideHeader=true&hideFooter=true" 
-  width="100%" 
-  height="600px" 
-  frameborder="0">
-</iframe>
-```
-
-### JavaScript Integration
-```javascript
-(function() {
-  var iframe = document.createElement('iframe');
-  iframe.src = 'https://ihre-domain.de/?embed=true';
-  iframe.width = '100%';
-  iframe.height = '600px';
-  iframe.frameBorder = '0';
-  document.getElementById('software-hub').appendChild(iframe);
-})();
-```
-
-### WordPress Shortcode
-```php
-[software_hub url="https://ihre-domain.de/?embed=true" width="100%" height="600px"]
-```
-
-### Embed-Parameter
-
-- `embed=true` - Aktiviert Embed-Modus
-- `hideHeader=true` - Versteckt Header
-- `hideFooter=true` - Versteckt Footer
-- `categoryId=123` - Filtert nach Kategorie
-- `targetGroupId=456` - Filtert nach Zielgruppe
-
-## 📊 API Endpunkte
-
-### Software
-- `GET /api/software` - Alle Software abrufen
-- `POST /api/software` - Neue Software erstellen
-- `PUT /api/software/[id]` - Software aktualisieren
-- `DELETE /api/software/[id]` - Software löschen
-
-### Kategorien
-- `GET /api/categories` - Alle Kategorien
-- `POST /api/categories` - Neue Kategorie
-
-### Zielgruppen
-- `GET /api/target-groups` - Alle Zielgruppen
-- `POST /api/target-groups` - Neue Zielgruppe
-
-### Einstellungen
-- `GET /api/settings` - Systemeinstellungen
-- `PUT /api/settings` - Einstellungen aktualisieren
-
-### Embed
-- `GET /api/base-url` - Aktuelle Base-URL abrufen
-
-## 🚀 Deployment
-
-### Docker Production
-
-1. **Produktions-Docker-Compose:**
 ```yaml
-version: '3.8'
-services:
-  app:
-    image: ghcr.io/noack-digital/software-hub:latest
-    environment:
-      DATABASE_URL: "postgresql://user:pass@postgres:5432/db"
-      NEXTAUTH_URL: "https://ihre-domain.de"
-      NEXTAUTH_SECRET: "secure-secret-key"
-      NEXT_PUBLIC_BASE_URL: "https://ihre-domain.de"
+# docker-compose.yml
+environment:
+  DATABASE_URL: "postgresql://software_hub_user:software_hub_password@postgres:5432/software_hub"
+  NEXTAUTH_URL: "http://localhost:3000"
+  NEXTAUTH_SECRET: "your-secret-key-change-in-production"
+  NEXT_PUBLIC_BASE_URL: "http://localhost:3000"
 ```
 
-2. **Mit Reverse Proxy (nginx):**
-```nginx
-server {
-    listen 80;
-    server_name ihre-domain.de;
-    
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
+#### Produktions-Deployment
+Für Produktionsumgebungen:
+
+1. **Sichere Passwörter** in `docker-compose.yml` setzen
+2. **HTTPS** konfigurieren (Reverse Proxy empfohlen)
+3. **Backup-Strategie** für PostgreSQL-Daten implementieren
+4. **Monitoring** und Logging einrichten
+
+### 📊 Datenbank
+
+**PostgreSQL 16** mit automatischen Migrationen:
+- Prisma ORM für typsichere Datenbankoperationen
+- Automatische Schema-Migrationen beim Start
+- Intelligentes Seeding (überspringt vorhandene Daten)
+
+#### Wichtige Tabellen:
+- `Software` - Software-Einträge
+- `Category` - Kategorien
+- `TargetGroup` - Zielgruppen
+- `User` - Benutzer und Rollen
+- `Settings` - Konfigurationseinstellungen
+- `FooterLink` - Footer-Links
+
+### 🔐 Authentifizierung
+
+**NextAuth.js** mit JWT-Strategie:
+- Sichere Session-Verwaltung
+- Rollen-basierte Zugriffskontrolle
+- Admin-Bereich geschützt
+
+### 🎨 Frontend-Features
+
+#### Suchfunktion
+- **Volltext-Suche** in Namen und Beschreibungen
+- **Filter** nach Kategorien und Zielgruppen
+- **Sortierung** nach verschiedenen Kriterien
+
+#### Responsive Design
+- **Mobile-First** Ansatz
+- **Tablet** und **Desktop** optimiert
+- **Accessibility** Standards befolgt
+
+### 🔌 Embed-Funktionalität
+
+Der Software-Hub kann in externe Websites eingebettet werden:
+
+```html
+<!-- Vollständige Einbettung -->
+<iframe src="http://localhost:3000/embed" width="100%" height="600"></iframe>
+
+<!-- Nur Software-Liste -->
+<iframe src="http://localhost:3000/embed/software" width="100%" height="400"></iframe>
 ```
 
-### Vercel Deployment
+**Unterstützte Plattformen:**
+- Moodle
+- TYPO3
+- WordPress
+- Jede Website mit iframe-Unterstützung
 
-1. **Repository zu Vercel verbinden**
-2. **Umgebungsvariablen setzen**
-3. **PostgreSQL Datenbank verbinden**
+## 🛠️ Entwicklung
 
-### Traditionelles Hosting
+### Lokale Entwicklung ohne Docker
 
-1. **Build erstellen:**
 ```bash
-npm run build
-```
+# Dependencies installieren
+npm install
 
-2. **Produktionsserver starten:**
-```bash
-npm start
-```
+# Datenbank starten (Docker)
+docker-compose up -d postgres
 
-## 🧪 Entwicklung
+# Environment Setup
+cp .env.example .env.local
+# .env.local bearbeiten
 
-### Entwicklungsumgebung
+# Datenbank migrieren
+npx prisma migrate dev
+npx prisma db seed
 
-```bash
-# Entwicklungsserver
+# Development Server
 npm run dev
-
-# Datenbank zurücksetzen
-npx prisma migrate reset
-
-# Prisma Studio öffnen
-npx prisma studio
-
-# Tests ausführen
-npm test
 ```
 
-### Projektstruktur
+### 🏗️ Technologie-Stack
+
+- **Frontend:** Next.js 15, React 18, TypeScript
+- **Styling:** Tailwind CSS, Shadcn/ui
+- **Backend:** Next.js API Routes
+- **Datenbank:** PostgreSQL 16, Prisma ORM
+- **Auth:** NextAuth.js
+- **Deployment:** Docker, Docker Compose
+
+### 📁 Projektstruktur
 
 ```
 software-hub/
 ├── src/
 │   ├── app/                 # Next.js App Router
-│   ├── components/          # React Komponenten
-│   ├── lib/                 # Utilities & Konfiguration
-│   └── scripts/             # Datenbank Seeds
-├── prisma/                  # Datenbank Schema & Migrationen
-├── public/                  # Statische Assets
-├── docker-compose.yml       # Docker Konfiguration
-├── Dockerfile              # Container Definition
-└── README.md               # Diese Datei
+│   │   ├── admin/          # Admin-Bereich
+│   │   ├── api/            # API Routes
+│   │   └── embed/          # Embed-Seiten
+│   ├── components/         # React Components
+│   ├── lib/               # Utilities & Config
+│   └── scripts/           # Seeding Scripts
+├── prisma/                # Datenbank Schema & Migrationen
+├── docker-compose.yml     # Docker Konfiguration
+├── Dockerfile            # Container Build
+└── docs/                 # Dokumentation
 ```
 
-## 🤝 Contributing
+## 🤝 Beitragen
 
-1. Fork das Repository
-2. Erstelle einen Feature Branch (`git checkout -b feature/amazing-feature`)
-3. Committe deine Änderungen (`git commit -m 'Add amazing feature'`)
-4. Push zum Branch (`git push origin feature/amazing-feature`)
-5. Öffne eine Pull Request
+Wir freuen uns über Beiträge! Bitte beachten Sie:
 
-## 📝 Lizenz
+1. **Fork** das Repository
+2. **Feature Branch** erstellen (`git checkout -b feature/AmazingFeature`)
+3. **Commit** Ihre Änderungen (`git commit -m 'Add some AmazingFeature'`)
+4. **Push** zum Branch (`git push origin feature/AmazingFeature`)
+5. **Pull Request** öffnen
 
-Dieses Projekt steht unter der MIT Lizenz. Siehe [LICENSE](LICENSE) für Details.
+### 🐛 Bug Reports
 
-## 🆘 Support
+Bitte verwenden Sie die [GitHub Issues](https://github.com/noack-digital/software-hub/issues) für Bug Reports und Feature Requests.
 
-- **Issues**: [GitHub Issues](https://github.com/noack-digital/software-hub/issues)
-- **Dokumentation**: [Wiki](https://github.com/noack-digital/software-hub/wiki)
-- **Diskussionen**: [GitHub Discussions](https://github.com/noack-digital/software-hub/discussions)
+## 📄 Lizenz
 
-## 🏗️ Roadmap
+Dieses Projekt steht unter der MIT-Lizenz. Siehe [LICENSE](LICENSE) für Details.
 
-- [ ] Multi-Tenancy Support
-- [ ] REST API Dokumentation (OpenAPI)
-- [ ] GraphQL API
-- [ ] Mobile App
-- [ ] Advanced Analytics
-- [ ] Plugin System
-- [ ] Internationalization (i18n)
+```
+MIT License
+
+Copyright (c) 2025 Alexander Noack - Hochschule für Nachhaltige Entwicklung Eberswalde (HNEE)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+## 👥 Team
+
+**Entwickelt von:** Alexander Noack  
+**Institution:** Hochschule für Nachhaltige Entwicklung Eberswalde (HNEE)  
+**Kontakt:** [GitHub](https://github.com/noack-digital)
+
+## 🙏 Danksagungen
+
+- **Next.js Team** für das großartige Framework
+- **Prisma Team** für die ausgezeichnete ORM
+- **Tailwind CSS** für das utility-first CSS Framework
+- **Shadcn/ui** für die wunderschönen UI-Komponenten
 
 ---
 
-**Entwickelt mit ❤️ von [Noack Digital](https://github.com/noack-digital)**
+**⭐ Wenn Ihnen dieses Projekt gefällt, geben Sie ihm einen Stern auf GitHub!**

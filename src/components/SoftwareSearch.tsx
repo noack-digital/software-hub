@@ -184,24 +184,22 @@ export function SoftwareSearch() {
                 <tr className="bg-gray-50">
                   <th className="px-4 py-3 text-left font-semibold text-gray-900">Name</th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-900">Typ</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-900">Kategorien</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-900">Beschreibung</th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-900">Kosten</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-900">HNEE</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-900">Verfügbar</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {software.map((item) => (
                   <tr key={item.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 text-gray-900">{item.name}</td>
-                    <td className="px-4 py-3 text-gray-900">{item.platform?.join(', ')}</td>
-                    <td className="px-4 py-3 text-gray-900">{item.category}</td>
-                    <td className="px-4 py-3 text-gray-900">
-                      {item.license === 'free' ? 'Kostenlos' : 'Kostenpflichtig'}
-                    </td>
+                    <td className="px-4 py-3 text-gray-900">{item.types?.join(', ')}</td>
+                    <td className="px-4 py-3 text-gray-900">{item.shortDescription}</td>
+                    <td className="px-4 py-3 text-gray-900">{item.costs}</td>
                     <td className="px-4 py-3">
                       <input
                         type="checkbox"
-                        checked={item.isActive}
+                        checked={item.available}
                         className="rounded border-gray-300 text-[#004d3d] focus:ring-[#004d3d]"
                         readOnly
                       />

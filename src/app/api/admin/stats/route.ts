@@ -11,12 +11,12 @@ export async function GET() {
   }
 
   try {
-    const [softwareCount, userCount, downloads] = await Promise.all([
+    const [softwareCount, userCount, availableSoftware] = await Promise.all([
       prisma.software.count(),
       prisma.user.count(),
-      prisma.software.aggregate({
-        _sum: {
-          downloads: true,
+      prisma.software.count({
+        where: {
+          available: true,
         },
       }),
     ]);
@@ -24,7 +24,7 @@ export async function GET() {
     return NextResponse.json({
       softwareCount,
       userCount,
-      totalDownloads: downloads._sum.downloads || 0,
+      availableSoftware,
     });
   } catch (error) {
     console.error("Fehler beim Laden der Admin-Statistiken:", error);

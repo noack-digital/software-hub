@@ -25,10 +25,10 @@ export async function POST(request: Request) {
     const auditLog = await prisma.auditLog.create({
       data: {
         action: "IMPORT",
-        entity: "Software",
-        entityId: "BULK_IMPORT",
+        model: "Software",
+        recordId: "BULK_IMPORT",
         userId: session.user.id,
-        changes: { count: data.length },
+        changes: JSON.stringify({ count: data.length }),
       },
     });
 
@@ -38,16 +38,12 @@ export async function POST(request: Request) {
         const software = await prisma.software.create({
           data: {
             name: item.name,
-            description: item.description,
-            version: item.version,
-            publisher: item.publisher,
-            website: item.website,
-            category: item.category,
-            tags: Array.isArray(item.tags)
-              ? item.tags
-              : item.tags?.split(",").map((t: string) => t.trim()) || [],
-            license: item.license,
-            platform: Array.isArray(item.platform)
+            description: item.description || item.longDescription || "",
+            shortDescription: item.shortDescription,
+            url: item.website || item.url,
+            costs: item.license === 'free' ? 'Kostenlos' : item.costs || 'Kostenpflichtig',
+            available: item.available !== false,
+            types: Array.isArray(item.platform)
               ? item.platform
               : item.platform?.split(",").map((p: string) => p.trim()) || [],
             userId: session.user.id,

@@ -1,9 +1,10 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Footer } from './Footer';
 
-export function ConditionalFooter() {
+function ConditionalFooterContent() {
   const searchParams = useSearchParams();
   const hideFooter = searchParams?.get('hideFooter') === 'true';
 
@@ -12,4 +13,12 @@ export function ConditionalFooter() {
   }
 
   return <Footer />;
+}
+
+export function ConditionalFooter() {
+  return (
+    <Suspense fallback={<Footer />}>
+      <ConditionalFooterContent />
+    </Suspense>
+  );
 }

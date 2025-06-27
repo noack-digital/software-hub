@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Copy, Check, Code, Globe, Settings } from 'lucide-react';
 import { toast } from 'sonner';
+import { getBaseUrl } from '@/lib/base-url';
 
 export default function EmbedSettingsPage() {
   const [baseUrl, setBaseUrl] = useState('');
@@ -20,24 +21,14 @@ export default function EmbedSettingsPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [baseUrlRes, categoriesRes, targetGroupsRes] = await Promise.all([
-          fetch('/api/base-url'),
+        // Dynamische Base-URL sofort setzen
+        const dynamicBaseUrl = getBaseUrl();
+        setBaseUrl(dynamicBaseUrl);
+        
+        const [categoriesRes, targetGroupsRes] = await Promise.all([
           fetch('/api/categories'),
           fetch('/api/target-groups')
         ]);
-        
-        // Base-URL vom Server laden
-        if (baseUrlRes.ok) {
-          const baseUrlData = await baseUrlRes.json();
-          if (baseUrlData.success && baseUrlData.baseUrl) {
-            setBaseUrl(baseUrlData.baseUrl);
-          }
-        }
-        
-        // Fallback: Client-seitige Base-URL
-        if (!baseUrl && typeof window !== 'undefined') {
-          setBaseUrl(window.location.origin);
-        }
         
         if (categoriesRes.ok) {
           const categoriesData = await categoriesRes.json();
@@ -50,10 +41,9 @@ export default function EmbedSettingsPage() {
         }
       } catch (error) {
         console.error('Fehler beim Laden der Daten:', error);
-        // Fallback bei Fehler
-        if (typeof window !== 'undefined') {
-          setBaseUrl(window.location.origin);
-        }
+        // Fallback bei Fehler - verwende dynamische Base-URL
+        const fallbackBaseUrl = getBaseUrl();
+        setBaseUrl(fallbackBaseUrl);
       }
     };
 

@@ -27,15 +27,15 @@ services:
       # Datenbank Konfiguration
       DATABASE_URL: "postgresql://software_hub_user:software_hub_password@postgres:5432/software_hub"
       
-      # NextAuth Konfiguration
-      NEXTAUTH_URL: "http://localhost:3000"
-      NEXTAUTH_SECRET: "your-secret-key-change-in-production"
-      
-      # Base URL für Embed-Codes
-      NEXT_PUBLIC_BASE_URL: "http://localhost:3000"
+      # NextAuth Konfiguration - Dynamische URL-Erkennung
+      NEXTAUTH_SECRET: "production-secret-key-change-in-production-2025"
       
       # Node Environment
       NODE_ENV: "production"
+      
+      # Optional: Setzen Sie diese nur wenn eine spezifische URL erforderlich ist
+      # NEXTAUTH_URL: "http://your-domain.com:port"
+      # NEXT_PUBLIC_BASE_URL: "http://your-domain.com:port"
     ports:
       - "3000:3000"
     depends_on:

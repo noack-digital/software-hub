@@ -2,6 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
+import { getBaseUrl } from "./base-url";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -66,8 +67,9 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async redirect({ url, baseUrl }) {
-      // Nach erfolgreicher Anmeldung zum Admin-Bereich weiterleiten
-      return `${baseUrl}/admin`;
+      // Verwende dynamische Base-URL falls baseUrl nicht verfügbar
+      const dynamicBaseUrl = baseUrl || getBaseUrl();
+      return `${dynamicBaseUrl}/admin`;
     },
   },
 };

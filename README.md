@@ -1,6 +1,15 @@
 # Software-Hub 🚀
 
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/noack-digital/software-hub/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://www.docker.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
+
 Ein modernes Web-Portal zur Verwaltung und Präsentation von Software-Tools für Bildungseinrichtungen. Entwickelt für die Hochschule für Nachhaltige Entwicklung Eberswalde (HNEE).
+
+> **🎉 Version 1.0.0 - Production Ready!**
+> Jetzt mit **dynamischer Base-URL-Erkennung** - funktioniert auf jeder IP-Adresse, Domain und jedem Port ohne Konfiguration!
 
 ![Software-Hub Screenshot](docs/screenshot.png)
 
@@ -25,10 +34,19 @@ Ein modernes Web-Portal zur Verwaltung und Präsentation von Software-Tools für
 - Embed-Code-Generator für externe Websites
 
 ### 🌐 **Integration & Deployment**
-- **Docker-Container** für einfache Bereitstellung
-- **Embed-Funktionalität** für Moodle, TYPO3, WordPress
-- **PostgreSQL** Datenbank mit automatischen Migrationen
-- **NextAuth.js** für sichere Authentifizierung
+- **🚀 Zero-Configuration Deployment** - Funktioniert überall ohne Setup
+- **🌐 Dynamische Base-URL-Erkennung** - Automatische Anpassung an jede Umgebung
+- **🐳 Docker-Container** für einfache Bereitstellung
+- **🔌 Embed-Funktionalität** für Moodle, TYPO3, WordPress
+- **🗄️ PostgreSQL** Datenbank mit automatischen Migrationen
+- **🔐 NextAuth.js** für sichere Authentifizierung
+
+### ✨ **Neu in Version 1.0.0**
+- **Universal Deployment**: Läuft auf jeder IP/Domain/Port ohne Konfiguration
+- **Produktionsreif**: Vollständig getestet und dokumentiert
+- **Embed-Code-Generator**: Automatische URL-Erkennung für externe Websites
+- **Admin-Dashboard**: Vollständige Kontrolle über alle Features
+- **Responsive Design**: Optimiert für alle Geräte
 
 ## 🚀 Quick Start mit Docker
 
@@ -55,6 +73,14 @@ docker-compose up -d
 
 Das war's! 🎉 Der Software-Hub läuft jetzt vollständig in Docker-Containern.
 
+### 🌟 **Was macht Version 1.0.0 besonders?**
+
+- ✅ **Zero-Configuration**: Keine manuellen URL-Einstellungen erforderlich
+- ✅ **Universal**: Funktioniert auf localhost, Servern, Cloud-Plattformen
+- ✅ **Production-Ready**: Vollständig getestet und dokumentiert
+- ✅ **Secure**: NextAuth.js mit JWT-basierter Authentifizierung
+- ✅ **Scalable**: Docker-basiert für einfache Skalierung
+
 ## 📋 Detaillierte Dokumentation
 
 ### 🐳 Docker Deployment
@@ -79,16 +105,17 @@ docker-compose up -d
 ### 🔧 Konfiguration
 
 #### Umgebungsvariablen
-Die wichtigsten Einstellungen werden über Docker Compose konfiguriert:
+Die wichtigsten Einstellungen werden automatisch konfiguriert:
 
 ```yaml
-# docker-compose.yml
+# docker-compose.yml - Minimale Konfiguration erforderlich
 environment:
   DATABASE_URL: "postgresql://software_hub_user:software_hub_password@postgres:5432/software_hub"
-  NEXTAUTH_URL: "http://localhost:3000"
   NEXTAUTH_SECRET: "your-secret-key-change-in-production"
-  NEXT_PUBLIC_BASE_URL: "http://localhost:3000"
+  # NEXTAUTH_URL und NEXT_PUBLIC_BASE_URL werden automatisch erkannt!
 ```
+
+> **🎯 Neu in v1.0.0**: Keine manuellen URL-Einstellungen mehr erforderlich!
 
 #### Produktions-Deployment
 Für Produktionsumgebungen:
@@ -242,11 +269,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
+## 📈 Changelog
+
+Siehe [CHANGELOG.md](CHANGELOG.md) für eine detaillierte Liste aller Änderungen und Verbesserungen.
+
+### Aktuelle Version: 1.0.0
+- 🚀 Production Ready Release
+- 🌐 Dynamische Base-URL-Erkennung
+- 🐳 Vollständige Docker-Integration
+- 📱 Responsive Design
+- 🔧 Admin-Dashboard
+- 📊 Import/Export-Funktionalität
+
 ## 👥 Team
 
-**Entwickelt von:** Alexander Noack  
-**Institution:** Hochschule für Nachhaltige Entwicklung Eberswalde (HNEE)  
+**Entwickelt von:** Alexander Noack
+**Institution:** Hochschule für Nachhaltige Entwicklung Eberswalde (HNEE)
 **Kontakt:** [GitHub](https://github.com/noack-digital)
+
+## 📊 Project Stats
+
+- **Language**: TypeScript (95%), CSS (3%), JavaScript (2%)
+- **Framework**: Next.js 15 with App Router
+- **Database**: PostgreSQL 16 with Prisma ORM
+- **Deployment**: Docker & Docker Compose
+- **License**: MIT
 
 ## 🙏 Danksagungen
 

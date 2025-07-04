@@ -1,6 +1,22 @@
 {
   "name": "software-hub",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "Ein modernes Web-Portal zur Verwaltung und Präsentation von Software-Tools für Bildungseinrichtungen",
+  "keywords": ["software-management", "education", "docker", "nextjs", "typescript", "prisma", "postgresql"],
+  "homepage": "https://github.com/noack-digital/software-hub",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/noack-digital/software-hub.git"
+  },
+  "bugs": {
+    "url": "https://github.com/noack-digital/software-hub/issues"
+  },
+  "author": {
+    "name": "Alexander Noack",
+    "email": "alexander.noack@hnee.de",
+    "url": "https://github.com/noack-digital"
+  },
+  "license": "MIT",
   "private": true,
   "scripts": {
     "dev": "next dev",

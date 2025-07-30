@@ -124,11 +124,28 @@ export default function EmbedSettingsPage() {
   // Code in Zwischenablage kopieren
   const copyToClipboard = async (code: string, type: string) => {
     try {
-      await navigator.clipboard.writeText(code);
+      // Versuche moderne Clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(code);
+      } else {
+        // Fallback für unsichere Kontexte
+        const textArea = document.createElement('textarea');
+        textArea.value = code;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+      
       setCopiedCode(type);
       toast.success(`${type} Code in Zwischenablage kopiert`);
       setTimeout(() => setCopiedCode(null), 2000);
     } catch (error) {
+      console.error('Clipboard error:', error);
       toast.error('Fehler beim Kopieren in die Zwischenablage');
     }
   };

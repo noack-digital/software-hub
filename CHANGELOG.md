@@ -5,6 +5,50 @@ Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/),
 und dieses Projekt folgt [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-07-30
+
+### 🚀 Patch Release - UI/UX Improvements & Bug Fixes
+
+#### ✨ Added - Neue Features
+- **🔗 GitHub Repository Link** in Admin-Sidebar Footer
+  - GitHub-Icon neben der Versionsnummer hinzugefügt
+  - Direkter Link zum Repository mit Hover-Effekt
+  - Tooltip für bessere Benutzerführung
+
+#### 🐛 Fixed - Behobene Probleme
+- **📋 Clipboard Copy Funktionalität** auf Embed-Seite repariert
+  - Problem: `navigator.clipboard` funktionierte nur in sicheren Kontexten (HTTPS/localhost)
+  - Lösung: Fallback-Mechanismus für unsichere Kontexte implementiert
+  - Verwendet `document.execCommand('copy')` als Fallback für HTTP-Deployments
+  - Alle Kopieren-Buttons (iFrame, JavaScript, WordPress) funktionieren jetzt korrekt
+
+- **🔧 JSX Syntax Errors** in Sidebar-Komponente behoben
+  - Doppelte JSX-Blöcke entfernt, die Build-Fehler verursachten
+  - Sidebar.tsx kompiliert jetzt fehlerfrei
+  - Container-Builds laufen wieder erfolgreich durch
+
+#### 🎨 Improved - Verbesserungen
+- **📱 Admin-Sidebar Footer** Design optimiert
+  - Bessere Anordnung von Version und GitHub-Link
+  - Konsistente Hover-Effekte und Übergänge
+  - Verbesserte Benutzerfreundlichkeit
+
+#### 🔧 Technical Changes
+- **Environment Variables** korrekt konfiguriert:
+  - `NEXT_PUBLIC_APP_VERSION` für dynamische Versionanzeige
+  - `NEXTAUTH_URL` und `NEXT_PUBLIC_BASE_URL` für korrekte Redirects
+- **Docker Container** erfolgreich rebuilt und getestet
+- **Build-Pipeline** stabilisiert und optimiert
+
+#### 🧪 Tested & Verified
+- ✅ **Sidebar GitHub-Link** funktioniert korrekt und öffnet Repository
+- ✅ **Clipboard Copy** auf allen Embed-Code-Typen getestet
+- ✅ **Container Build** läuft fehlerfrei durch
+- ✅ **Version Display** zeigt korrekte v1.0.1 an
+- ✅ **Responsive Design** bleibt auf allen Geräten erhalten
+
+---
+
 ## [1.0.0] - 2025-07-04
 
 ### 🚀 Major Release - Production Ready

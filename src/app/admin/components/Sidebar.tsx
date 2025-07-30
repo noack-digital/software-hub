@@ -1,9 +1,15 @@
 'use client';
 
+// Import version from package.json for display
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import React from 'react';
+import { version as appVersion } from '../../../../package.json';
+
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronLeft, ChevronRight, Package, Home, ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Package, Home, ChevronDown, ChevronUp, Github } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
 
@@ -245,20 +251,32 @@ export default function Sidebar() {
         </ul>
       </nav>
       
+
+
       {/* Footer */}
       <div className="p-4 border-t">
-        <div className="flex items-center gap-3">
-          {!isCollapsed && (
-            <div>
-              <p className="text-xs text-gray-500">
-                {isAdmin ? 'Administrator' : 'Benutzer'}
-              </p>
-              <p className="text-sm font-medium text-gray-900">
-                {session?.user?.name || 'Benutzer'}
-              </p>
+        {!isCollapsed && (
+          <div>
+            <p className="text-xs text-gray-500">
+              {isAdmin ? 'Administrator' : 'Benutzer'}
+            </p>
+            <p className="text-sm font-medium text-gray-900">
+              {session?.user?.name || 'Benutzer'}
+            </p>
+            <div className="flex items-center justify-between text-xs text-gray-400">
+              <span>{process.env.NEXT_PUBLIC_APP_VERSION || 'v1.0.0'}</span>
+              <a 
+                href="https://github.com/noack-digital/software-hub" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-gray-600 transition-colors"
+                title="GitHub Repository"
+              >
+                <Github className="h-3 w-3" />
+              </a>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

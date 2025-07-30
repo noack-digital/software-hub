@@ -32,12 +32,15 @@ services:
       
       # Node Environment
       NODE_ENV: "production"
+      NEXTAUTH_URL: "http://10.1.1.45:8080"
+      NEXT_PUBLIC_BASE_URL: "http://10.1.1.45:8080"
+      NEXT_PUBLIC_APP_VERSION: "v1.0.0"
       
       # Optional: Setzen Sie diese nur wenn eine spezifische URL erforderlich ist
       # NEXTAUTH_URL: "http://your-domain.com:port"
       # NEXT_PUBLIC_BASE_URL: "http://your-domain.com:port"
     ports:
-      - "3000:3000"
+      - "8080:3000"
     depends_on:
       postgres:
         condition: service_healthy

@@ -67,9 +67,12 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async redirect({ url, baseUrl }) {
-      // Verwende dynamische Base-URL falls baseUrl nicht verfügbar
-      const dynamicBaseUrl = baseUrl || getBaseUrl();
-      return `${dynamicBaseUrl}/admin`;
+      // Wenn die URL bereits relativ ist, direkt zurückgeben
+      if (url.startsWith('/')) {
+        return url;
+      }
+      // Andernfalls stets relative Admin-Startseite verwenden, um Host-Port-Probleme zu vermeiden
+      return '/admin';
     },
   },
 };

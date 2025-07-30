@@ -1,6 +1,6 @@
 {
   "name": "software-hub",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Ein modernes Web-Portal zur Verwaltung und Präsentation von Software-Tools für Bildungseinrichtungen",
   "keywords": ["software-management", "education", "docker", "nextjs", "typescript", "prisma", "postgresql"],
   "homepage": "https://github.com/noack-digital/software-hub",

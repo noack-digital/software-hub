@@ -15,12 +15,22 @@ if (process.env.NODE_ENV !== "production") {
 // GET /api/admin/export - Alle Software für Export abrufen
 export async function GET(request: NextRequest) {
   try {
-    // Basisabfrage mit Kategorien
+    // Basisabfrage mit Kategorien und Zielgruppen
     const software = await prisma.software.findMany({
       include: {
         categories: {
           select: {
             category: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        },
+        targetGroups: {
+          select: {
+            targetGroup: {
               select: {
                 id: true,
                 name: true
@@ -41,12 +51,25 @@ export async function GET(request: NextRequest) {
       shortDescription: item.shortDescription,
       description: item.description,
       url: item.url,
+      logo: item.logo || '',
       // Array in kommagetrennten String umwandeln
       types: Array.isArray(item.types) ? item.types.join(', ') : '',
       costs: item.costs,
       available: item.available ? 'Ja' : 'Nein',
       // Kategorien als kommagetrennten String hinzufügen
-      categories: item.categories.map(c => c.category.name).join(', ')
+      categories: item.categories.map(c => c.category.name).join(', '),
+      // Englische Felder
+      nameEn: item.nameEn || '',
+      shortDescriptionEn: item.shortDescriptionEn || '',
+      descriptionEn: item.descriptionEn || '',
+      features: item.features || '',
+      alternatives: item.alternatives || '',
+      notes: item.notes || '',
+      featuresEn: item.featuresEn || '',
+      alternativesEn: item.alternativesEn || '',
+      notesEn: item.notesEn || '',
+      // Zielgruppen (falls vorhanden)
+      targetGroups: (item as any).targetGroups?.map((tg: any) => tg.targetGroup?.name || tg.name).join(', ') || ''
     }));
     
     return NextResponse.json(exportData);

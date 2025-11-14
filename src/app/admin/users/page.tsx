@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { UserNav } from '@/components/UserNav';
 import { Plus, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { UserDialog } from './components/UserDialog';
@@ -199,27 +198,24 @@ export default function UserManagement() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <header className="border-b">
-        <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-          <h1 className="text-2xl font-bold" style={{ color: '#004d3d' }}>
-            Benutzerverwaltung
-          </h1>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={handleNewUser}
-              className="rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-              style={{ backgroundColor: '#004d3d' }}
-            >
-              <Plus className="h-4 w-4 mr-2 inline-block" />
-              Neuen Benutzer anlegen
-            </button>
-            <UserNav />
-          </div>
+    <div>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold" style={{ color: '#004d3d' }}>
+          Benutzerverwaltung
+        </h1>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={handleNewUser}
+            className="rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            style={{ backgroundColor: '#004d3d' }}
+          >
+            <Plus className="h-4 w-4 mr-2 inline-block" />
+            Neuen Benutzer anlegen
+          </button>
         </div>
-      </header>
+      </div>
 
-      <main className="container mx-auto px-4 py-8">
+      <div>
         <div className="mb-6 flex items-center justify-between">
           <button
             onClick={() => router.push('/admin')}

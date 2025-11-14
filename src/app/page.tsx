@@ -7,6 +7,7 @@ import { Package, Search, ExternalLink, Globe, Monitor, Laptop, Smartphone } fro
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CategoryFilter } from '@/components/CategoryFilter';
+import { TargetGroupFilter } from '@/components/TargetGroupFilter';
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from '@/lib/LanguageContext';
@@ -26,12 +27,26 @@ interface Software {
   shortDescription: string;
   description: string;
   url: string;
+  logo?: string | null;
   types: string[];
   costs: string;
   available: boolean;
+  // Englische Übersetzungen
+  nameEn?: string | null;
+  shortDescriptionEn?: string | null;
+  descriptionEn?: string | null;
+  featuresEn?: string | null;
+  alternativesEn?: string | null;
+  notesEn?: string | null;
   categories: {
     id: string;
     name: string;
+    nameEn?: string | null;
+  }[];
+  targetGroups?: {
+    id: string;
+    name: string;
+    nameEn?: string | null;
   }[];
 }
 
@@ -90,11 +105,13 @@ export default function HomePage() {
   const { t, language } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedTargetGroup, setSelectedTargetGroup] = useState<string | null>(null);
   const [badgeText, setBadgeText] = useState(t('common.available'));
   const [showBadges, setShowBadges] = useState(true);
   const [badgeBackgroundColor, setBadgeBackgroundColor] = useState('#10b981');
   const [badgeTextColor, setBadgeTextColor] = useState('#ffffff');
   const [stickyHeader, setStickyHeader] = useState(true);
+  const [showLogos, setShowLogos] = useState(true);
 
   // URL-Parameter beim Laden verarbeiten
   useEffect(() => {
@@ -165,6 +182,15 @@ export default function HomePage() {
             setStickyHeader(data.value.toLowerCase() !== 'false');
           }
         }
+
+        // Logo-Anzeige Einstellung laden
+        const showLogosResponse = await fetch('/api/settings?key=showLogos');
+        if (showLogosResponse.ok) {
+          const data = await showLogosResponse.json();
+          if (data && data.value) {
+            setShowLogos(data.value.toLowerCase() === 'true');
+          }
+        }
       } catch (error) {
         console.error('Fehler beim Laden der Einstellungen:', error);
       }
@@ -174,12 +200,13 @@ export default function HomePage() {
   }, []);
 
   const { data: softwareData = [], isLoading, error } = useQuery<Software[]>({
-    queryKey: ['software', searchQuery, selectedCategory],
+    queryKey: ['software', searchQuery, selectedCategory, selectedTargetGroup, language],
     queryFn: async () => {
       console.log('Homepage: Starte Datenabruf...');
       const params = new URLSearchParams();
       if (searchQuery) params.append('q', searchQuery);
       if (selectedCategory) params.append('categoryId', selectedCategory);
+      if (selectedTargetGroup) params.append('targetGroupId', selectedTargetGroup);
       
       const url = `/api/software?${params.toString()}`;
       console.log('Homepage: Sende Anfrage an:', url);
@@ -204,11 +231,50 @@ export default function HomePage() {
 
   // Filter Software basierend auf Suche und Kategorie
   const filteredSoftware = softwareData.filter(software => {
-    const matchesSearch = software.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         software.shortDescription.toLowerCase().includes(searchQuery.toLowerCase());
+    // Je nach Sprache in den richtigen Feldern suchen
+    const searchName = language === 'en' && software.nameEn ? software.nameEn : software.name;
+    const searchShortDesc = language === 'en' && software.shortDescriptionEn ? software.shortDescriptionEn : software.shortDescription;
+    
+    const matchesSearch = searchName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         searchShortDesc.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === null || software.categories.some(category => category.id === selectedCategory);
     return matchesSearch && matchesCategory;
   });
+
+  // Hilfsfunktion zum Abrufen des richtigen Textes je nach Sprache
+  const getLocalizedText = (software: Software, field: 'name' | 'shortDescription' | 'description') => {
+    if (language === 'en') {
+      switch (field) {
+        case 'name':
+          return software.nameEn || software.name;
+        case 'shortDescription':
+          return software.shortDescriptionEn || software.shortDescription;
+        case 'description':
+          return software.descriptionEn || software.description;
+        default:
+          return '';
+      }
+    }
+    // Deutsch (Standard)
+    switch (field) {
+      case 'name':
+        return software.name;
+      case 'shortDescription':
+        return software.shortDescription;
+      case 'description':
+        return software.description;
+      default:
+        return '';
+    }
+  };
+
+  // Hilfsfunktion zum Abrufen des Kategorien-Namens je nach Sprache
+  const getCategoryName = (category: { id: string; name: string; nameEn?: string | null }) => {
+    if (language === 'en' && category.nameEn) {
+      return category.nameEn;
+    }
+    return category.name;
+  };
 
   return (
     <div className="min-h-screen bg-gray-50/50">
@@ -243,6 +309,11 @@ export default function HomePage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
+            {/* Zielgruppen-Filter */}
+            <TargetGroupFilter
+              selectedTargetGroup={selectedTargetGroup}
+              onSelectTargetGroup={setSelectedTargetGroup}
+            />
             <CategoryFilter
               selectedCategory={selectedCategory}
               onSelectCategory={setSelectedCategory}
@@ -271,21 +342,32 @@ export default function HomePage() {
                   layout
                 >
                   <Card className="overflow-hidden flex flex-col h-full relative">
-                    <CardContent className="p-6 flex-1">
+                    <CardContent className="p-6 flex-1 flex flex-col">
                       <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold">{software.name}</h3>
+                        <div className="flex items-center gap-2 flex-1">
+                          {showLogos && software.logo && (
+                            <img 
+                              src={software.logo} 
+                              alt={`${software.name} Logo`}
+                              className="h-6 w-6 object-contain flex-shrink-0"
+                              onError={(e) => {
+                                // Fallback falls Logo nicht geladen werden kann
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                          )}
+                          <h3 className="font-semibold">{getLocalizedText(software, 'name')}</h3>
                           <a 
                             href={software.url} 
                             target="_blank" 
                             rel="noopener noreferrer" 
-                            className="text-primary hover:text-primary/80"
+                            className="text-primary hover:text-primary/80 flex-shrink-0"
                             title="Zur Website"
                           >
                             <ExternalLink className="h-4 w-4" />
                           </a>
                           {software.types.map((type, index) => (
-                            <div key={index} title={type.trim()} className="text-gray-500">
+                            <div key={index} title={type.trim()} className="text-gray-500 flex-shrink-0">
                               {getSoftwareTypeIcon(type.trim())}
                             </div>
                           ))}
@@ -304,26 +386,36 @@ export default function HomePage() {
                           </div>
                         </div>
                       )}
-                      <p className="text-sm text-gray-600 line-clamp-2 mb-4">{software.shortDescription}</p>
+                      <p className="text-sm text-gray-600 mb-4 flex-grow">{getLocalizedText(software, 'shortDescription')}</p>
                       <div className="flex flex-wrap gap-2 mb-4">
                         {software.categories.map((category, index) => (
                           <Badge key={index} variant="secondary" className="text-xs">
-                            {category.name}
+                            {getCategoryName(category)}
                           </Badge>
                         ))}
                       </div>
                     </CardContent>
-                    <CardFooter className="p-6 pt-0 flex justify-center">
+                    <CardFooter className="p-6 pt-0 flex justify-center flex-shrink-0">
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button className="w-auto px-8">
                             {t('software.showDetails')}
                           </Button>
                         </DialogTrigger>
-                        <DialogContent>
+                        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                           <DialogHeader>
                             <DialogTitle className="flex items-center gap-2">
-                              {software.name}
+                              {showLogos && software.logo && (
+                                <img 
+                                  src={software.logo} 
+                                  alt={`${software.name} Logo`}
+                                  className="h-8 w-8 object-contain"
+                                  onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                  }}
+                                />
+                              )}
+                              {getLocalizedText(software, 'name')}
                               <a 
                                 href={software.url} 
                                 target="_blank" 
@@ -335,38 +427,46 @@ export default function HomePage() {
                             </DialogTitle>
                           </DialogHeader>
                           <div className="space-y-4">
+                            {/* Kategorien direkt unter dem Namen */}
+                            {software.categories.length > 0 && (
+                              <div>
+                                <div className="flex flex-wrap gap-2">
+                                  {software.categories.map((category, index) => (
+                                    <Badge key={index} variant="secondary">
+                                      {getCategoryName(category)}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            
+                            {/* Lange Beschreibung */}
                             <div>
                               <h4 className="font-medium mb-1">{t('software.description')}</h4>
-                              <p className="text-sm text-gray-600">{software.description}</p>
+                              <p className="text-sm text-gray-600 whitespace-pre-wrap">{getLocalizedText(software, 'description')}</p>
                             </div>
-                            <div>
-                              <h4 className="font-medium mb-1">{t('categories.title')}</h4>
-                              <div className="flex flex-wrap gap-2">
-                                {software.categories.map((category, index) => (
-                                  <Badge key={index} variant="secondary">
-                                    {category.name}
-                                  </Badge>
-                                ))}
+                            
+                            {/* Typ, Kosten und Verfügbarkeit */}
+                            <div className="space-y-3 pt-2 border-t">
+                              <div>
+                                <h4 className="font-medium mb-1">{t('software.type')}</h4>
+                                <div className="flex gap-2 flex-wrap">
+                                  {software.types.map((type, index) => (
+                                    <div key={index} className="flex items-center gap-1">
+                                      {getSoftwareTypeIcon(type.trim())}
+                                      <span className="text-sm text-gray-600">{type.trim()}</span>
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
-                            </div>
-                            <div>
-                              <h4 className="font-medium mb-1">{t('software.type')}</h4>
-                              <div className="flex gap-2">
-                                {software.types.map((type, index) => (
-                                  <div key={index} className="flex items-center gap-1">
-                                    {getSoftwareTypeIcon(type.trim())}
-                                    <span className="text-sm text-gray-600">{type.trim()}</span>
-                                  </div>
-                                ))}
+                              <div>
+                                <h4 className="font-medium mb-1">{t('software.costs')}</h4>
+                                <p className="text-sm text-gray-600">{software.costs}</p>
                               </div>
-                            </div>
-                            <div>
-                              <h4 className="font-medium mb-1">{t('software.costs')}</h4>
-                              <p className="text-sm text-gray-600">{software.costs}</p>
-                            </div>
-                            <div>
-                              <h4 className="font-medium mb-1">{t('software.availability')}</h4>
-                              <p className="text-sm text-gray-600">{software.available ? t('common.available') : t('common.notAvailable')}</p>
+                              <div>
+                                <h4 className="font-medium mb-1">{t('software.availability')}</h4>
+                                <p className="text-sm text-gray-600">{software.available ? t('common.available') : t('common.notAvailable')}</p>
+                              </div>
                             </div>
                           </div>
                         </DialogContent>

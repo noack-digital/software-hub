@@ -52,6 +52,8 @@ export async function POST(request: NextRequest) {
       data: {
         name: body.name,
         description: body.description || '',
+        nameEn: body.nameEn || '',
+        descriptionEn: body.descriptionEn || '',
       },
     });
     
@@ -116,6 +118,8 @@ export async function PATCH(request: NextRequest) {
       data: {
         name: body.name,
         description: body.description,
+        nameEn: body.nameEn,
+        descriptionEn: body.descriptionEn,
       },
     });
     

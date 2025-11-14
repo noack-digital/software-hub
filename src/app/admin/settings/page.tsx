@@ -276,6 +276,19 @@ export default function SettingsPage() {
             Zu den Link-Einstellungen
           </a>
         </div>
+
+        <div className="p-4 bg-purple-50 border border-purple-200 rounded-md">
+          <h2 className="text-lg font-semibold text-purple-700 mb-2">KI-Einstellungen</h2>
+          <p className="text-purple-600 mb-3">
+            Konfigurieren Sie die KI-Funktionen für automatisches Ausfüllen von Software-Formularen.
+          </p>
+          <a 
+            href="/admin/settings/ai" 
+            className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+          >
+            Zu den KI-Einstellungen
+          </a>
+        </div>
       </div>
 
       <div className="grid gap-6">

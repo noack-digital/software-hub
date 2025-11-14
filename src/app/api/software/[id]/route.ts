@@ -36,16 +36,22 @@ export async function PATCH(
 ) {
   try {
     const data = await request.json();
-    const { categories, ...otherData } = data;
+    const { categories, targetGroups, ...otherData } = data;
     
-    // Bestehende Kategorien löschen
+    // Bestehende Kategorien und Zielgruppen löschen
     await prisma.softwareCategory.deleteMany({
       where: {
         softwareId: context.params.id
       }
     });
     
-    // Software aktualisieren und neue Kategorien erstellen
+    await prisma.softwareTargetGroup.deleteMany({
+      where: {
+        softwareId: context.params.id
+      }
+    });
+    
+    // Software aktualisieren und neue Kategorien und Zielgruppen erstellen
     const software = await prisma.software.update({
       where: {
         id: context.params.id
@@ -60,12 +66,31 @@ export async function PATCH(
               }
             }
           })) || []
+        },
+        targetGroups: {
+          create: targetGroups?.map(targetGroupId => ({
+            targetGroup: {
+              connect: {
+                id: targetGroupId
+              }
+            }
+          })) || []
         }
       },
       include: {
         categories: {
           select: {
             category: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        },
+        targetGroups: {
+          select: {
+            targetGroup: {
               select: {
                 id: true,
                 name: true
@@ -83,12 +108,27 @@ export async function PATCH(
       shortDescription: software.shortDescription,
       description: software.description,
       url: software.url,
+      logo: software.logo,
       types: software.types,
       costs: software.costs,
       available: software.available,
+      // Englische Felder
+      nameEn: software.nameEn,
+      shortDescriptionEn: software.shortDescriptionEn,
+      descriptionEn: software.descriptionEn,
+      featuresEn: software.featuresEn,
+      alternativesEn: software.alternativesEn,
+      notesEn: software.notesEn,
+      features: software.features,
+      alternatives: software.alternatives,
+      notes: software.notes,
       categories: software.categories.map(c => ({
         id: c.category.id,
         name: c.category.name
+      })),
+      targetGroups: software.targetGroups.map(tg => ({
+        id: tg.targetGroup.id,
+        name: tg.targetGroup.name
       }))
     };
 

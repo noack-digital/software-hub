@@ -22,12 +22,12 @@ export async function DELETE(request: NextRequest) {
       await prisma.auditLog.create({
         data: {
           action: 'DELETE_SELECTED',
-          entity: 'Software',
-          entityId: 'MULTIPLE',
-          changes: { 
+          model: 'Software',
+          recordId: 'MULTIPLE',
+          changes: JSON.stringify({ 
             message: `${data.ids.length} Software-Einträge wurden gelöscht`,
             ids: data.ids 
-          },
+          }),
           userId: 'SYSTEM',
         },
       });
@@ -39,9 +39,9 @@ export async function DELETE(request: NextRequest) {
       await prisma.auditLog.create({
         data: {
           action: 'DELETE_ALL',
-          entity: 'Software',
-          entityId: 'ALL',
-          changes: { message: 'Alle Software-Einträge wurden gelöscht' },
+          model: 'Software',
+          recordId: 'ALL',
+          changes: JSON.stringify({ message: 'Alle Software-Einträge wurden gelöscht' }),
           userId: 'SYSTEM',
         },
       });

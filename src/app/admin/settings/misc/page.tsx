@@ -32,7 +32,7 @@ export default function MiscSettingsPage() {
       const allSettings = await response.json();
       // Filtere nur die relevanten Einstellungen
       return allSettings.filter((setting: Setting) => 
-        ['stickyHeader'].includes(setting.key)
+        ['stickyHeader', 'showLogos'].includes(setting.key)
       );
     },
   });
@@ -49,7 +49,8 @@ export default function MiscSettingsPage() {
     } else if (settings.length === 0 && !isInitialized) {
       // Standardwerte setzen, wenn keine Einstellungen gefunden wurden
       setFormData({
-        stickyHeader: 'true'
+        stickyHeader: 'true',
+        showLogos: 'true'
       });
       setIsInitialized(true);
     }
@@ -100,10 +101,42 @@ export default function MiscSettingsPage() {
     });
   };
 
+  // Einstellungen erstellen, falls sie noch nicht existieren
+  useEffect(() => {
+    const createDefaultSettings = async () => {
+      if (isInitialized) {
+        const defaultSettings = [
+          { key: 'stickyHeader', value: 'true', description: 'Sticky Header im Frontend' },
+          { key: 'showLogos', value: 'true', description: 'Zeigt Logos/Favicons vor Software-Namen an' }
+        ];
+        
+        for (const defaultSetting of defaultSettings) {
+          const exists = settings.some((s: Setting) => s.key === defaultSetting.key);
+          if (!exists) {
+            try {
+              await fetch('/api/settings', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(defaultSetting),
+              });
+            } catch (error) {
+              console.error(`Fehler beim Erstellen der Einstellung ${defaultSetting.key}:`, error);
+            }
+          }
+        }
+        queryClient.invalidateQueries({ queryKey: ['settings'] });
+      }
+    };
+    createDefaultSettings();
+  }, [isInitialized, settings, queryClient]);
+
   // Benutzerfreundlicher Name für Einstellungen
   const getSettingFriendlyName = (key: string): string => {
     const nameMap: Record<string, string> = {
       stickyHeader: 'Sticky Header im Frontend',
+      showLogos: 'Logos anzeigen',
     };
     return nameMap[key] || key;
   };
@@ -112,6 +145,7 @@ export default function MiscSettingsPage() {
   const getSettingDescription = (key: string): string => {
     const descriptionMap: Record<string, string> = {
       stickyHeader: 'Wenn aktiviert, bleibt der Header beim Scrollen oben fixiert.',
+      showLogos: 'Zeigt Logos/Favicons vor Software-Namen im Frontend und Admin-Bereich an.',
     };
     return descriptionMap[key] || '';
   };
@@ -147,22 +181,42 @@ export default function MiscSettingsPage() {
           <CardDescription>Passen Sie das Layout des Software Hubs an</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between py-2">
-            <div>
-              <Label htmlFor="setting-stickyHeader" className="font-medium">
-                {getSettingFriendlyName('stickyHeader')}
-              </Label>
-              <p className="text-sm text-gray-500 mt-1">
-                {getSettingDescription('stickyHeader')}
-              </p>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <Label htmlFor="setting-stickyHeader" className="font-medium">
+                  {getSettingFriendlyName('stickyHeader')}
+                </Label>
+                <p className="text-sm text-gray-500 mt-1">
+                  {getSettingDescription('stickyHeader')}
+                </p>
+              </div>
+              <Button
+                variant={formData.stickyHeader === 'true' ? 'default' : 'outline'}
+                onClick={() => handleToggleChange('stickyHeader', formData.stickyHeader !== 'true')}
+                className="w-20"
+              >
+                {formData.stickyHeader === 'true' ? 'Ein' : 'Aus'}
+              </Button>
             </div>
-            <Button
-              variant={formData.stickyHeader === 'true' ? 'default' : 'outline'}
-              onClick={() => handleToggleChange('stickyHeader', formData.stickyHeader !== 'true')}
-              className="w-20"
-            >
-              {formData.stickyHeader === 'true' ? 'Ein' : 'Aus'}
-            </Button>
+            
+            <div className="flex items-center justify-between py-2 border-t pt-4">
+              <div>
+                <Label htmlFor="setting-showLogos" className="font-medium">
+                  {getSettingFriendlyName('showLogos')}
+                </Label>
+                <p className="text-sm text-gray-500 mt-1">
+                  {getSettingDescription('showLogos')}
+                </p>
+              </div>
+              <Button
+                variant={formData.showLogos === 'true' ? 'default' : 'outline'}
+                onClick={() => handleToggleChange('showLogos', formData.showLogos !== 'true')}
+                className="w-20"
+              >
+                {formData.showLogos === 'true' ? 'Ein' : 'Aus'}
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>

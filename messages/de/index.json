@@ -9,6 +9,7 @@
     "embed": "Einbetten",
     "badgeSettings": "Badge-Einstellungen",
     "linkSettings": "Link-Einstellungen",
+    "aiSettings": "KI-Einstellungen",
     "misc": "Sonstiges",
     "adminArea": "Admin-Bereich",
     "logout": "Abmelden",
@@ -64,6 +65,7 @@
   "categories": {
     "title": "Kategorien",
     "name": "Name",
+    "all": "Alle",
     "addCategory": "Kategorie hinzufügen",
     "editCategory": "Kategorie bearbeiten",
     "deleteCategory": "Kategorie löschen"

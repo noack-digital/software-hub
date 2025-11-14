@@ -2,10 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { useQuery } from '@tanstack/react-query';
+import { useLanguage } from '@/lib/LanguageContext';
 
 interface Category {
   id: string;
   name: string;
+  nameEn?: string | null;
 }
 
 interface CategoryFilterProps {
@@ -14,6 +16,8 @@ interface CategoryFilterProps {
 }
 
 export function CategoryFilter({ selectedCategory, onSelectCategory }: CategoryFilterProps) {
+  const { language, t } = useLanguage();
+  
   // Kategorien aus der API laden
   const { data: categories = [], isLoading } = useQuery<Category[]>({
     queryKey: ['categories'],
@@ -26,8 +30,16 @@ export function CategoryFilter({ selectedCategory, onSelectCategory }: CategoryF
     },
   });
 
+  // Hilfsfunktion zum Abrufen des Kategorien-Namens je nach Sprache
+  const getCategoryName = (category: Category) => {
+    if (language === 'en' && category.nameEn) {
+      return category.nameEn;
+    }
+    return category.name;
+  };
+
   if (isLoading) {
-    return <div className="flex justify-center py-4">Kategorien werden geladen...</div>;
+    return <div className="flex justify-center py-4">{t('common.loading')}</div>;
   }
 
   return (
@@ -37,7 +49,7 @@ export function CategoryFilter({ selectedCategory, onSelectCategory }: CategoryF
         onClick={() => onSelectCategory(null)}
         className="rounded-full"
       >
-        Alle
+        {t('categories.all') || 'Alle'}
       </Button>
       {categories.map((category) => (
         <Button
@@ -46,7 +58,7 @@ export function CategoryFilter({ selectedCategory, onSelectCategory }: CategoryF
           onClick={() => onSelectCategory(category.id)}
           className="rounded-full"
         >
-          {category.name}
+          {getCategoryName(category)}
         </Button>
       ))}
     </div>

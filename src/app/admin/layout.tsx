@@ -2,6 +2,7 @@
 
 import { Sidebar } from '@/components/layout/Sidebar';
 import { UserNav } from '@/components/UserNav';
+import { DemoBanner } from '@/components/admin/DemoBanner';
 
 export default function AdminLayout({
   children,
@@ -20,6 +21,7 @@ export default function AdminLayout({
           </div>
         </header>
         <div className="p-8">
+          <DemoBanner />
           {children}
         </div>
       </div>

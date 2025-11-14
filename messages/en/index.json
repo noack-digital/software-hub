@@ -9,6 +9,7 @@
     "embed": "Embed",
     "badgeSettings": "Badge Settings",
     "linkSettings": "Link Settings",
+    "aiSettings": "AI Settings",
     "misc": "Miscellaneous",
     "adminArea": "Admin Area",
     "logout": "Logout",
@@ -64,6 +65,7 @@
   "categories": {
     "title": "Categories",
     "name": "Name",
+    "all": "All",
     "addCategory": "Add Category",
     "editCategory": "Edit Category",
     "deleteCategory": "Delete Category"

@@ -50,8 +50,18 @@ model Software {
   createdBy        User?    @relation(fields: [userId], references: [id])
   userId           String?
   
+  // Englische Übersetzungen
+  nameEn             String?  // Englischer Name
+  shortDescriptionEn String?  @db.Text  // Englische Kurzbeschreibung
+  descriptionEn      String?  @db.Text  // Englische Beschreibung
+  featuresEn         String?  @db.Text  // Englische Hauptfunktionen
+  alternativesEn     String?  @db.Text  // Englische Alternativen
+  notesEn            String?  @db.Text  // Englische Anmerkungen
+  
   // Beziehung zu Kategorien (many-to-many)
   categories       SoftwareCategory[]
+  // Beziehung zu Zielgruppen (many-to-many)
+  targetGroups     SoftwareTargetGroup[]
 }
 
 // Kategorien für Software
@@ -61,6 +71,10 @@ model Category {
   description String?  @db.Text // Optionale Beschreibung
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
+  // Englische Übersetzungen
+  nameEn        String?  @db.Text // Englischer Name
+  descriptionEn String?  @db.Text // Englische Beschreibung
   
   // Beziehung zu Software (many-to-many)
   software    SoftwareCategory[]
@@ -74,6 +88,32 @@ model SoftwareCategory {
   categoryId    String
   
   @@id([softwareId, categoryId])
+}
+
+// Zielgruppen für Software
+model TargetGroup {
+  id          String   @id @default(cuid())
+  name        String   @unique // Name der Zielgruppe
+  description String?  @db.Text // Optionale Beschreibung
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Englische Übersetzungen
+  nameEn        String?  @db.Text // Englischer Name
+  descriptionEn String?  @db.Text // Englische Beschreibung
+  
+  // Beziehung zu Software (many-to-many)
+  software    SoftwareTargetGroup[]
+}
+
+// Verbindungstabelle für die many-to-many Beziehung zwischen Software und Zielgruppen
+model SoftwareTargetGroup {
+  software      Software @relation(fields: [softwareId], references: [id], onDelete: Cascade)
+  softwareId    String
+  targetGroup   TargetGroup @relation(fields: [targetGroupId], references: [id], onDelete: Cascade)
+  targetGroupId String
+  
+  @@id([softwareId, targetGroupId])
 }
 
 // Audit-Log für Änderungen

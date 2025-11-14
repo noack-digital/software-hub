@@ -70,10 +70,58 @@ export async function GET() {
     // Sortieren nach Anzahl (absteigend)
     categoryStats.sort((a, b) => b.total - a.total);
 
+    // Alle Zielgruppen laden
+    const targetGroups = await prisma.targetGroup.findMany({
+      select: {
+        id: true,
+        name: true
+      }
+    });
+
+    // Statistiken für jede Zielgruppe
+    const targetGroupStats = await Promise.all(
+      targetGroups.map(async (targetGroup) => {
+        // Anzahl der Software mit dieser Zielgruppe
+        const total = await prisma.softwareTargetGroup.count({
+          where: {
+            targetGroupId: targetGroup.id
+          }
+        });
+
+        // Anzahl der Software mit dieser Zielgruppe vom letzten Monat
+        const lastMonthTotal = await prisma.softwareTargetGroup.count({
+          where: {
+            targetGroupId: targetGroup.id,
+            software: {
+              createdAt: {
+                lt: lastMonth
+              }
+            }
+          }
+        });
+
+        // Prozentuale Änderung für diese Zielgruppe
+        const tgPercentageChange = lastMonthTotal === 0 
+          ? (total > 0 ? 100 : 0) 
+          : Math.round(((total - lastMonthTotal) / lastMonthTotal) * 100);
+
+        return {
+          id: targetGroup.id,
+          name: targetGroup.name,
+          total,
+          percentageChange: tgPercentageChange
+        };
+      })
+    );
+
+    // Sortieren nach Anzahl (absteigend)
+    targetGroupStats.sort((a, b) => b.total - a.total);
+
     return NextResponse.json({
       total: totalSoftware,
       percentageChange,
-      categories: categoryStats
+      categories: categoryStats,
+      targetGroups: targetGroupStats
     });
   } catch (error) {
     console.error('Fehler beim Abrufen der Statistiken:', error);

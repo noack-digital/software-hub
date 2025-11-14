@@ -69,6 +69,46 @@
     "value": "false",
     "description": "Aktiviert oder deaktiviert den sticky Header im Frontend (true/false)",
     "createdAt": "2025-03-31T12:28:00.000Z",
-    "updatedAt": "2025-03-31T12:29:34.950Z"
+    "updatedAt": "2025-11-13T13:04:22.218Z"
+  },
+  {
+    "id": "setting_1763039331723",
+    "key": "geminiApiKey",
+    "value": "AIzaSyAAnYORzyHU10jpg8X9ipjDVkBtzyFCIGs",
+    "description": "Google Gemini API-Schlüssel für KI-Funktionen",
+    "createdAt": "2025-11-13T13:08:51.723Z",
+    "updatedAt": "2025-11-13T13:35:22.371Z"
+  },
+  {
+    "id": "setting_1763045238799",
+    "key": "aiDescriptionWords",
+    "value": "100",
+    "description": "Anzahl Wörter für die ausführliche Beschreibung",
+    "createdAt": "2025-11-13T14:47:18.799Z",
+    "updatedAt": "2025-11-13T14:47:18.799Z"
+  },
+  {
+    "id": "setting_1763045238829",
+    "key": "aiShortDescriptionWords",
+    "value": "20",
+    "description": "Anzahl Wörter für die Kurzbeschreibung",
+    "createdAt": "2025-11-13T14:47:18.829Z",
+    "updatedAt": "2025-11-13T14:47:18.829Z"
+  },
+  {
+    "id": "setting_1763045238963",
+    "key": "aiAlternativesCount",
+    "value": "5",
+    "description": "Anzahl der Alternativen, die aufgelistet werden sollen",
+    "createdAt": "2025-11-13T14:47:18.963Z",
+    "updatedAt": "2025-11-13T14:47:18.963Z"
+  },
+  {
+    "id": "setting_1763046352029",
+    "key": "showLogos",
+    "value": "true",
+    "description": "Zeigt Logos/Favicons vor Software-Namen an",
+    "createdAt": "2025-11-13T15:05:52.029Z",
+    "updatedAt": "2025-11-13T15:05:52.029Z"
   }
 ]

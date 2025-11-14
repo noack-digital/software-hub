@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Package, Upload, Users, Settings, Home, Code, Tags, ChevronDown, ChevronUp } from "lucide-react";
+import { Package, Upload, Users, Settings, Home, Code, Tags, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -8,7 +8,10 @@ import { useLanguage } from "@/lib/LanguageContext";
 
 export function Sidebar() {
   const pathname = usePathname();
-  const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
+  // Submenu automatisch öffnen, wenn man auf einer Settings-Seite ist
+  const [expandedMenu, setExpandedMenu] = useState<string | null>(
+    pathname?.startsWith('/admin/settings') ? '#' : null
+  );
   const { t } = useLanguage();
 
   const toggleSubmenu = (href: string) => {
@@ -30,6 +33,11 @@ export function Sidebar() {
       title: t('navigation.categories'),
       icon: Tags,
       href: "/admin/categories",
+    },
+    {
+      title: 'Zielgruppen',
+      icon: Tags,
+      href: "/admin/target-groups",
     },
     {
       title: t('navigation.importExport'),
@@ -60,6 +68,11 @@ export function Sidebar() {
           title: t('navigation.linkSettings'),
           icon: Settings,
           href: "/admin/settings/links",
+        },
+        {
+          title: t('navigation.aiSettings'),
+          icon: Sparkles,
+          href: "/admin/settings/ai",
         },
         {
           title: t('navigation.misc'),

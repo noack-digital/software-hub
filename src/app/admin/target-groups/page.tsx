@@ -7,10 +7,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { PlusCircle, Pencil, Trash2, Sparkles, Languages, CheckCircle2, XCircle } from 'lucide-react';
+import { PlusCircle, Pencil, Trash2, Languages, CheckCircle2, XCircle } from 'lucide-react';
 
-// Typ für Kategorie
-type Category = {
+// Typ für Zielgruppe
+type TargetGroup = {
   id: string;
   name: string;
   description: string | null;
@@ -20,10 +20,10 @@ type Category = {
   updatedAt: string;
 };
 
-export default function CategoriesPage() {
+export default function TargetGroupsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [editingTargetGroup, setEditingTargetGroup] = useState<TargetGroup | null>(null);
   const [isTranslating, setIsTranslating] = useState(false);
   const [hasValidApiKey, setHasValidApiKey] = useState(false);
   const queryClient = useQueryClient();
@@ -46,22 +46,22 @@ export default function CategoriesPage() {
     checkApiKey();
   }, []);
 
-  // Kategorien abrufen
-  const { data: categories = [], isLoading } = useQuery<Category[]>({
-    queryKey: ['categories'],
+  // Zielgruppen abrufen
+  const { data: targetGroups = [], isLoading } = useQuery<TargetGroup[]>({
+    queryKey: ['target-groups'],
     queryFn: async () => {
-      const response = await fetch('/api/categories');
+      const response = await fetch('/api/target-groups');
       if (!response.ok) {
-        throw new Error('Fehler beim Laden der Kategorien');
+        throw new Error('Fehler beim Laden der Zielgruppen');
       }
       return response.json();
     },
   });
 
-  // Mutation zum Erstellen einer neuen Kategorie
+  // Mutation zum Erstellen einer neuen Zielgruppe
   const createMutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      const response = await fetch('/api/categories', {
+      const response = await fetch('/api/target-groups', {
         method: 'POST',
         body: JSON.stringify({
           name: formData.get('name'),
@@ -76,14 +76,14 @@ export default function CategoriesPage() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Fehler beim Erstellen der Kategorie');
+        throw new Error(error.error || 'Fehler beim Erstellen der Zielgruppe');
       }
 
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-      toast.success('Kategorie erfolgreich erstellt');
+      queryClient.invalidateQueries({ queryKey: ['target-groups'] });
+      toast.success('Zielgruppe erfolgreich erstellt');
       setIsDialogOpen(false);
     },
     onError: (error) => {
@@ -91,15 +91,15 @@ export default function CategoriesPage() {
     },
   });
 
-  // Mutation zum Aktualisieren einer Kategorie
+  // Mutation zum Aktualisieren einer Zielgruppe
   const updateMutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      if (!editingCategory) return null;
+      if (!editingTargetGroup) return null;
 
-      const response = await fetch('/api/categories', {
+      const response = await fetch('/api/target-groups', {
         method: 'PATCH',
         body: JSON.stringify({
-          id: editingCategory.id,
+          id: editingTargetGroup.id,
           name: formData.get('name'),
           description: formData.get('description'),
           nameEn: formData.get('nameEn'),
@@ -112,67 +112,62 @@ export default function CategoriesPage() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Fehler beim Aktualisieren der Kategorie');
+        throw new Error(error.error || 'Fehler beim Aktualisieren der Zielgruppe');
       }
 
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-      toast.success('Kategorie erfolgreich aktualisiert');
+      queryClient.invalidateQueries({ queryKey: ['target-groups'] });
+      toast.success('Zielgruppe erfolgreich aktualisiert');
       setIsDialogOpen(false);
-      setEditingCategory(null);
+      setEditingTargetGroup(null);
     },
     onError: (error) => {
       toast.error(`Fehler: ${error.message}`);
     },
   });
 
-  // Mutation zum Löschen einer Kategorie
+  // Mutation zum Löschen einer Zielgruppe
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await fetch(`/api/categories?id=${id}`, {
+      const response = await fetch(`/api/target-groups?id=${id}`, {
         method: 'DELETE',
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        // Verwende die detaillierte Fehlermeldung falls vorhanden
-        const errorMessage = errorData.message || errorData.error || 'Fehler beim Löschen der Kategorie';
-        throw new Error(errorMessage);
+        const error = await response.json();
+        throw new Error(error.error || 'Fehler beim Löschen der Zielgruppe');
       }
 
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-      toast.success('Kategorie erfolgreich gelöscht');
+      queryClient.invalidateQueries({ queryKey: ['target-groups'] });
+      toast.success('Zielgruppe erfolgreich gelöscht');
     },
-    onError: (error: Error) => {
-      // Zeige die vollständige Fehlermeldung an
-      toast.error(`Fehler: ${error.message}`, {
-        duration: 5000, // Längere Anzeigedauer für wichtige Fehlermeldungen
-      });
+    onError: (error) => {
+      toast.error(`Fehler: ${error.message}`);
     },
   });
 
-  // Funktion zum Öffnen des Dialogs für eine neue Kategorie
-  const handleNewCategory = () => {
+  // Funktion zum Öffnen des Dialogs für eine neue Zielgruppe
+  const handleNewTargetGroup = () => {
     setIsEditMode(false);
-    setEditingCategory(null);
+    setEditingTargetGroup(null);
     setIsDialogOpen(true);
   };
 
-  // Funktion zum Öffnen des Dialogs zum Bearbeiten einer Kategorie
-  const handleEditCategory = (category: Category) => {
+  // Funktion zum Öffnen des Dialogs zum Bearbeiten einer Zielgruppe
+  const handleEditTargetGroup = (targetGroup: TargetGroup) => {
     setIsEditMode(true);
-    setEditingCategory(category);
+    setEditingTargetGroup(targetGroup);
     setIsDialogOpen(true);
   };
 
-  // Funktion zum Löschen einer Kategorie mit Bestätigung
-  const handleDeleteCategory = (id: string, name: string) => {
-    if (window.confirm(`Möchten Sie die Kategorie "${name}" wirklich löschen?`)) {
+  // Funktion zum Löschen einer Zielgruppe mit Bestätigung
+  const handleDeleteTargetGroup = (id: string, name: string) => {
+    if (window.confirm(`Möchten Sie die Zielgruppe "${name}" wirklich löschen?`)) {
       deleteMutation.mutate(id);
     }
   };
@@ -182,7 +177,7 @@ export default function CategoriesPage() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
-    if (isEditMode && editingCategory) {
+    if (isEditMode && editingTargetGroup) {
       updateMutation.mutate(formData);
     } else {
       createMutation.mutate(formData);
@@ -264,7 +259,7 @@ export default function CategoriesPage() {
       if (retryMatch) {
         const retrySeconds = parseInt(retryMatch[1]);
         toast.error(`Fehler bei der Übersetzung: ${errorMessage}`, {
-          duration: Math.min(retrySeconds * 1000, 10000), // Zeige Toast für Retry-Delay oder max 10 Sekunden
+          duration: Math.min(retrySeconds * 1000, 10000),
         });
       } else {
         toast.error(`Fehler bei der Übersetzung: ${errorMessage}`);
@@ -349,7 +344,7 @@ export default function CategoriesPage() {
       if (retryMatch) {
         const retrySeconds = parseInt(retryMatch[1]);
         toast.error(`Fehler bei der Übersetzung: ${errorMessage}`, {
-          duration: Math.min(retrySeconds * 1000, 10000), // Zeige Toast für Retry-Delay oder max 10 Sekunden
+          duration: Math.min(retrySeconds * 1000, 10000),
         });
       } else {
         toast.error(`Fehler bei der Übersetzung: ${errorMessage}`);
@@ -363,18 +358,18 @@ export default function CategoriesPage() {
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-green-900">
-          Kategorien verwalten
+          Zielgruppen verwalten
         </h1>
       </div>
 
       <div>
         <div className="mb-6 flex justify-between items-center">
           <p className="text-gray-600">
-            Verwalten Sie hier die Kategorien für die Software-Einträge.
+            Verwalten Sie hier die Zielgruppen für die Software-Einträge.
           </p>
-          <Button onClick={handleNewCategory}>
+          <Button onClick={handleNewTargetGroup}>
             <PlusCircle className="h-4 w-4 mr-2" />
-            Neue Kategorie
+            Neue Zielgruppe
           </Button>
         </div>
 
@@ -405,24 +400,24 @@ export default function CategoriesPage() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {categories.length === 0 ? (
+                {targetGroups.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
-                      Keine Kategorien vorhanden. Erstellen Sie eine neue Kategorie.
+                      Keine Zielgruppen vorhanden. Erstellen Sie eine neue Zielgruppe.
                     </td>
                   </tr>
                 ) : (
-                  categories.map((category) => {
-                    const hasTranslation = (category.nameEn && category.nameEn.trim().length > 0) || 
-                                         (category.descriptionEn && category.descriptionEn.trim().length > 0);
+                  targetGroups.map((targetGroup) => {
+                    const hasTranslation = (targetGroup.nameEn && targetGroup.nameEn.trim().length > 0) || 
+                                         (targetGroup.descriptionEn && targetGroup.descriptionEn.trim().length > 0);
                     
                     return (
-                      <tr key={category.id} className="hover:bg-gray-50">
+                      <tr key={targetGroup.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {category.name}
+                          {targetGroup.name}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-500">
-                          {category.description || '-'}
+                          {targetGroup.description || '-'}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-center">
                           {hasTranslation ? (
@@ -436,13 +431,13 @@ export default function CategoriesPage() {
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(category.createdAt).toLocaleDateString('de-DE')}
+                          {new Date(targetGroup.createdAt).toLocaleDateString('de-DE')}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleEditCategory(category)}
+                          onClick={() => handleEditTargetGroup(targetGroup)}
                           className="text-green-600 hover:text-green-900 mr-2"
                         >
                           <Pencil className="h-4 w-4" />
@@ -450,7 +445,7 @@ export default function CategoriesPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleDeleteCategory(category.id, category.name)}
+                          onClick={() => handleDeleteTargetGroup(targetGroup.id, targetGroup.name)}
                           className="text-red-600 hover:text-red-900"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -465,12 +460,12 @@ export default function CategoriesPage() {
           </div>
         )}
 
-        {/* Dialog für Neue/Bearbeiten Kategorie */}
+        {/* Dialog für Neue/Bearbeiten Zielgruppe */}
         {isDialogOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
               <h2 className="text-xl font-semibold mb-4">
-                {isEditMode ? 'Kategorie bearbeiten' : 'Neue Kategorie'}
+                {isEditMode ? 'Zielgruppe bearbeiten' : 'Neue Zielgruppe'}
               </h2>
               
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -500,9 +495,9 @@ export default function CategoriesPage() {
                       <Input
                         id="name"
                         name="name"
-                        defaultValue={editingCategory?.name || ''}
+                        defaultValue={editingTargetGroup?.name || ''}
                         required
-                        placeholder="Name der Kategorie"
+                        placeholder="Name der Zielgruppe"
                       />
                     </div>
                     
@@ -511,8 +506,8 @@ export default function CategoriesPage() {
                       <Textarea
                         id="description"
                         name="description"
-                        defaultValue={editingCategory?.description || ''}
-                        placeholder="Beschreibung der Kategorie"
+                        defaultValue={editingTargetGroup?.description || ''}
+                        placeholder="Beschreibung der Zielgruppe"
                         rows={4}
                       />
                     </div>
@@ -542,8 +537,8 @@ export default function CategoriesPage() {
                       <Input
                         id="nameEn"
                         name="nameEn"
-                        defaultValue={editingCategory?.nameEn || ''}
-                        placeholder="Category name"
+                        defaultValue={editingTargetGroup?.nameEn || ''}
+                        placeholder="Target group name"
                       />
                     </div>
                     
@@ -552,8 +547,8 @@ export default function CategoriesPage() {
                       <Textarea
                         id="descriptionEn"
                         name="descriptionEn"
-                        defaultValue={editingCategory?.descriptionEn || ''}
-                        placeholder="Category description"
+                        defaultValue={editingTargetGroup?.descriptionEn || ''}
+                        placeholder="Target group description"
                         rows={4}
                       />
                     </div>

@@ -297,7 +297,7 @@ export default function UserManagement() {
             </div>
           )}
         </div>
-      </main>
+      </div>
 
       {/* Dialog zum Erstellen eines neuen Benutzers */}
       <UserDialog

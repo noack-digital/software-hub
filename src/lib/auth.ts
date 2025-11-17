@@ -68,17 +68,24 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async redirect({ url, baseUrl }) {
-      // Nach erfolgreicher Anmeldung zum Admin-Bereich weiterleiten
       // Verwende baseUrl (aktuelle Domain) statt hardcodierter URL
       if (url && url.startsWith('/')) {
         // Relative URL - verwende baseUrl als Basis
+        // Bei Logout (callbackUrl: '/') zur Startseite weiterleiten
+        if (url === '/') {
+          return `${baseUrl}/`;
+        }
         return `${baseUrl}${url}`;
       }
       if (url && url.startsWith(baseUrl)) {
         // Absolute URL mit gleicher Domain - verwende sie direkt
+        // Bei Logout zur Startseite weiterleiten
+        if (url === baseUrl || url === `${baseUrl}/`) {
+          return `${baseUrl}/`;
+        }
         return url;
       }
-      // Standard: Weiterleitung zum Admin-Bereich auf aktueller Domain
+      // Standard: Weiterleitung zum Admin-Bereich auf aktueller Domain (bei Login)
       return `${baseUrl}/admin`;
     },
   },

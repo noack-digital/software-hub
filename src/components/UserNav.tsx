@@ -24,7 +24,7 @@ export function UserNav() {
             </Link>
           )}
           <button
-            onClick={() => signOut()}
+            onClick={() => signOut({ callbackUrl: '/' })}
             className="text-sm font-medium text-gray-700 hover:text-gray-800"
           >
             {t('navigation.logout')}

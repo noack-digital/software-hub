@@ -24,7 +24,7 @@ export default function LoginPage() {
         email,
         password,
         redirect: true,
-        callbackUrl: '/'
+        callbackUrl: '/admin'
       });
 
       if (result?.error) {

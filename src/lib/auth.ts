@@ -69,7 +69,17 @@ export const authOptions: NextAuthOptions = {
     },
     async redirect({ url, baseUrl }) {
       // Nach erfolgreicher Anmeldung zum Admin-Bereich weiterleiten
-      return `https://software-hub.noack.digital/admin`;
+      // Verwende baseUrl (aktuelle Domain) statt hardcodierter URL
+      if (url && url.startsWith('/')) {
+        // Relative URL - verwende baseUrl als Basis
+        return `${baseUrl}${url}`;
+      }
+      if (url && url.startsWith(baseUrl)) {
+        // Absolute URL mit gleicher Domain - verwende sie direkt
+        return url;
+      }
+      // Standard: Weiterleitung zum Admin-Bereich auf aktueller Domain
+      return `${baseUrl}/admin`;
     },
   },
 };

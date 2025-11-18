@@ -13,7 +13,6 @@ export default function ImportExportPage() {
   const [isExporting, setIsExporting] = useState(false);
   const [isLoadingDemo, setIsLoadingDemo] = useState(false);
   const [isRemovingDemo, setIsRemovingDemo] = useState(false);
-  const [isSavingDemo, setIsSavingDemo] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -28,39 +27,6 @@ export default function ImportExportPage() {
     refetchInterval: 5000 // Alle 5 Sekunden prüfen
   });
 
-  const handleSaveDemoData = async () => {
-    setIsSavingDemo(true);
-    const loadingToast = toast.loading('DEMO-Datensatz wird gespeichert...');
-    
-    try {
-      // Exportiere aktuellen Stand
-      const exportResponse = await fetch('/api/admin/demo/export');
-      if (!exportResponse.ok) {
-        const errorData = await exportResponse.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Fehler beim Exportieren');
-      }
-      const demoData = await exportResponse.json();
-
-      // Speichere als DEMO-Datensatz (im localStorage oder als Datei)
-      localStorage.setItem('demo-dataset', JSON.stringify(demoData));
-      
-      toast.dismiss(loadingToast);
-      toast.success('DEMO-Datensatz erfolgreich gespeichert', {
-        description: `${demoData.software?.length || 0} Software-Einträge, ${demoData.categories?.length || 0} Kategorien, ${demoData.targetGroups?.length || 0} Zielgruppen`,
-        duration: 5000
-      });
-    } catch (error) {
-      console.error('Fehler beim Speichern:', error);
-      toast.dismiss(loadingToast);
-      toast.error('Fehler beim Speichern des DEMO-Datensatzes', {
-        description: error instanceof Error ? error.message : 'Unbekannter Fehler',
-        duration: 5000
-      });
-    } finally {
-      setIsSavingDemo(false);
-    }
-  };
-
   const handleLoadDemoData = async () => {
     if (!confirm('Möchten Sie wirklich den DEMO-Datensatz laden? Alle vorhandenen Daten werden gelöscht!')) {
       return;
@@ -70,21 +36,12 @@ export default function ImportExportPage() {
     const loadingToast = toast.loading('DEMO-Datensatz wird geladen...');
     
     try {
-      // Lade DEMO-Datensatz aus localStorage
-      const demoDataStr = localStorage.getItem('demo-dataset');
-      if (!demoDataStr) {
-        throw new Error('Kein DEMO-Datensatz gefunden. Bitte speichern Sie zuerst den aktuellen Stand.');
-      }
-
-      const demoData = JSON.parse(demoDataStr);
-
-      // Lade DEMO-Datensatz
       const response = await fetch('/api/admin/demo/load', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(demoData)
+        body: JSON.stringify({ useDefault: true })
       });
 
       if (!response.ok) {
@@ -604,18 +561,10 @@ export default function ImportExportPage() {
             <h2 className="text-lg font-semibold">DEMO-Datensatz</h2>
           </div>
           <p className="text-sm text-gray-600 mb-6">
-            Verwalten Sie den DEMO-Datensatz für Demonstrationszwecke. Der DEMO-Datensatz enthält alle aktuell vorhandenen Software-Einträge, Kategorien und Zielgruppen.
+            Verwalten Sie den festen DEMO-Datensatz für Demonstrationszwecke. Dieser Datensatz umfasst 17 Software-Einträge, 6 Kategorien und 3 Zielgruppen – inklusive Übersetzungen und Logos.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <button
-              onClick={handleSaveDemoData}
-              disabled={isSavingDemo}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSavingDemo ? 'Speichert...' : 'Aktuellen Stand als DEMO-Datensatz speichern'}
-            </button>
-
             <button
               onClick={handleLoadDemoData}
               disabled={isLoadingDemo || demoCheck?.hasDemoData}

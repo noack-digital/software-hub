@@ -40,11 +40,6 @@ export function Sidebar() {
       href: "/admin/target-groups",
     },
     {
-      title: t('navigation.importExport'),
-      icon: Upload,
-      href: "/admin/import-export",
-    },
-    {
       title: t('navigation.settings'),
       icon: Settings,
       href: "#",
@@ -68,6 +63,11 @@ export function Sidebar() {
           title: t('navigation.linkSettings'),
           icon: Settings,
           href: "/admin/settings/links",
+        },
+        {
+          title: t('navigation.importExport'),
+          icon: Upload,
+          href: "/admin/import-export",
         },
         {
           title: t('navigation.aiSettings'),

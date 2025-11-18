@@ -5,6 +5,28 @@ Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/),
 und dieses Projekt folgt [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-11-18
+
+### 🚀 Feature Release – Demo-Datensatz & Inhouse-Ampel
+
+#### ✨ Added
+- **Inhouse-Hosting-Indikator** für Softwarekarten mitsamt Tooltip-Text, Upload/URL/Favicon-Optionen sowie DSGVO-Ampel-Steuerung im Admin-Bereich.
+- **Immer verfügbarer DEMO-Datensatz** mit 17 Softwareeinträgen, 6 Kategorien und 3 Zielgruppen inklusive Erst-Login-Popup, Bannern und Frontend-Hinweisen.
+
+#### 🧩 Improved
+- **Import/Export** ist jetzt unter „Einstellungen“ einsortiert und bietet klarere Aktionen (Laden/Entfernen).
+- **Admin-UI** informiert bei leeren Datenbanken automatisch über verfügbare Demo-Daten; Frontend zeigt denselben Hinweis für eingeloggte Admins.
+- **Badge-Einstellungen** besitzen ein eigenständiges Panel für den Inhouse-Tooltip und vermeiden doppelte Karten.
+
+#### 🐛 Fixed
+- Mehrere Build-/Hydration-Probleme rund um die Badge-Seite sowie das Sidebar-Menü wurden behoben.
+- DSGVO-Ampel, Tooltip und Inhouse-Logo werden nur gerendert, wenn benötigte Settings vorhanden sind.
+
+#### 🔐 Security
+- Release **v1.1.0** wurde zurückgezogen, weil die darin enthaltenen Änderungen Sicherheitsschwächen aufwiesen. Bitte ausschließlich v1.2.0 oder neuer einsetzen.
+
+---
+
 ## [1.0.1] - 2025-07-30
 
 ### 🚀 Patch Release - UI/UX Improvements & Bug Fixes

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { AlertCircle, X, Database, Trash2 } from 'lucide-react';
+import { AlertCircle, X, Database, PlusSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -33,8 +33,43 @@ export function DemoBanner() {
     localStorage.setItem('demo-banner-dismissed', 'true');
   };
 
-  // Banner nur anzeigen wenn DEMO-Daten vorhanden sind und nicht dismissed
-  if (!demoCheck?.hasDemoData || isDismissed) {
+  const softwareCount = demoCheck?.counts?.software || 0;
+  const hasDemoData = demoCheck?.hasDemoData;
+
+  if (softwareCount === 0) {
+    return (
+      <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+        <div className="flex items-start">
+          <div className="flex-shrink-0">
+            <PlusSquare className="h-5 w-5 text-blue-500" />
+          </div>
+          <div className="ml-3 flex-1 text-sm text-blue-800">
+            <h3 className="text-sm font-semibold">Jetzt starten</h3>
+            <p className="mt-1">
+              Es sind noch keine Software-Einträge hinterlegt. Laden Sie den fertigen DEMO-Datensatz
+              (17 Software-Einträge, 6 Kategorien, 3 Zielgruppen) oder legen Sie eigene Inhalte an.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Link href="/admin/import-export">
+                <Button size="sm">
+                  <Database className="h-4 w-4 mr-1" />
+                  DEMO-Daten laden
+                </Button>
+              </Link>
+              <Link href="/admin/software/new">
+                <Button size="sm" variant="outline">
+                  <PlusSquare className="h-4 w-4 mr-1" />
+                  Eigene Software anlegen
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!hasDemoData || isDismissed) {
     return null;
   }
 
@@ -83,4 +118,6 @@ export function DemoBanner() {
     </div>
   );
 }
+
+
 

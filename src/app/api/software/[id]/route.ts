@@ -38,45 +38,46 @@ export async function PATCH(
     const data = await request.json();
     const { categories, targetGroups, ...otherData } = data;
     
-    // Bestehende Kategorien und Zielgruppen löschen
-    await prisma.softwareCategory.deleteMany({
-      where: {
-        softwareId: context.params.id
-      }
-    });
+    const updateData: any = {
+      ...otherData,
+    };
     
-    await prisma.softwareTargetGroup.deleteMany({
-      where: {
-        softwareId: context.params.id
-      }
-    });
+    if (Array.isArray(categories)) {
+      await prisma.softwareCategory.deleteMany({
+        where: {
+          softwareId: context.params.id
+        }
+      });
+      updateData.categories = {
+        create: categories.map(categoryId => ({
+          category: {
+            connect: { id: categoryId }
+          }
+        }))
+      };
+    }
     
-    // Software aktualisieren und neue Kategorien und Zielgruppen erstellen
+    if (Array.isArray(targetGroups)) {
+      await prisma.softwareTargetGroup.deleteMany({
+        where: {
+          softwareId: context.params.id
+        }
+      });
+      updateData.targetGroups = {
+        create: targetGroups.map(targetGroupId => ({
+          targetGroup: {
+            connect: { id: targetGroupId }
+          }
+        }))
+      };
+    }
+    
+    // Software aktualisieren und ggf. neue Kategorien/Zielgruppen setzen
     const software = await prisma.software.update({
       where: {
         id: context.params.id
       },
-      data: {
-        ...otherData,
-        categories: {
-          create: categories?.map(categoryId => ({
-            category: {
-              connect: {
-                id: categoryId
-              }
-            }
-          })) || []
-        },
-        targetGroups: {
-          create: targetGroups?.map(targetGroupId => ({
-            targetGroup: {
-              connect: {
-                id: targetGroupId
-              }
-            }
-          })) || []
-        }
-      },
+      data: updateData,
       include: {
         categories: {
           select: {
@@ -112,6 +113,8 @@ export async function PATCH(
       types: software.types,
       costs: software.costs,
       available: software.available,
+      dataPrivacyStatus: software.dataPrivacyStatus,
+      inhouseHosted: software.inhouseHosted,
       // Englische Felder
       nameEn: software.nameEn,
       shortDescriptionEn: software.shortDescriptionEn,

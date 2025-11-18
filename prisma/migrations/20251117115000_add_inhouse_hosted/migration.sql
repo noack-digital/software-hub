@@ -1,0 +1,2 @@
+ALTER TABLE "Software"
+ADD COLUMN "inhouseHosted" BOOLEAN NOT NULL DEFAULT false;

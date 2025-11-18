@@ -13,7 +13,7 @@
     "value": "false",
     "description": "Aktiviert oder deaktiviert die Anzeige von Badges (true/false)",
     "createdAt": "2025-02-26T17:09:59.585Z",
-    "updatedAt": "2025-03-31T12:12:06.673Z"
+    "updatedAt": "2025-11-18T08:16:18.687Z"
   },
   {
     "id": "3",
@@ -77,7 +77,7 @@
     "value": "AIzaSyAAnYORzyHU10jpg8X9ipjDVkBtzyFCIGs",
     "description": "Google Gemini API-Schlüssel für KI-Funktionen",
     "createdAt": "2025-11-13T13:08:51.723Z",
-    "updatedAt": "2025-11-13T13:35:22.371Z"
+    "updatedAt": "2025-11-17T09:24:31.672Z"
   },
   {
     "id": "setting_1763045238799",
@@ -110,5 +110,29 @@
     "description": "Zeigt Logos/Favicons vor Software-Namen an",
     "createdAt": "2025-11-13T15:05:52.029Z",
     "updatedAt": "2025-11-13T15:05:52.029Z"
+  },
+  {
+    "id": "setting_1763046352030",
+    "key": "showPrivacyIndicator",
+    "value": "true",
+    "description": "Zeigt die DSGVO-Ampel in den Software-Karten an",
+    "createdAt": "2025-11-17T09:40:00.000Z",
+    "updatedAt": "2025-11-17T09:40:00.000Z"
+  },
+  {
+    "id": "setting_1763046352031",
+    "key": "inhouseLogoUrl",
+    "value": "/logos/hnee-de-aHR0cHM6.png",
+    "description": "Logo für inhouse gehostete Software",
+    "createdAt": "2025-11-17T10:05:00.000Z",
+    "updatedAt": "2025-11-18T08:16:35.303Z"
+  },
+  {
+    "id": "setting_1763550000000",
+    "key": "inhouseLogoTooltip",
+    "value": "Diese Software wird inhouse gehostet.",
+    "description": "Tooltip-Text für das Inhouse-Hosting-Logo auf Softwarekarten",
+    "createdAt": "2025-11-18T12:00:00.000Z",
+    "updatedAt": "2025-11-18T12:00:00.000Z"
   }
 ]

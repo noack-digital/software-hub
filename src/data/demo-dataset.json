@@ -1,0 +1,511 @@
+{
+  "software": [
+    {
+      "name": "Adobe Premiere Pro",
+      "shortDescription": "Professionelle Videobearbeitungssoftware für Film, Fernsehen und Web. Bietet umfassende Werkzeuge für kreative Bearbeitung und Postproduktion.",
+      "description": "Adobe Premiere Pro ist eine branchenführende Videobearbeitungssoftware, die von Profis weltweit eingesetzt wird. Sie bietet leistungsstarke Werkzeuge für Schnitt, Farbkorrektur, Audiobearbeitung und visuelle Effekte. Premiere Pro unterstützt eine Vielzahl von Formaten und Codecs und integriert sich nahtlos in andere Adobe Creative Cloud Anwendungen wie After Effects und Audition. Ideal für Projekte jeder Größe, von Kurzfilmen bis zu Spielfilmen.",
+      "url": "https://www.adobe.com/de/products/premiere.html",
+      "logo": "/logos/adobe-com-aHR0cHM6.ico",
+      "types": [
+        "desktop"
+      ],
+      "costs": "Kostenlos",
+      "available": true,
+      "features": "Nonlineare Videobearbeitung\nFarbkorrektur und Grading\nAudiobearbeitung mit Adobe Audition Integration\nMotion Graphics und visuelle Effekte (After Effects Integration)\nUnterstützung für verschiedene Formate und Codecs\nMehrkamera-Bearbeitung\nVR-Videobearbeitung\nZusammenarbeit mit Team Projects",
+      "alternatives": "DaVinci Resolve\nFinal Cut Pro\nAvid Media Composer\nFilmora\nOpenShot Video Editor",
+      "notes": "Adobe Premiere Pro ist eine kostenpflichtige Software. Es gibt verschiedene Abonnementoptionen. Die Software erfordert eine leistungsstarke Hardware, insbesondere für die Bearbeitung von hochauflösendem Videomaterial.",
+      "nameEn": null,
+      "shortDescriptionEn": "Professional video editing software for film, TV, and web. Offers comprehensive tools for creative editing and post-production.",
+      "descriptionEn": "Adobe Premiere Pro is an industry-leading video editing software used by professionals worldwide. It offers powerful tools for editing, color correction, audio editing, and visual effects. Premiere Pro supports a wide variety of formats and codecs and seamlessly integrates with other Adobe Creative Cloud applications such as After Effects and Audition. Ideal for projects of all sizes, from short films to feature films.",
+      "featuresEn": "Non-linear video editing\nColor correction and grading\nAudio editing with Adobe Audition integration\nMotion Graphics and visual effects (After Effects Integration)\nSupport for various formats and codecs\nMulti-camera editing\nVR video editing\nCollaboration with Team Projects",
+      "alternativesEn": "DaVinci Resolve\nFinal Cut Pro\nAvid Media Composer\nFilmora\nOpenShot Video Editor",
+      "notesEn": "Adobe Premiere Pro is a paid software. There are different subscription options available. The software requires powerful hardware, especially for editing high-resolution video footage.",
+      "categoryNames": [
+        "E-Learning & Medien"
+      ],
+      "targetGroupNames": [
+        "Lehrende"
+      ]
+    },
+    {
+      "name": "BigBlueButton",
+      "shortDescription": "BigBlueButton ist eine Open-Source-Webkonferenzlösung für Online-Lernen. Sie bietet Funktionen wie Bildschirmfreigabe, Chat und Whiteboard.",
+      "description": "BigBlueButton ist ein Open-Source-Webkonferenzsystem, das speziell für Online-Lernen entwickelt wurde. Es bietet Echtzeit-Freigabe von Audio, Video, Präsentationen, Chat und Bildschirm. Dozenten können Schüler interaktiv einbeziehen und Umfragen durchführen. BigBlueButton ist einfach zu bedienen und in verschiedene Lernplattformen integrierbar.",
+      "url": "https://bigbluebutton.org/",
+      "logo": "/logos/bigbluebutton-org-aHR0cHM6.png",
+      "types": [
+        "web"
+      ],
+      "costs": "Kostenlos",
+      "available": true,
+      "features": "Audio- und Video-Konferenzen\nBildschirmfreigabe\nÖffentlicher und privater Chat\nWhiteboard für interaktive Sitzungen\nPräsentationsfreigabe\nUmfragen\nBreakout-Räume",
+      "alternatives": "Zoom\nMicrosoft Teams\nGoogle Meet\nJitsi Meet\nWebex",
+      "notes": "BigBlueButton ist ideal für Bildungseinrichtungen und Unternehmen, die eine datenschutzfreundliche Webkonferenzlösung suchen.",
+      "nameEn": null,
+      "shortDescriptionEn": "BigBlueButton is an open-source web conferencing solution for online learning. It offers screen sharing, chat, and whiteboard features.",
+      "descriptionEn": "BigBlueButton is an open-source web conferencing system designed specifically for online learning. It provides real-time sharing of audio, video, presentations, chat, and screen. Instructors can interactively engage students and conduct polls. BigBlueButton is easy to use and integrates with various learning platforms.",
+      "featuresEn": "Audio and Video Conferencing\nScreen Sharing\nPublic and Private Chat\nWhiteboard for Interactive Sessions\nPresentation Sharing\nPolling\nBreakout Rooms",
+      "alternativesEn": "Zoom\nMicrosoft Teams\nGoogle Meet\nJitsi Meet\nWebex",
+      "notesEn": "BigBlueButton is ideal for educational institutions and companies looking for a privacy-friendly web conferencing solution.",
+      "categoryNames": [
+        "Webkonferenzen"
+      ],
+      "targetGroupNames": []
+    },
+    {
+      "name": "Camtasia Studio",
+      "shortDescription": "Camtasia Studio ist eine All-in-One-Lösung für Bildschirmaufnahmen und Videobearbeitung, ideal zur Erstellung professioneller Tutorials, Präsentationen und Online-Kurse.",
+      "description": "Camtasia Studio ist eine leistungsstarke und benutzerfreundliche Software von TechSmith, die es Anwendern ermöglicht, hochwertige Videoinhalte zu erstellen. Sie kombiniert Bildschirmaufzeichnung mit umfangreichen Videobearbeitungsfunktionen in einer intuitiven Oberfläche. Ideal für die Erstellung von Software-Demos, Tutorials, E-Learning-Inhalten, Marketing-Videos und Präsentationen. Die Software bietet eine Vielzahl von Tools zur Nachbearbeitung, wie Schnitt, Übergänge, Animationen, Audiobearbeitung und interaktive Elemente wie Quizze, um ansprechende und informative Videos zu produzieren und zu teilen.",
+      "url": "https://www.techsmith.com/camtasia/",
+      "logo": "/logos/techsmith-com-aHR0cHM6.ico",
+      "types": [
+        "desktop"
+      ],
+      "costs": "Kostenlos",
+      "available": true,
+      "features": "Bildschirmaufnahme und Webcam-Aufzeichnung\nUmfangreiche Videobearbeitung (Schneiden, Übergänge, Effekte, Verhalten)\nAudiobearbeitung und Rauschunterdrückung\nInteraktive Quizze und Hotspots hinzufügen\nIntegration mit PowerPoint\nMedienimport und Export in verschiedene Formate (MP4, GIF)",
+      "alternatives": "Adobe Premiere Pro\nDaVinci Resolve\nOBS Studio\nScreencast-O-Matic\nFilmora",
+      "notes": "Verfügbar für Windows und macOS. Bietet eine kostenlose Testversion, um die Funktionen zu evaluieren. Ideal für Content Creator, Pädagogen und Unternehmen.",
+      "nameEn": "",
+      "shortDescriptionEn": "Camtasia Studio is an all-in-one solution for screen recording and video editing, ideal for creating professional tutorials, presentations, and online courses.",
+      "descriptionEn": "Camtasia Studio by TechSmith is a powerful yet user-friendly software enabling high-quality video content creation. It seamlessly integrates screen recording with extensive video editing features within an intuitive interface. It's perfect for developing software demos, tutorials, e-learning content, marketing videos, and presentations. The software provides numerous post-production tools, including trimming, transitions, animations, audio editing, and interactive elements like quizzes, to produce and share engaging and informative videos efficiently.",
+      "featuresEn": "Screen recording and webcam recording\nExtensive video editing (trimming, transitions, effects, behaviors)\nAudio editing and noise reduction\nAdd interactive quizzes and hotspots\nPowerPoint integration\nMedia import and export to various formats (MP4, GIF)",
+      "alternativesEn": "Adobe Premiere Pro\nDaVinci Resolve\nOBS Studio\nScreencast-O-Matic\nFilmora",
+      "notesEn": "Available for Windows and macOS. Offers a free trial to evaluate features. Ideal for content creators, educators, and businesses.",
+      "categoryNames": [
+        "E-Learning & Medien",
+        "Audio"
+      ],
+      "targetGroupNames": []
+    },
+    {
+      "name": "Cursor IDE",
+      "shortDescription": "Cursor IDE: Ein KI-nativer Code-Editor mit integrierten Funktionen für Code-Generierung, Fehlersuche und Refactoring, um die Entwicklung zu beschleunigen.",
+      "description": "Cursor IDE revolutioniert die Softwareentwicklung durch die tiefe Integration von Künstlicher Intelligenz. Entwickler können KI-Assistenten nutzen, um Code-Blöcke zu generieren, Fehler zu finden, komplexe Funktionen zu erklären oder Refactoring-Vorschläge zu erhalten. Die IDE bietet eine vertraute Benutzeroberfläche, die auf VS Code basiert, und erweitert diese um leistungsstarke KI-Tools. Dies ermöglicht eine deutlich beschleunigte Entwicklung, verbesserte Code-Qualität und eine intuitivere Interaktion mit dem eigenen Code. Cursor unterstützt eine Vielzahl von Programmiersprachen und ist ideal für Teams und Einzelentwickler, die die Vorteile moderner KI in ihren Workflow integrieren möchten.",
+      "url": "https://cursor.sh",
+      "logo": "/logos/cursor-sh-aHR0cHM6.ico",
+      "types": [
+        "desktop"
+      ],
+      "costs": "Kostenlos",
+      "available": false,
+      "features": "KI-gestützte Code-Generierung und Vervollständigung\nKI-Chat für Code-Erklärungen und Problembehebung\nAutomatische Fehlererkennung und Debugging-Hilfe durch KI\nRefactoring-Vorschläge und Code-Optimierung durch KI\nBasierend auf VS Code mit erweiterter Funktionalität\nUnterstützung für eine Vielzahl von Programmiersprachen\nInline-Bearbeitung und schnelles Prototyping",
+      "alternatives": "Visual Studio Code\nJetBrains IntelliJ IDEA\nSublime Text\nGitHub Copilot (als KI-Ergänzung zu anderen IDEs)\nVSCodium",
+      "notes": "Cursor IDE zielt darauf ab, die Produktivität von Entwicklern durch die direkte Integration von KI zu maximieren. Es ist besonders nützlich für Entwickler, die aktiv mit Large Language Models (LLMs) im Rahmen ihrer Coding-Workflows experimentieren oder diese nutzen möchten.",
+      "nameEn": "",
+      "shortDescriptionEn": "Cursor IDE: An AI-native code editor with integrated AI features for code generation, debugging, and refactoring, built to accelerate software development.",
+      "descriptionEn": "Cursor IDE stands out as an AI-first code editor, meticulously crafted to augment developer productivity. By deeply integrating advanced artificial intelligence, Cursor empowers users to leverage AI for tasks like generating code, identifying and fixing bugs, explaining complex code sections, and suggesting refactorings. Built upon the familiar foundation of VS Code, it offers a powerful yet intuitive development experience. This fusion of a robust editor with cutting-edge AI accelerates coding workflows, enhances code quality, and fosters a more seamless interaction with the codebase across various programming languages, making it a valuable tool for modern developers.",
+      "featuresEn": "AI-powered code generation and completion\nAI Chat for code explanations and problem-solving\nAutomatic error detection and AI-assisted debugging\nAI-driven refactoring suggestions and code optimization\nBuilt on VS Code with extended functionality\nSupport for a wide range of programming languages\nInline editing and rapid prototyping",
+      "alternativesEn": "Visual Studio Code\nJetBrains IntelliJ IDEA\nSublime Text\nGitHub Copilot (as an AI add-on to other IDEs)\nVSCodium",
+      "notesEn": "Cursor IDE aims to maximize developer productivity through the direct integration of AI. It is particularly useful for developers who want to actively experiment with or utilize Large Language Models (LLMs) within their coding workflows.",
+      "categoryNames": [
+        "Programmierung & Entwicklung"
+      ],
+      "targetGroupNames": []
+    },
+    {
+      "name": "DaVinci Resolve",
+      "shortDescription": "Professionelle Software für Videobearbeitung, Farbkorrektur, visuelle Effekte und Audio-Postproduktion, integriert in einem leistungsstarken Workflow.",
+      "description": "DaVinci Resolve ist eine umfassende All-in-One-Lösung für die Film- und Fernsehproduktion. Es kombiniert nicht-lineare Videobearbeitung (NLE), Farbkorrektur auf Hollywood-Niveau, visuelle Effekte und Motion Graphics mit der Fusion-Seite sowie professionelle Audio-Postproduktion mit Fairlight. Es bietet eine leistungsstarke und skalierbare Plattform für Einzelkünstler und große Postproduktionsstudios gleichermaßen, mit Funktionen für Schnitt, Grading, Effekte und Audiomischung. Mit seiner intuitiven Benutzeroberfläche und fortschrittlichen Tools ist es der Branchenstandard für viele Kreativschaffende.",
+      "url": "https://www.blackmagicdesign.com/products/davinciresolve/",
+      "logo": "/logos/blackmagicdesign-com-aHR0cHM6.ico",
+      "types": [
+        "desktop"
+      ],
+      "costs": "Kostenlos",
+      "available": true,
+      "features": "Professioneller Videoschnitt (Cut & Edit Seiten)\nFortgeschrittene Farbkorrektur und Grading\nVisuelle Effekte und Motion Graphics (Fusion)\nProfessionelle Audio-Postproduktion (Fairlight)\nUmfassendes Medienmanagement\nKollaborations-Tools für Teams\nNeural Engine KI-Funktionen",
+      "alternatives": "Adobe Premiere Pro\nFinal Cut Pro\nAvid Media Composer\nVegas Pro\nHitFilm",
+      "notes": "Eine funktionsreiche kostenlose Version ist verfügbar, die die meisten Kernfunktionen bietet. Die kostenpflichtige Studio-Version erweitert den Funktionsumfang um HDR, 3D, KI-Tools und erweiterte Kollaboration.",
+      "nameEn": "",
+      "shortDescriptionEn": "Professional software for video editing, color correction, visual effects, and audio post-production, integrated into one powerful workflow.",
+      "descriptionEn": "DaVinci Resolve is a comprehensive all-in-one solution for film and television post-production. It combines non-linear video editing (NLE), Hollywood-grade color correction, visual effects and motion graphics with the Fusion page, and professional audio post-production with Fairlight. It offers a powerful and scalable platform for individual artists and large post-production studios alike, featuring capabilities for cutting, grading, effects, and audio mixing. With its intuitive interface and advanced tools, it is an industry standard for many creatives.",
+      "featuresEn": "Professional Video Editing (Cut & Edit pages)\nAdvanced Color Correction and Grading\nVisual Effects and Motion Graphics (Fusion)\nProfessional Audio Post-Production (Fairlight)\nComprehensive Media Management\nCollaboration Tools for Teams\nNeural Engine AI Features",
+      "alternativesEn": "Adobe Premiere Pro\nFinal Cut Pro\nAvid Media Composer\nVegas Pro\nHitFilm",
+      "notesEn": "A feature-rich free version is available, offering most core functionalities. The paid Studio version extends capabilities with HDR, 3D, AI tools, and advanced collaboration features.",
+      "categoryNames": [
+        "E-Learning & Medien",
+        "Audio"
+      ],
+      "targetGroupNames": []
+    },
+    {
+      "name": "DFNconf",
+      "shortDescription": "DFNconf ist eine sichere Webkonferenz-Plattform für Bildung und Forschung in Deutschland. Sie ermöglicht virtuelle Meetings, Online-Lehre und Zusammenarbeit.",
+      "description": "DFNconf bietet Hochschulen und Forschungseinrichtungen in Deutschland eine zuverlässige Plattform für Online-Besprechungen, Webinare und digitale Lehre. Basierend auf professionellen Lösungen wie Pexip und Adobe Connect, unterstützt es Video-, Audio- und Textkommunikation, Bildschirmfreigabe, interaktive Whiteboards sowie die Aufzeichnung von Sessions. Es ist speziell auf die Bedürfnisse des wissenschaftlichen Betriebs zugeschnitten und legt Wert auf Datenschutz und Datensicherheit.",
+      "url": "https://www.conf.dfn.de/",
+      "logo": "/logos/conf-dfn-de-aHR0cHM6.png",
+      "types": [
+        "web"
+      ],
+      "costs": "Kostenlos",
+      "available": true,
+      "features": "Video- und Audiokonferenzen\nBildschirm- und Anwendungsfreigabe\nChatfunktion\nInteraktives Whiteboard\nSession-Aufzeichnung\nBreakout-Räume\nUmfragen und Abstimmungen\nDatenschutzkonform (DSGVO)",
+      "alternatives": "Zoom\nMicrosoft Teams\nGoogle Meet\nJitsi Meet\nBigBlueButton",
+      "notes": "DFNconf ist ein spezieller Dienst des DFN-Vereins, der primär für den Wissenschafts- und Forschungsbereich in Deutschland entwickelt und betrieben wird. Der Zugang erfolgt in der Regel über die jeweilige Heimatinstitution.",
+      "nameEn": "",
+      "shortDescriptionEn": "DFNconf is a secure web conferencing platform for education and research in Germany. It enables virtual meetings, online teaching, and collaboration.",
+      "descriptionEn": "DFNconf provides universities and research institutions in Germany with a reliable platform for online meetings, webinars, and digital teaching. Based on professional solutions like Pexip and Adobe Connect, it supports video, audio, and text communication, screen sharing, interactive whiteboards, and session recording. It is specifically tailored to the needs of academic operations, emphasizing data protection and security.",
+      "featuresEn": "Video and audio conferencing\nScreen and application sharing\nChat functionality\nInteractive whiteboard\nSession recording\nBreakout rooms\nPolls and surveys\nGDPR compliant",
+      "alternativesEn": "Zoom\nMicrosoft Teams\nGoogle Meet\nJitsi Meet\nBigBlueButton",
+      "notesEn": "DFNconf is a specialized service from the DFN-Verein, primarily developed and operated for the scientific and research sector in Germany. Access is typically provided via the respective home institution.",
+      "categoryNames": [
+        "Webkonferenzen",
+        "Office & Zusammenarbeit",
+        "E-Learning & Medien"
+      ],
+      "targetGroupNames": []
+    },
+    {
+      "name": "Fobizz",
+      "shortDescription": "Fobizz ist eine innovative Plattform für Lehrkräfte, die KI-Tools, digitale Ressourcen und Online-Kurse für einen modernen und zukunftsorientierten Unterricht bietet.",
+      "description": "Fobizz unterstützt Lehrkräfte bei der Integration digitaler Medien und künstlicher Intelligenz in den Schulalltag. Die Plattform bietet Zugang zu einer Vielzahl von KI-Tools wie Text-Generatoren, Bild-Generatoren und einer Chatbot-Funktion, die speziell für den Bildungsbereich angepasst sind. Darüber hinaus umfasst Fobizz umfassende Online-Kurse und Fortbildungen zu Themen wie Digitale Bildung, Medienkompetenz und didaktische Konzepte. Lehrkräfte finden auch eine breite Palette an sofort einsetzbaren Unterrichtsmaterialien und Vorlagen, um ihren Unterricht interaktiver und effizienter zu gestalten, immer unter Berücksichtigung von Datenschutz und pädagogischem Mehrwert.",
+      "url": "https://www.fobizz.com",
+      "logo": "/logos/fobizz-com-aHR0cHM6.png",
+      "types": [
+        "web"
+      ],
+      "costs": "Kostenlos",
+      "available": true,
+      "features": "KI-Tools (Text-, Bild-, Chatbot-Generatoren)\nOnline-Kurse und Fortbildungen für Lehrkräfte\nDigitale Unterrichtsmaterialien und Vorlagen\nDatenschutzkonforme Nutzung\nCommunity-Funktionen und Austauschmöglichkeiten",
+      "alternatives": "Lehrer-Online\nMebis\nSchulportal.de\nChatGPT (als KI-Tool)\nDALL-E (als KI-Bildtool)",
+      "notes": "Fobizz richtet sich speziell an Lehrkräfte und Bildungseinrichtungen, um den Einsatz von KI im Unterricht sicher und pädagogisch sinnvoll zu gestalten. Die Plattform legt großen Wert auf Datenschutz und didaktischen Mehrwert.",
+      "nameEn": "",
+      "shortDescriptionEn": "Fobizz is an innovative platform for teachers, offering AI tools, digital resources, and online courses for modern, future-oriented education.",
+      "descriptionEn": "Fobizz supports educators in integrating digital media and artificial intelligence into daily school life. The platform provides access to a variety of AI tools such as text generators, image generators, and a chatbot function, all specifically adapted for the educational sector. Additionally, Fobizz includes comprehensive online courses and training on topics like digital education, media literacy, and didactic concepts. Teachers also find a wide range of ready-to-use teaching materials and templates to make their lessons more interactive and efficient, always considering data protection and pedagogical value.",
+      "featuresEn": "AI Tools (Text, Image, Chatbot Generators)\nOnline Courses and Professional Development for Teachers\nDigital Teaching Materials and Templates\nData Protection Compliant Usage\nCommunity Features and Exchange Opportunities",
+      "alternativesEn": "Lehrer-Online\nMebis\nSchulportal.de\nChatGPT (as an AI tool)\nDALL-E (as an AI image tool)",
+      "notesEn": "Fobizz specifically targets teachers and educational institutions to ensure the safe and pedagogically sound integration of AI in the classroom. The platform emphasizes data protection and didactic added value.",
+      "categoryNames": [
+        "Office & Zusammenarbeit",
+        "E-Learning & Medien"
+      ],
+      "targetGroupNames": [
+        "Lehrende"
+      ]
+    },
+    {
+      "name": "HISinOne",
+      "shortDescription": "Umfassendes Campus-Management-System für Hochschulen zur Digitalisierung und Verwaltung von Studienprozessen, von Bewerbung über Lehre bis zur Prüfungsverwaltung.",
+      "description": "HISinOne ist ein umfassendes Campus-Management-System, das Hochschulen dabei unterstützt, alle administrativen Prozesse entlang des gesamten Studienzyklus effizient zu digitalisieren. Es deckt Bereiche wie Studienbewerbung, Immatrikulation, Veranstaltungsmanagement, Prüfungsverwaltung und die Bereitstellung von Informationen für Studierende und Lehrende ab. Ziel ist die Optimierung von Arbeitsabläufen und die Verbesserung der Servicequalität für alle Hochschulakteure. Es fördert Transparenz und Effizienz in der Hochschulverwaltung.",
+      "url": "https://www.his.de/hisinone",
+      "logo": "/logos/his-de-aHR0cHM6.png",
+      "types": [
+        "web"
+      ],
+      "costs": "Einmalige Lizenzkosten:  €",
+      "available": true,
+      "features": "Studienbewerbung und Zulassungsmanagement\nStudierendenverwaltung und Immatrikulation\nVeranstaltungs- und Prüfungsmanagement\nSelf-Service-Funktionen für Studierende und Lehrende\nLeistungsverwaltung und Zeugnisgenerierung\nReporting und statistische Auswertungen",
+      "alternatives": "CampusNet\nSAP SLcM (Student Lifecycle Management)\nUNICUM\nAcademyFive",
+      "notes": "HISinOne wird primär von staatlichen und öffentlich-rechtlichen Hochschulen in Deutschland eingesetzt. Die Software wird kontinuierlich an neue gesetzliche und hochschulspezifische Anforderungen angepasst und weiterentwickelt.",
+      "nameEn": "",
+      "shortDescriptionEn": "Comprehensive campus management system for universities, digitizing and managing study processes from application to teaching and exam administration.",
+      "descriptionEn": "HISinOne is a comprehensive campus management system that enables universities to efficiently digitize and manage all administrative processes throughout the student lifecycle. It covers areas such as application management, enrollment, course management, examination administration, and provides information for students and lecturers. The system aims to optimize workflows and enhance the quality of services for all university stakeholders. It promotes transparency and efficiency in university administration.",
+      "featuresEn": "Student application and admission management\nStudent administration and enrollment\nCourse and examination management\nSelf-service functionalities for students and lecturers\nPerformance management and certificate generation\nReporting and statistical analysis",
+      "alternativesEn": "CampusNet\nSAP SLcM (Student Lifecycle Management)\nUNICUM\nEllucian Banner\nWorkday Student",
+      "notesEn": "HISinOne is primarily used by public and state universities in Germany. The software is continuously adapted and further developed to meet new legal and university-specific requirements.",
+      "categoryNames": [
+        "E-Learning & Medien",
+        "Office & Zusammenarbeit",
+        "Datenanalyse & Statistik"
+      ],
+      "targetGroupNames": [
+        "Mitarbeitende",
+        "Lehrende"
+      ]
+    },
+    {
+      "name": "IrfanView",
+      "shortDescription": "IrfanView ist ein schneller, kompakter und innovativer Bildbetrachter mit grundlegenden Bearbeitungsfunktionen und Unterstützung für viele Dateiformate.",
+      "description": "IrfanView ist ein weit verbreiteter Bildbetrachter für Windows, der sich durch seine Geschwindigkeit, Kompaktheit und vielfältige Funktionalität auszeichnet. Er unterstützt eine Vielzahl von Bild-, Audio- und Videoformaten und bietet grundlegende Bildbearbeitungsfunktionen wie Größenänderung, Zuschneiden, Farbkorrektur und das Hinzufügen von Effekten. Dank seiner Plugin-Architektur kann der Funktionsumfang erweitert werden.",
+      "url": "https://www.irfanview.com/",
+      "logo": "/logos/irfanview-com-aHR0cHM6.ico",
+      "types": [
+        "desktop",
+        "web"
+      ],
+      "costs": "Kostenlos",
+      "available": true,
+      "features": "Unterstützung vieler Grafikformate\nDiashow-Funktion\nBatch-Konvertierung\nTWAIN-Unterstützung\nBildbearbeitungsfunktionen (z.B. Zuschneiden, Farbkorrektur)\nPlugin-Unterstützung",
+      "alternatives": "XnView\nFastStone Image Viewer\nImageMagick\nNomacs",
+      "notes": "IrfanView ist für den nicht-kommerziellen Gebrauch kostenlos. Eine Lizenz ist für die kommerzielle Nutzung erforderlich.",
+      "nameEn": "",
+      "shortDescriptionEn": "IrfanView is a fast, compact, and innovative image viewer with basic editing features and support for many file formats.",
+      "descriptionEn": "IrfanView is a popular image viewer for Windows, known for its speed, compactness, and versatile functionality. It supports a wide variety of image, audio, and video formats and offers basic image editing features such as resizing, cropping, color correction, and adding effects. Its functionality can be extended through a plugin architecture.",
+      "featuresEn": "Support for many graphic formats\nSlideshow feature\nBatch conversion\nTWAIN support\nImage editing functions (e.g., cropping, color correction)\nPlugin support",
+      "alternativesEn": "XnView\nFastStone Image Viewer\nImageMagick\nNomacs",
+      "notesEn": "IrfanView is free for non-commercial use. A license is required for commercial use.",
+      "categoryNames": [
+        "E-Learning & Medien"
+      ],
+      "targetGroupNames": [
+        "Lehrende",
+        "Mitarbeitende"
+      ]
+    },
+    {
+      "name": "Libre Office",
+      "shortDescription": "Umfangreiche, kostenlose und quelloffene Office-Suite für Textverarbeitung, Tabellenkalkulation, Präsentationen und mehr. Eine Alternative zu proprietären Suiten.",
+      "description": "LibreOffice ist eine leistungsstarke und umfassende Office-Suite, die kostenlos und quelloffen ist. Sie bietet eine breite Palette von Anwendungen für Büroaufgaben: Writer für Textverarbeitung, Calc für Tabellenkalkulationen, Impress für Präsentationen, Draw für Vektorgrafiken, Base für Datenbanken und Math für Formeln. Kompatibel mit verschiedenen Dateiformaten, einschließlich derer von Microsoft Office. Ideal für Privatanwender und Unternehmen, die eine flexible und kostengünstige Lösung suchen, die auf Windows, macOS und Linux läuft.",
+      "url": "https://www.libreoffice.org/",
+      "logo": "/logos/libreoffice-org-aHR0cHM6.ico",
+      "types": [
+        "desktop"
+      ],
+      "costs": "Kostenlos",
+      "available": true,
+      "features": "Textverarbeitung (Writer)\nTabellenkalkulation (Calc)\nPräsentationen (Impress)\nVektorgrafiken & Flussdiagramme (Draw)\nDatenbankverwaltung (Base)\nFormeleditor (Math)\nUmfassende Dateiformat-Kompatibilität (.docx, .xlsx, .pptx, etc.)\nPlattformübergreifende Verfügbarkeit (Windows, macOS, Linux)\nKostenlos und Open Source",
+      "alternatives": "Microsoft 365 (Office)\nGoogle Workspace (Docs, Sheets, Slides)\nApple iWork (Pages, Numbers, Keynote)\nWPS Office\nOnlyOffice",
+      "notes": "LibreOffice wird von einer engagierten Community und der Document Foundation entwickelt. Es ist eine der bekanntesten und meistgenutzten freien Büro-Suiten weltweit und bietet regelmäßige Updates.",
+      "nameEn": "",
+      "shortDescriptionEn": "A comprehensive, free, and open-source office suite for word processing, spreadsheets, presentations, and more. A powerful alternative to proprietary software.",
+      "descriptionEn": "LibreOffice is a powerful and complete office productivity suite that is free and open-source. It provides a rich set of applications for office tasks: Writer for word processing, Calc for spreadsheets, Impress for presentations, Draw for vector graphics, Base for databases, and Math for formulas. It offers broad compatibility with various document formats, including those from Microsoft Office. Ideal for individuals and businesses seeking a flexible, cost-effective, and fully functional office solution across different operating systems like Windows, macOS, and Linux.",
+      "featuresEn": "Word Processor (Writer)\nSpreadsheet Application (Calc)\nPresentation Software (Impress)\nVector Graphics & Flowcharts (Draw)\nDatabase Management (Base)\nFormula Editor (Math)\nExtensive File Format Compatibility (.docx, .xlsx, .pptx, etc.)\nCross-Platform Availability (Windows, macOS, Linux)\nFree and Open Source",
+      "alternativesEn": "Microsoft 365 (Office)\nGoogle Workspace (Docs, Sheets, Slides)\nApple iWork (Pages, Numbers, Keynote)\nWPS Office\nOnlyOffice",
+      "notesEn": "LibreOffice is developed by a dedicated community and supported by The Document Foundation. It is one of the most widely used free office suites globally, offering regular updates and improvements.",
+      "categoryNames": [
+        "Office & Zusammenarbeit"
+      ],
+      "targetGroupNames": []
+    },
+    {
+      "name": "Lightshot",
+      "shortDescription": "Lightshot ist ein schnelles und benutzerfreundliches Screenshot-Tool für Windows und macOS. Es ermöglicht das einfache Aufnehmen, Bearbeiten und Teilen von Bildschirmfotos.",
+      "description": "Lightshot bietet eine schnelle Möglichkeit, anpassbare Screenshots aufzunehmen. Benutzer können einen beliebigen Bereich auswählen, diesen direkt mit Text, Pfeilen, Formen und Farben annotieren und anschließend lokal speichern, in die Cloud hochladen, um ihn über einen Link zu teilen, oder direkt ausdrucken. Die Software integriert sich nahtlos in den Workflow und macht die visuelle Kommunikation effizient und unkompliziert. Es ist ideal für schnelle Erklärungen und das Teilen von Bildinformationen.",
+      "url": "https://app.prntscr.com/",
+      "logo": "/logos/app-prntscr-com-aHR0cHM6.ico",
+      "types": [
+        "desktop"
+      ],
+      "costs": "Kostenlos",
+      "available": true,
+      "features": "Screenshot beliebiger Bereiche\nBearbeitung direkt nach der Aufnahme (Text, Pfeile, Formen, Farben)\nCloud-Upload und Link-Generierung zum Teilen\nLokales Speichern in verschiedenen Formaten (JPG, PNG, BMP)\nÄhnliche Bilder finden (Google Suche)",
+      "alternatives": "Snipping Tool (Windows)\nGreenshot\nShareX\nSnagit\nKsnip",
+      "notes": "Lightshot ist besonders beliebt für seine Einfachheit und die schnelle Möglichkeit, Screenshots zu teilen. Einige Nutzer kritisieren die potenziellen Datenschutzbedenken bei öffentlichen Uploads, da die Links über die prntscr.com-Plattform öffentlich zugänglich sein können.",
+      "nameEn": "",
+      "shortDescriptionEn": "Lightshot is a fast and user-friendly screenshot tool for Windows and macOS, enabling easy capturing, editing, and sharing of screen captures.",
+      "descriptionEn": "Lightshot provides a quick and intuitive way to capture customizable screenshots. Users can select any screen area, annotate it directly with text, arrows, shapes, and colors, and then save it locally, upload it to the cloud for link-based sharing, or print it directly. Its seamless integration into the workflow makes visual communication highly efficient and straightforward. It is ideal for rapid explanations and sharing visual information.",
+      "featuresEn": "Capture any screen area\nInstant editing after capture (text, arrows, shapes, colors)\nCloud upload and link generation for sharing\nSave locally in various formats (JPG, PNG, BMP)\nFind similar images (Google Search)",
+      "alternativesEn": "Snipping Tool (Windows)\nGreenshot\nShareX\nSnagit\nKsnip",
+      "notesEn": "Lightshot is popular for its simplicity and quick sharing capabilities. Some users raise privacy concerns regarding public cloud uploads, as links shared via prntscr.com can be publicly accessible.",
+      "categoryNames": [
+        "E-Learning & Medien"
+      ],
+      "targetGroupNames": []
+    },
+    {
+      "name": "Linqpad",
+      "shortDescription": "Linqpad ist ein vielseitiges Tool für .NET-Entwickler zum Testen, Abfragen und Erkunden von Daten und Code in C#, F# und VB.NET.",
+      "description": "Linqpad ist ein mächtiges .NET-Tool, das es Entwicklern ermöglicht, C#, F# und VB.NET Code direkt auszuführen und zu testen. Es bietet eine intuitive Benutzeroberfläche zur Abfrage von Datenbanken über LINQ, zum Experimentieren mit Code-Snippets und zum Erstellen kleiner Anwendungen. Linqpad unterstützt das Entity Framework, LINQ to SQL und andere Datenzugriffstechnologien. Es ist ein ideales Werkzeug für schnelles Prototyping, Debugging und Lernen.",
+      "url": "https://www.linqpad.net/",
+      "logo": "/logos/linqpad-net-aHR0cHM6.ico",
+      "types": [
+        "desktop"
+      ],
+      "costs": "Kostenlos",
+      "available": true,
+      "features": "Direkte Codeausführung von C#, F# und VB.NET\nLINQ-Abfragen für Datenbanken\nUnterstützung für Entity Framework und LINQ to SQL\nCode-Vervollständigung und Syntaxhervorhebung\nIntegrierter Debugger\nAutomatische Formattierung von Ergebnissen",
+      "alternatives": "Visual Studio\n.NET Fiddle\nSharpDevelop\nReSharper",
+      "notes": "Linqpad ist in verschiedenen Versionen verfügbar, darunter eine kostenlose Version mit eingeschränkten Funktionen.",
+      "nameEn": "",
+      "shortDescriptionEn": "Linqpad is a versatile .NET scratchpad for testing, querying, and exploring data and code in C#, F#, and VB.NET.",
+      "descriptionEn": "Linqpad is a powerful .NET utility that allows developers to directly execute and test C#, F#, and VB.NET code. It offers an intuitive interface for querying databases via LINQ, experimenting with code snippets, and building small applications. Linqpad supports the Entity Framework, LINQ to SQL, and other data access technologies. It is an ideal tool for rapid prototyping, debugging, and learning.",
+      "featuresEn": "Direct code execution for C#, F#, and VB.NET\nLINQ queries for databases\nSupport for Entity Framework and LINQ to SQL\nCode completion and syntax highlighting\nIntegrated debugger\nAutomatic formatting of results",
+      "alternativesEn": "Visual Studio\n.NET Fiddle\nSharpDevelop\nReSharper",
+      "notesEn": "Linqpad is available in different versions, including a free version with limited features.",
+      "categoryNames": [
+        "Datenanalyse & Statistik",
+        "Programmierung & Entwicklung"
+      ],
+      "targetGroupNames": []
+    },
+    {
+      "name": "Moodle",
+      "shortDescription": "Moodle ist eine Open-Source-Lernplattform (LMS) für Bildungseinrichtungen und Unternehmen zur Erstellung dynamischer Online-Lernräume und -kurse.",
+      "description": "Moodle (Modular Object-Oriented Dynamic Learning Environment) ist eine weltweit führende, kostenlose und quelloffene Lernmanagement-Software. Sie bietet eine robuste Suite von Tools für Lehrende, um interaktive Online-Kurse zu erstellen, Lernmaterialien zu verwalten, Bewertungen durchzuführen und die Zusammenarbeit zwischen Lernenden zu fördern. Von Diskussionsforen über Quizze bis hin zu Aufgabenmodulen unterstützt Moodle eine breite Palette von pädagogischen Ansätzen. Es ist hochgradig anpassbar und skalierbar, geeignet für Universitäten, Schulen und Unternehmen jeder Größe.",
+      "url": "https://moodle.org/",
+      "logo": "/logos/moodle-org-aHR0cHM6.ico",
+      "types": [
+        "web"
+      ],
+      "costs": "Kostenlos",
+      "available": true,
+      "features": "Kursmanagement und -verwaltung\nInteraktive Lernaktivitäten (Quizze, Foren, Wikis)\nBewertungs- und Notenverwaltung\nAnpassbare Kursoberflächen und Themen\nMobile App-Unterstützung\nPlug-in-Architektur zur Erweiterung der Funktionalität",
+      "alternatives": "Blackboard Learn\nCanvas LMS\nOpen edX\nGoogle Classroom\nMicrosoft Teams (mit Bildungsfunktionen)",
+      "notes": "Moodle ist bekannt für seine Flexibilität und die große, aktive Community, die bei der Weiterentwicklung und Unterstützung hilft. Es erfordert jedoch eine eigene Installation und Wartung oder die Nutzung eines Hosting-Anbieters.",
+      "nameEn": "",
+      "shortDescriptionEn": "Moodle is an open-source Learning Management System (LMS) for educational institutions and businesses to create dynamic online learning spaces and courses.",
+      "descriptionEn": "Moodle (Modular Object-Oriented Dynamic Learning Environment) is a leading free and open-source learning management software used worldwide. It provides a robust suite of tools for educators to create interactive online courses, manage learning materials, conduct assessments, and foster collaboration among learners. From discussion forums and quizzes to assignment modules, Moodle supports a wide range of pedagogical approaches. It is highly customizable and scalable, suitable for universities, schools, and businesses of all sizes.",
+      "featuresEn": "Course management and administration\nInteractive learning activities (quizzes, forums, wikis)\nGrading and gradebook management\nCustomizable course interfaces and themes\nMobile app support\nPlug-in architecture for extending functionality",
+      "alternativesEn": "Blackboard Learn\nCanvas LMS\nOpen edX\nGoogle Classroom\nMicrosoft Teams (with education features)",
+      "notesEn": "Moodle is renowned for its flexibility and its large, active community that aids in development and support. However, it requires self-hosting and maintenance or the use of a hosting provider.",
+      "categoryNames": [
+        "E-Learning & Medien"
+      ],
+      "targetGroupNames": []
+    },
+    {
+      "name": "Particify",
+      "shortDescription": "Interaktive Software für Echtzeit-Abstimmungen, Q&A, Brainstorming und Feedback. Ideal für Vorträge, Workshops und Vorlesungen zur Steigerung der Publikumsbeteiligung.",
+      "description": "Particify ist eine vielseitige Open-Source-Plattform, die die Interaktion bei Veranstaltungen, Vorlesungen und Meetings revolutioniert. Sie ermöglicht es Moderatoren, Live-Umfragen zu erstellen, Fragen aus dem Publikum zu sammeln, Brainstormings zu organisieren und sofortiges Feedback zu erhalten. Teilnehmende können über ihre Smartphones oder Laptops anonym mitmachen, was die Engagement-Rate deutlich erhöht und wertvolle Einblicke liefert.",
+      "url": "https://particify.com",
+      "logo": "/logos/particify-com-aHR0cHM6.png",
+      "types": [
+        "web"
+      ],
+      "costs": "Kostenlos",
+      "available": true,
+      "features": "Live-Umfragen und Abstimmungen\nQ&A-Sitzungen mit Moderationsfunktion\nWord-Clouds und Brainstorming-Funktionen\nQuiz- und Bewertungsfragen\nAnonymes Feedback sammeln\nIntegration in Präsentationen",
+      "alternatives": "Slido\nMentimeter\nKahoot!\nZoom Polls\nMURAL",
+      "notes": "Particify ist ein Open-Source-Projekt, das von der Universität Jena entwickelt wurde und eine hohe Datensicherheit bietet.",
+      "nameEn": "",
+      "shortDescriptionEn": "Interactive software for real-time polling, Q&A, brainstorming, and feedback. Ideal for presentations, workshops, and lectures to boost audience engagement.",
+      "descriptionEn": "Particify is a versatile open-source platform that revolutionizes interaction in events, lectures, and meetings. It enables presenters to create live polls, collect audience questions, organize brainstorming sessions, and gather instant feedback. Participants can engage anonymously via their smartphones or laptops, significantly increasing engagement rates and providing valuable insights.",
+      "featuresEn": "Live polls and voting\nQ&A sessions with moderation\nWord clouds and brainstorming features\nQuiz and assessment questions\nCollect anonymous feedback\nIntegration into presentations",
+      "alternativesEn": "Slido\nMentimeter\nKahoot!\nZoom Polls\nMURAL",
+      "notesEn": "Particify is an open-source project developed by the University of Jena, offering high data security.",
+      "categoryNames": [
+        "E-Learning & Medien",
+        "Office & Zusammenarbeit",
+        "Webkonferenzen"
+      ],
+      "targetGroupNames": []
+    },
+    {
+      "name": "Visual Studio Code",
+      "shortDescription": "Visual Studio Code ist ein leistungsstarker, kostenloser und quelloffener Code-Editor von Microsoft für die Entwicklung moderner Web-, Cloud- und Desktop-Anwendungen.",
+      "description": "Visual Studio Code ist ein vielseitiger und hochgradig anpassbarer Code-Editor, der auf Electron basiert. Er bietet umfassende Unterstützung für zahlreiche Programmiersprachen und Technologien durch Syntaxhervorhebung, intelligente Code-Vervollständigung (IntelliSense), integrierte Debugging-Tools und eine nahtlose Git-Versionskontrolle. Seine umfangreiche Bibliothek an Erweiterungen ermöglicht die Anpassung an nahezu jeden Entwicklungs-Workflow, von der Frontend-Webentwicklung über Backend-Dienste bis hin zu Data Science. Dies macht ihn zu einem bevorzugten und flexiblen Tool für Millionen von Entwicklern weltweit, das kontinuierlich weiterentwickelt wird.",
+      "url": "https://code.visualstudio.com/",
+      "logo": "/logos/code-visualstudio-com-aHR0cHM6.ico",
+      "types": [
+        "desktop"
+      ],
+      "costs": "Kostenlos",
+      "available": true,
+      "features": "Intelligente Code-Vervollständigung (IntelliSense)\nIntegriertes Debugging\nEingebettete Git-Steuerung\nUmfassendes Erweiterungs-Ökosystem\nIntegrierter Terminal\nMulti-Plattform-Unterstützung (Windows, macOS, Linux)\nSyntaxhervorhebung für zahlreiche Sprachen",
+      "alternatives": "Sublime Text\nAtom\nJetBrains IDEs (z.B. IntelliJ IDEA)\nVim\nNotepad++",
+      "notes": "Sehr beliebt in der Entwicklergemeinschaft aufgrund seiner Flexibilität und Leistungsfähigkeit. Bietet auch eine Remote-Entwicklungsumgebung.",
+      "nameEn": "",
+      "shortDescriptionEn": "Visual Studio Code is a powerful, free, and open-source code editor from Microsoft for modern web, cloud, and desktop application development.",
+      "descriptionEn": "Visual Studio Code is a versatile and highly customizable code editor built on Electron. It provides extensive support for numerous programming languages and technologies through syntax highlighting, intelligent code completion (IntelliSense), integrated debugging tools, and seamless Git version control. Its vast library of extensions allows for adaptation to almost any development workflow, from frontend web development to backend services and data science. This makes it a preferred and flexible tool for millions of developers worldwide, constantly evolving with new features.",
+      "featuresEn": "Intelligent Code Completion (IntelliSense)\nIntegrated Debugging\nBuilt-in Git Control\nExtensive Extension Ecosystem\nIntegrated Terminal\nCross-platform Support (Windows, macOS, Linux)\nSyntax Highlighting for many languages",
+      "alternativesEn": "Sublime Text\nAtom\nJetBrains IDEs (e.g., IntelliJ IDEA)\nVim\nNotepad++",
+      "notesEn": "Highly popular within the developer community due to its flexibility and performance. Also offers a remote development environment.",
+      "categoryNames": [
+        "Programmierung & Entwicklung"
+      ],
+      "targetGroupNames": []
+    },
+    {
+      "name": "Wooclap",
+      "shortDescription": "Interaktives Audience-Engagement-Tool für Vorträge, Schulungen und Meetings. Ermöglicht Echtzeit-Umfragen, Quizze und Brainstorming für dynamische Lernerfahrung.",
+      "description": "Wooclap ist eine webbasierte Plattform, die Dozenten, Lehrern und Moderatoren ermöglicht, interaktive Elemente in ihre Präsentationen zu integrieren. Es unterstützt verschiedene Fragetypen wie Multiple-Choice, offene Fragen, Wortwolken, Brainstorming und mehr, um das Publikum aktiv einzubeziehen. Die Ergebnisse werden in Echtzeit angezeigt, was sofortiges Feedback und Anpassungen ermöglicht. Ideal für Universitäten, Schulen und Unternehmen, um die Aufmerksamkeit zu steigern und das Verständnis zu fördern, sowohl vor Ort als auch remote.",
+      "url": "https://www.wooclap.com/",
+      "logo": "/logos/wooclap-com-aHR0cHM6.ico",
+      "types": [
+        "web"
+      ],
+      "costs": "Kostenlos",
+      "available": true,
+      "features": "Echtzeit-Umfragen und Abstimmungen\nInteraktive Quizze und Tests\nWortwolken-Generierung\nBrainstorming-Sitzungen\nOffene Fragen und Q&A\nIntegration mit PowerPoint, Google Slides, Keynote\nTeilnehmer-Statistiken und Berichte",
+      "alternatives": "Mentimeter\nSlido\nKahoot!\nPoll Everywhere\nAhaSlides",
+      "notes": "Kostenlose Basisversion verfügbar; erweiterte Funktionen erfordern ein kostenpflichtiges Abonnement. Besonders nützlich für Hybrid- und Online-Veranstaltungen, um die Interaktion zu fördern.",
+      "nameEn": "Wooclap",
+      "shortDescriptionEn": "Wooclap is an interactive platform boosting audience engagement with real-time polls, quizzes, and Q&A during presentations, training, and events.",
+      "descriptionEn": "Wooclap revolutionizes presentations, training sessions, and meetings by enabling speakers to dynamically craft their content and actively involve the audience. The software offers a variety of interactive question types such as multiple choice, open-ended questions, word clouds, brainstorming, and Q&A. Results are instantly and appealingly visualized, stimulating discussions, providing immediate feedback, and enhancing understanding. With easy integration into common presentation tools, Wooclap is ideal for educational institutions, conferences, and businesses aiming to maximize engagement, learning outcomes, and deepen audience interaction.",
+      "featuresEn": "Multiple Choice Questions\nOpen-ended Questions\nWord Clouds\nQ&A Sessions\nBrainstorming Sessions\nSurveys\nMessage Wall\nTimer Function\nIntegration with presentation software (PowerPoint, Google Slides, Keynote)",
+      "alternativesEn": "Mentimeter\nSlido\nKahoot!\nPoll Everywhere\nAhaSlides",
+      "notesEn": "Wooclap is a web-based application and requires no installation. It is scalable for both small groups and large events, offering various subscription plans, including a free one for basic usage.",
+      "categoryNames": [
+        "Webkonferenzen",
+        "Office & Zusammenarbeit",
+        "E-Learning & Medien"
+      ],
+      "targetGroupNames": []
+    },
+    {
+      "name": "Zammad",
+      "shortDescription": "Zammad ist eine quelloffene Helpdesk- und Kundensupport-Software, die die Kommunikation über diverse Kanäle zentralisiert und Teams bei der effizienten Ticketverwaltung unterstützt.",
+      "description": "Zammad ist ein modernes, webbasiertes Open-Source-Helpdesk-System, das darauf ausgelegt ist, die Kundenkommunikation effizient zu verwalten. Es konsolidiert Interaktionen von E-Mail, Chat, Telefon und sozialen Medien in einer einzigen, intuitiven Benutzeroberfläche. Support-Teams können Anfragen bearbeiten, Tickets verfolgen, eine Wissensdatenbank pflegen und Service Level Agreements (SLAs) durchsetzen. Dies führt zu einem besseren Kundenservice, optimierten internen Abläufen und einer erhöhten Kundenzufriedenheit durch verbesserte Kollaboration.",
+      "url": "https://zammad.com",
+      "logo": "/logos/zammad-com-aHR0cHM6.png",
+      "types": [
+        "web"
+      ],
+      "costs": "Kostenlos",
+      "available": true,
+      "features": "Ticketing-System\nOmnichannel-Kommunikation\nWissensdatenbank\nSLA-Management\nReporting & Analyse\nEchtzeit-Kommunikation (Chat)\nIntegrationen (z.B. Social Media)",
+      "alternatives": "Zendesk\nFreshdesk\nosTicket\nKayako\nIntercom",
+      "notes": "Zammad ist quelloffen und kann entweder selbst gehostet oder als Cloud-Service bezogen werden. Es bietet eine hohe Anpassbarkeit an individuelle Unternehmensbedürfnisse.",
+      "nameEn": "",
+      "shortDescriptionEn": "Zammad is an open-source helpdesk and customer support software, centralizing communication across channels to streamline ticketing and enhance team collaboration.",
+      "descriptionEn": "Zammad is a modern, web-based open-source helpdesk system designed to efficiently manage customer communication. It consolidates interactions from various channels like email, chat, phone, and social media into a single, intuitive user interface. Support teams can process inquiries, track tickets, maintain a comprehensive knowledge base, and enforce Service Level Agreements (SLAs). This leads to improved customer service, optimized internal workflows, and increased customer satisfaction through better team collaboration.",
+      "featuresEn": "Ticketing System\nOmnichannel Communication\nKnowledge Base\nSLA Management\nReporting & Analytics\nReal-time Communication (Chat)\nIntegrations (e.g., Social Media)",
+      "alternativesEn": "Zendesk\nFreshdesk\nosTicket\nKayako\nIntercom",
+      "notesEn": "Zammad is open-source and can be self-hosted or obtained as a cloud service. It offers high customizability to individual business needs.",
+      "categoryNames": [
+        "Office & Zusammenarbeit"
+      ],
+      "targetGroupNames": []
+    }
+  ],
+  "categories": [
+    {
+      "name": "Audio",
+      "description": "Tools für die Audio-Bearbeitung",
+      "nameEn": "Audio",
+      "descriptionEn": "Tools for audio editing"
+    },
+    {
+      "name": "Datenanalyse & Statistik",
+      "description": "Software für Datenanalyse und statistische Auswertungen",
+      "nameEn": "Data Analysis & Statistics",
+      "descriptionEn": "Software for data analysis and statistical evaluations"
+    },
+    {
+      "name": "E-Learning & Medien",
+      "description": "Software für E-Learning, Medienproduktion und -bearbeitung",
+      "nameEn": "",
+      "descriptionEn": ""
+    },
+    {
+      "name": "Office & Zusammenarbeit",
+      "description": "Office-Anwendungen und Kollaborationstools",
+      "nameEn": "",
+      "descriptionEn": ""
+    },
+    {
+      "name": "Programmierung & Entwicklung",
+      "description": "Entwicklungsumgebungen und Programmiertools",
+      "nameEn": "",
+      "descriptionEn": ""
+    },
+    {
+      "name": "Webkonferenzen",
+      "description": "Tools für Online-Meetings und Webkonferenzen",
+      "nameEn": "",
+      "descriptionEn": ""
+    }
+  ],
+  "targetGroups": [
+    {
+      "name": "Lehrende",
+      "description": "Für Lehrende",
+      "nameEn": "Teachers",
+      "descriptionEn": "For Teachers"
+    },
+    {
+      "name": "Mitarbeitende",
+      "description": "Für Mitarbeitende",
+      "nameEn": "Employees",
+      "descriptionEn": "For employees"
+    },
+    {
+      "name": "Studierende",
+      "description": "Für Studierende",
+      "nameEn": "Students",
+      "descriptionEn": "For students"
+    }
+  ]
+}
+

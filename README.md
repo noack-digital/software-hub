@@ -18,6 +18,8 @@ Software Hub ist eine Anwendung zur Verwaltung und Präsentation von Software-Re
 - Einbettungsmöglichkeiten für externe Webseiten (iFrame, JavaScript, WordPress, TYPO3, Moodle)
 - Konfigurierbare Footer-Links (Impressum, Datenschutz)
 - Export-Funktion für Software-Daten
+- Immer verfügbarer DEMO-Datensatz mit One-Click-Import
+- DSGVO-Ampel inklusive Inhouse-Hosting-Logo mit Tooltip
 - **Mehrsprachigkeitsunterstützung** (Deutsch und Englisch)
 - **Sprachumschalter** für einfachen Wechsel zwischen den verfügbaren Sprachen
 - **Konfigurierbare UI-Einstellungen** (z.B. Sticky Header ein-/ausschalten)
@@ -83,9 +85,8 @@ Alternativ kann die Anwendung mit Docker entwickelt werden:
 docker-compose up -d
 ```
 
-Die Anwendung ist dann unter folgenden URLs verfügbar:
-- Produktionsversion: [http://localhost:3002](http://localhost:3002)
-- Entwicklungsversion: [http://localhost:3001](http://localhost:3001)
+Die Anwendung ist dann unter folgendem Port verfügbar:
+- Lokale Instanz: [http://localhost:1234](http://localhost:1234)
 
 ## Admin-Bereich
 

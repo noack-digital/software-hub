@@ -1,9 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { UserNav } from '@/components/UserNav';
-import { Package, Search, ExternalLink, Globe, Monitor, Laptop, Smartphone } from 'lucide-react';
+import { Package, Search, ExternalLink, Globe, Monitor, Laptop, Smartphone, Info } from 'lucide-react';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CategoryFilter } from '@/components/CategoryFilter';
@@ -15,7 +18,6 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -31,6 +33,8 @@ interface Software {
   types: string[];
   costs: string;
   available: boolean;
+  dataPrivacyStatus?: 'DSGVO_COMPLIANT' | 'EU_HOSTED' | 'NON_EU';
+  inhouseHosted?: boolean;
   // Englische Übersetzungen
   nameEn?: string | null;
   shortDescriptionEn?: string | null;
@@ -91,17 +95,29 @@ const cardVariants = {
   }
 };
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.05
-    }
-  }
+const privacyStatusMeta: Record<
+  NonNullable<Software['dataPrivacyStatus']>,
+  { label: string; tooltip: string; colorClass: string }
+> = {
+  DSGVO_COMPLIANT: {
+    label: 'DSGVO-konform',
+    tooltip: 'Diese Software wird DSGVO-konform betrieben.',
+    colorClass: 'bg-green-500',
+  },
+  EU_HOSTED: {
+    label: 'Hosting in der EU',
+    tooltip: 'Server befinden sich in der EU – weitere Prüfung empfohlen.',
+    colorClass: 'bg-yellow-500',
+  },
+  NON_EU: {
+    label: 'Server außerhalb der EU',
+    tooltip: 'Serverstandort außerhalb der EU – prüfen Sie die Rechtsgrundlage.',
+    colorClass: 'bg-red-500',
+  },
 };
 
 export default function HomePage() {
+  const { data: session } = useSession();
   const { t, language } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -111,7 +127,11 @@ export default function HomePage() {
   const [badgeBackgroundColor, setBadgeBackgroundColor] = useState('#10b981');
   const [badgeTextColor, setBadgeTextColor] = useState('#ffffff');
   const [stickyHeader, setStickyHeader] = useState(true);
+  const defaultInhouseTooltip = 'Diese Software wird inhouse gehostet.';
   const [showLogos, setShowLogos] = useState(true);
+  const [backendShowPrivacyIndicator, setBackendShowPrivacyIndicator] = useState(true);
+  const [inhouseLogoUrl, setInhouseLogoUrl] = useState<string | null>(null);
+  const [inhouseLogoTooltip, setInhouseLogoTooltip] = useState<string>(defaultInhouseTooltip);
 
   // URL-Parameter beim Laden verarbeiten
   useEffect(() => {
@@ -191,6 +211,31 @@ export default function HomePage() {
             setShowLogos(data.value.toLowerCase() === 'true');
           }
         }
+
+        const showPrivacyIndicatorResponse = await fetch('/api/settings?key=showPrivacyIndicator');
+        if (showPrivacyIndicatorResponse.ok) {
+          const data = await showPrivacyIndicatorResponse.json();
+          if (data && data.value) {
+            const enabled = data.value.toLowerCase() === 'true';
+            setBackendShowPrivacyIndicator(enabled);
+          }
+        }
+
+        const inhouseLogoResponse = await fetch('/api/settings?key=inhouseLogoUrl');
+        if (inhouseLogoResponse.ok) {
+          const data = await inhouseLogoResponse.json();
+          if (data && typeof data.value === 'string') {
+            setInhouseLogoUrl(data.value.trim() || null);
+          }
+        }
+
+        const inhouseTooltipResponse = await fetch('/api/settings?key=inhouseLogoTooltip');
+        if (inhouseTooltipResponse.ok) {
+          const data = await inhouseTooltipResponse.json();
+          if (data && typeof data.value === 'string') {
+            setInhouseLogoTooltip(data.value.trim() || defaultInhouseTooltip);
+          }
+        }
       } catch (error) {
         console.error('Fehler beim Laden der Einstellungen:', error);
       }
@@ -229,12 +274,25 @@ export default function HomePage() {
     console.error('Homepage: Query Error:', error);
   }
 
+  const { data: demoCheck } = useQuery({
+    queryKey: ['demo-check'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/demo/check');
+      if (!response.ok) {
+        return null;
+      }
+      return response.json();
+    },
+    enabled: session?.user?.role === 'ADMIN',
+    refetchInterval: session?.user?.role === 'ADMIN' ? 10000 : false,
+  });
+
   // Filter Software basierend auf Suche und Kategorie
   const filteredSoftware = softwareData.filter(software => {
     // Je nach Sprache in den richtigen Feldern suchen
     const searchName = language === 'en' && software.nameEn ? software.nameEn : software.name;
     const searchShortDesc = language === 'en' && software.shortDescriptionEn ? software.shortDescriptionEn : software.shortDescription;
-    
+
     const matchesSearch = searchName.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          searchShortDesc.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === null || software.categories.some(category => category.id === selectedCategory);
@@ -321,6 +379,35 @@ export default function HomePage() {
           </div>
         </div>
 
+        {session?.user?.role === 'ADMIN' && (demoCheck?.counts?.software || 0) === 0 && (
+          <div className="mb-8 rounded-lg border border-dashed border-primary/30 bg-primary/5 p-4">
+            <div className="flex items-start gap-3">
+              <Info className="h-5 w-5 text-primary mt-0.5" />
+              <div className="flex-1 text-sm text-gray-800">
+                <p className="font-medium">
+                  Noch keine Software-Einträge vorhanden
+                </p>
+                <p className="mt-1">
+                  Laden Sie den DEMO-Datensatz (17 Software-Einträge, 6 Kategorien, 3 Zielgruppen) oder
+                  legen Sie eigene Inhalte im Admin-Bereich an, um den Software-Hub zu demonstrieren.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Button asChild size="sm">
+                    <Link href="/admin/import-export">
+                      DEMO-Daten laden
+                    </Link>
+                  </Button>
+                  <Button asChild size="sm" variant="outline">
+                    <Link href="/admin/software/new">
+                      Eigene Software anlegen
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Software Grid */}
         {isLoading ? (
           <div className="text-center py-8">{t('common.loading')}</div>
@@ -332,16 +419,63 @@ export default function HomePage() {
             transition={{ duration: 0.2 }}
           >
             <AnimatePresence mode="wait">
-              {filteredSoftware.map((software) => (
-                <motion.div
-                  key={software.id}
-                  variants={cardVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  layout
-                >
+              {filteredSoftware.map((software) => {
+                const showInhouseLogo =
+                  backendShowPrivacyIndicator &&
+                  software.dataPrivacyStatus === 'DSGVO_COMPLIANT' &&
+                  software.inhouseHosted &&
+                  !!inhouseLogoUrl;
+
+                return (
+                  <motion.div
+                    key={software.id}
+                    variants={cardVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    layout
+                  >
                   <Card className="overflow-hidden flex flex-col h-full relative">
+                    {(backendShowPrivacyIndicator && software.dataPrivacyStatus) ||
+                    (showBadges && software.available) ? (
+                      <div className="absolute top-2 right-2 flex flex-col items-end gap-2 z-10">
+                        {backendShowPrivacyIndicator &&
+                          software.dataPrivacyStatus &&
+                          privacyStatusMeta[software.dataPrivacyStatus] && (
+                          <div
+                            className="flex items-center gap-2 rounded-full bg-white/90 px-2 py-1 text-xs font-medium text-gray-700 shadow"
+                            title={privacyStatusMeta[software.dataPrivacyStatus].tooltip}
+                          >
+                            {showInhouseLogo && inhouseLogoUrl && (
+                              <img
+                                src={inhouseLogoUrl}
+                                alt="Inhouse Logo"
+                                className="h-5 w-5 object-contain rounded border border-gray-200 bg-white"
+                                title={inhouseLogoTooltip || 'Inhouse gehostet'}
+                                aria-label={inhouseLogoTooltip || 'Inhouse gehostet'}
+                              />
+                            )}
+                            <div className="flex items-center gap-1">
+                              <span
+                                className={`inline-block h-2.5 w-2.5 rounded-full ${privacyStatusMeta[software.dataPrivacyStatus].colorClass}`}
+                              />
+                              <span>{privacyStatusMeta[software.dataPrivacyStatus].label}</span>
+                            </div>
+                          </div>
+                        )}
+                        {showBadges && software.available && (
+                          <div 
+                            className="py-1 px-3 text-sm font-semibold shadow-md rounded bg-white"
+                            style={{ 
+                              backgroundColor: badgeBackgroundColor,
+                              color: badgeTextColor
+                            }}
+                          >
+                            {badgeText}
+                          </div>
+                        )}
+                      </div>
+                    ) : null}
                     <CardContent className="p-6 flex-1 flex flex-col">
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-2 flex-1">
@@ -373,19 +507,6 @@ export default function HomePage() {
                           ))}
                         </div>
                       </div>
-                      {showBadges && software.available && (
-                        <div className="absolute top-0 right-0">
-                          <div 
-                            className="py-1 px-3 text-sm font-semibold shadow-md"
-                            style={{ 
-                              backgroundColor: badgeBackgroundColor,
-                              color: badgeTextColor
-                            }}
-                          >
-                            {badgeText}
-                          </div>
-                        </div>
-                      )}
                       <p className="text-sm text-gray-600 mb-4 flex-grow">{getLocalizedText(software, 'shortDescription')}</p>
                       <div className="flex flex-wrap gap-2 mb-4">
                         {software.categories.map((category, index) => (
@@ -474,7 +595,8 @@ export default function HomePage() {
                     </CardFooter>
                   </Card>
                 </motion.div>
-              ))}
+                );
+              })}
             </AnimatePresence>
           </motion.div>
         )}

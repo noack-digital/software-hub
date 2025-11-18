@@ -25,6 +25,27 @@ const softwareTypes = [
   { id: 'mobile', name: 'Mobile' },
 ];
 
+const dataPrivacyOptions = [
+  {
+    id: 'DSGVO_COMPLIANT',
+    label: 'Grün – DSGVO-konform',
+    description: 'Serverstandort und Verarbeitung vollständig DSGVO-konform (z. B. AV-Vertrag vorhanden).',
+    colorClass: 'bg-green-500',
+  },
+  {
+    id: 'EU_HOSTED',
+    label: 'Gelb – In der EU gehostet',
+    description: 'Serverstandort in der EU, aber weitere Prüfungen/Verträge notwendig.',
+    colorClass: 'bg-yellow-500',
+  },
+  {
+    id: 'NON_EU',
+    label: 'Rot – Server außerhalb der EU',
+    description: 'Serverstandort außerhalb der EU – besondere Rechtsgrundlage erforderlich.',
+    colorClass: 'bg-red-500',
+  },
+];
+
 // Zielgruppen werden aus der API geladen
 
 // Kostenmodelle
@@ -54,6 +75,8 @@ export default function NewSoftwarePage() {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedTargetGroups, setSelectedTargetGroups] = useState<string[]>([]);
+  const [inhouseHosted, setInhouseHosted] = useState(false);
+  const [dataPrivacyStatus, setDataPrivacyStatus] = useState('EU_HOSTED');
 
   // Prüfe ob API-Key vorhanden ist
   useEffect(() => {
@@ -351,6 +374,8 @@ export default function NewSoftwarePage() {
           alternativesEn: formData.get('alternativesEn'),
           notesEn: formData.get('notesEn'),
           available: true,
+          dataPrivacyStatus,
+          inhouseHosted,
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -476,6 +501,37 @@ export default function NewSoftwarePage() {
               <p className="text-xs text-gray-500">
                 Geben Sie die Website-URL ein und klicken Sie auf den Button, um das Favicon automatisch herunterzuladen.
               </p>
+            </div>
+
+            <div className="grid gap-2">
+              <Label>DSGVO-Konformität</Label>
+              <div className="flex flex-col gap-2">
+                <select
+                  value={dataPrivacyStatus}
+                  onChange={(e) => setDataPrivacyStatus(e.target.value)}
+                  className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                >
+                  {dataPrivacyOptions.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <span className={`inline-block h-3 w-3 rounded-full ${dataPrivacyOptions.find(opt => opt.id === dataPrivacyStatus)?.colorClass || 'bg-gray-300'}`} />
+                  <span>{dataPrivacyOptions.find(opt => opt.id === dataPrivacyStatus)?.description}</span>
+                </div>
+                  <div className="flex items-center gap-2 pt-2">
+                    <Checkbox
+                      id="inhouseHosted"
+                      checked={inhouseHosted}
+                      onCheckedChange={(checked) => setInhouseHosted(Boolean(checked))}
+                    />
+                    <Label htmlFor="inhouseHosted" className="font-normal">
+                      Inhouse gehostet
+                    </Label>
+                  </div>
+              </div>
             </div>
 
             <div className="grid gap-2">

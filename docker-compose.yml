@@ -4,12 +4,12 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3002:3000"
+      - "1234:3000"
     environment:
       - DATABASE_URL=postgresql://softhub:softhub123@db:5432/software_hub
       - NODE_ENV=development
-      # NEXTAUTH_URL wird dynamisch aus der Request-URL bestimmt, wenn nicht gesetzt
-      # - NEXTAUTH_URL=https://software-hub.noack.digital
+      - NEXTAUTH_URL=http://localhost:1234
+      - NEXT_PUBLIC_BASE_URL=http://localhost:1234
       - NEXTAUTH_SECRET=mein_geheimer_nextauth_schluessel
     depends_on:
       db:

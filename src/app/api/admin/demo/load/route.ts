@@ -2,6 +2,18 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import demoDataset from '@/data/demo-dataset.json';
+import { DataPrivacyStatus } from '@prisma/client';
+
+const normalizePrivacyStatus = (value?: string | null): DataPrivacyStatus => {
+  if (
+    value &&
+    Object.values(DataPrivacyStatus).includes(value as DataPrivacyStatus)
+  ) {
+    return value as DataPrivacyStatus;
+  }
+  return DataPrivacyStatus.EU_HOSTED;
+};
 
 // POST /api/admin/demo/load - Lade DEMO-Datensatz
 export async function POST(request: Request) {
@@ -12,8 +24,12 @@ export async function POST(request: Request) {
   }
 
   try {
-    const body = await request.json();
-    const { software, categories, targetGroups } = body;
+    const bodyText = await request.text();
+    const body = bodyText ? JSON.parse(bodyText) : null;
+    const dataset = body && body.software && body.categories && body.targetGroups
+      ? body
+      : demoDataset;
+    const { software, categories, targetGroups } = dataset;
 
     if (!software || !Array.isArray(software)) {
       return NextResponse.json(
@@ -98,6 +114,8 @@ export async function POST(request: Request) {
             types: item.types || [],
             costs: item.costs || '',
             available: item.available !== undefined ? item.available : true,
+            dataPrivacyStatus: normalizePrivacyStatus(item.dataPrivacyStatus),
+            inhouseHosted: item.inhouseHosted ?? false,
             features: item.features || '',
             alternatives: item.alternatives || '',
             notes: item.notes || '',

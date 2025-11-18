@@ -148,6 +148,8 @@ export async function GET(request: NextRequest) {
       types: item.types,
       costs: item.costs,
       available: item.available,
+    dataPrivacyStatus: item.dataPrivacyStatus,
+    inhouseHosted: item.inhouseHosted,
       // Deutsche Felder
       features: item.features,
       alternatives: item.alternatives,
@@ -207,6 +209,8 @@ export async function POST(request: NextRequest) {
         alternatives: data.alternatives || '',
         notes: data.notes || '',
         available: data.available || false,
+        dataPrivacyStatus: data.dataPrivacyStatus || 'EU_HOSTED',
+        inhouseHosted: data.inhouseHosted ?? false,
         // Englische Felder
         nameEn: data.nameEn || '',
         shortDescriptionEn: data.shortDescriptionEn || '',
@@ -258,6 +262,8 @@ export async function POST(request: NextRequest) {
       types: newSoftware.types,
       costs: newSoftware.costs,
       available: newSoftware.available,
+      dataPrivacyStatus: newSoftware.dataPrivacyStatus,
+      inhouseHosted: newSoftware.inhouseHosted,
       categories: newSoftware.categories.map(c => ({
         id: c.category.id,
         name: c.category.name
@@ -330,6 +336,8 @@ export async function PATCH(request: NextRequest) {
         alternatives: data.alternatives || '',
         notes: data.notes || '',
         available: data.available || false,
+        dataPrivacyStatus: data.dataPrivacyStatus || 'EU_HOSTED',
+        inhouseHosted: data.inhouseHosted ?? false,
         // Englische Felder
         nameEn: data.nameEn || '',
         shortDescriptionEn: data.shortDescriptionEn || '',
@@ -391,6 +399,8 @@ export async function PATCH(request: NextRequest) {
       types: updatedSoftware.types,
       costs: updatedSoftware.costs,
       available: updatedSoftware.available,
+      dataPrivacyStatus: updatedSoftware.dataPrivacyStatus,
+      inhouseHosted: updatedSoftware.inhouseHosted,
       categories: updatedSoftware.categories.map(c => ({
         id: c.category.id,
         name: c.category.name

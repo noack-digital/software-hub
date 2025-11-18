@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Software } from '@prisma/client';
 import { Search, Pencil, Trash2, Globe, Monitor, CheckCircle2, XCircle, Sparkles, Download, Upload, X, ImageIcon } from 'lucide-react';
@@ -37,6 +37,8 @@ interface SoftwareWithCategories {
   targetGroups?: string[];
   costs: string;
   available: boolean;
+  dataPrivacyStatus?: string;
+  inhouseHosted?: boolean;
   // Englische Übersetzungen
   nameEn?: string | null;
   shortDescriptionEn?: string | null;
@@ -55,6 +57,27 @@ const softwareTypes = [
   { id: 'web', name: 'Web' },
   { id: 'desktop', name: 'Desktop' },
   { id: 'mobile', name: 'Mobile' },
+];
+
+const dataPrivacyOptions = [
+  {
+    id: 'DSGVO_COMPLIANT',
+    label: 'Grün – DSGVO-konform',
+    description: 'Serverstandort und Verarbeitung vollständig DSGVO-konform (z. B. AV-Vertrag vorhanden).',
+    colorClass: 'bg-green-500',
+  },
+  {
+    id: 'EU_HOSTED',
+    label: 'Gelb – In der EU gehostet',
+    description: 'Serverstandort in der EU, aber weitere Prüfung/Vertrag notwendig.',
+    colorClass: 'bg-yellow-500',
+  },
+  {
+    id: 'NON_EU',
+    label: 'Rot – Server außerhalb der EU',
+    description: 'Serverstandort außerhalb der EU – Nutzung nur mit besonderer Rechtsgrundlage empfohlen.',
+    colorClass: 'bg-red-500',
+  },
 ];
 
 // Zielgruppen werden aus der API geladen
@@ -87,12 +110,19 @@ export function AdminSoftwareList() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedTargetGroups, setSelectedTargetGroups] = useState<string[]>([]);
   const [showLogos, setShowLogos] = useState(true);
+  const [sortOption, setSortOption] = useState<'name-asc' | 'name-desc' | 'missing-logo' | 'missing-translation'>('name-asc');
+  const [filterMissingLogo, setFilterMissingLogo] = useState(false);
+  const [filterMissingTranslation, setFilterMissingTranslation] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string>('');
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [isFetchingFavicon, setIsFetchingFavicon] = useState(false);
   const [hasValidApiKey, setHasValidApiKey] = useState(false);
   const [isAILoading, setIsAILoading] = useState(false);
   const [fetchingFavicons, setFetchingFavicons] = useState<Set<string>>(new Set());
+  const [failedLogos, setFailedLogos] = useState<Set<string>>(new Set());
+  const [translationRequests, setTranslationRequests] = useState<Set<string>>(new Set());
+  const [inhouseHosted, setInhouseHosted] = useState(false);
+  const [dataPrivacyStatus, setDataPrivacyStatus] = useState('EU_HOSTED');
   const queryClient = useQueryClient();
 
   // Lade showLogos Einstellung
@@ -169,6 +199,59 @@ export function AdminSoftwareList() {
       return response.json();
     },
   });
+
+  const hasTranslation = (item: SoftwareWithCategories) => {
+    return Boolean(
+      (item.nameEn && item.nameEn.trim().length > 0) ||
+        (item.shortDescriptionEn && item.shortDescriptionEn.trim().length > 0) ||
+        (item.descriptionEn && item.descriptionEn.trim().length > 0)
+    );
+  };
+
+  const isLogoMissing = (item: SoftwareWithCategories) => {
+    return !item.logo || failedLogos.has(item.id);
+  };
+
+  const processedSoftware = useMemo(() => {
+    let result = [...software];
+
+    if (filterMissingLogo) {
+      result = result.filter(isLogoMissing);
+    }
+
+    if (filterMissingTranslation) {
+      result = result.filter(item => !hasTranslation(item));
+    }
+
+    const compareByName = (a: SoftwareWithCategories, b: SoftwareWithCategories) =>
+      a.name.localeCompare(b.name, 'de', { sensitivity: 'base' });
+
+    switch (sortOption) {
+      case 'name-desc':
+        result.sort((a, b) => compareByName(b, a));
+        break;
+      case 'missing-logo':
+        result.sort((a, b) => {
+          const aMissing = isLogoMissing(a) ? 0 : 1;
+          const bMissing = isLogoMissing(b) ? 0 : 1;
+          return aMissing - bMissing || compareByName(a, b);
+        });
+        break;
+      case 'missing-translation':
+        result.sort((a, b) => {
+          const aMissing = hasTranslation(a) ? 1 : 0;
+          const bMissing = hasTranslation(b) ? 1 : 0;
+          return aMissing - bMissing || compareByName(a, b);
+        });
+        break;
+      default:
+        result.sort(compareByName);
+    }
+
+    return result;
+  }, [software, filterMissingLogo, filterMissingTranslation, sortOption, failedLogos]);
+
+  const displayedSoftware = processedSoftware;
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -333,6 +416,8 @@ export function AdminSoftwareList() {
     // Setze Logo-URL beim Öffnen des Dialogs
     const initialLogoUrl = software.logo || '';
     setLogoUrl(initialLogoUrl);
+    setDataPrivacyStatus(software.dataPrivacyStatus || 'EU_HOSTED');
+    setInhouseHosted(Boolean(software.inhouseHosted));
     
     // Setze auch das versteckte Input-Feld nach kurzer Verzögerung (nachdem Dialog gerendert wurde)
     setTimeout(() => {
@@ -447,6 +532,8 @@ export function AdminSoftwareList() {
         targetGroups: selectedTargetGroups, // IDs der ausgewählten Zielgruppen
         costs: costsInfo,
         available: formData.get('available') === 'true',
+        dataPrivacyStatus,
+        inhouseHosted,
         // Englische Felder
         nameEn: formData.get('nameEn') as string || null,
         shortDescriptionEn: formData.get('shortDescriptionEn') as string || null,
@@ -471,11 +558,13 @@ export function AdminSoftwareList() {
   };
 
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newSet = new Set(selectedSoftware);
     if (event.target.checked) {
-      setSelectedSoftware(new Set(software.map(item => item.id)));
+      displayedSoftware.forEach(item => newSet.add(item.id));
     } else {
-      setSelectedSoftware(new Set());
+      displayedSoftware.forEach(item => newSet.delete(item.id));
     }
+    setSelectedSoftware(newSet);
   };
 
   const handleSelectSoftware = (id: string) => {
@@ -497,25 +586,261 @@ export function AdminSoftwareList() {
     deleteSelectedMutation.mutate(selectedIds);
   };
 
+  const handleFetchIcon = async (item: SoftwareWithCategories, options?: { silent?: boolean }) => {
+    if (fetchingFavicons.has(item.id)) return false;
+
+    setFetchingFavicons(prev => new Set(prev).add(item.id));
+
+    try {
+      let websiteUrl = item.url?.trim() || '';
+
+      if (!websiteUrl) {
+        if (!hasValidApiKey) {
+          if (!options?.silent) {
+            toast.error('Keine URL vorhanden und kein API-Key konfiguriert. Bitte URL manuell hinzufügen.');
+          }
+          return false;
+        }
+
+        const aiResponse = await fetch('/api/ai/fill-software', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ softwareName: item.name }),
+        });
+
+        if (!aiResponse.ok) {
+          throw new Error('Fehler bei der KI-Anfrage');
+        }
+
+        const aiData = await aiResponse.json();
+        websiteUrl = aiData.url || '';
+
+        if (!websiteUrl) {
+          if (!options?.silent) {
+            toast.error('KI konnte keine URL für diese Software finden.');
+          }
+          return false;
+        }
+      }
+
+      const faviconResponse = await fetch('/api/software/fetch-favicon', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ websiteUrl }),
+      });
+
+      if (!faviconResponse.ok) {
+        const error = await faviconResponse.json();
+        throw new Error(error.error || 'Fehler beim Herunterladen des Favicons');
+      }
+
+      const faviconData = await faviconResponse.json();
+
+      const updateData: any = { logo: faviconData.logoUrl };
+      if (websiteUrl !== item.url) {
+        updateData.url = websiteUrl;
+      }
+
+      const updateResponse = await fetch(`/api/software/${item.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateData),
+      });
+
+      if (!updateResponse.ok) {
+        throw new Error('Fehler beim Aktualisieren des Logos');
+      }
+
+      setFailedLogos(prev => {
+        const next = new Set(prev);
+        next.delete(item.id);
+        return next;
+      });
+
+      queryClient.invalidateQueries({ queryKey: ['software'] });
+      if (!options?.silent) {
+        toast.success(`Logo für ${item.name} aktualisiert`);
+      }
+      return true;
+    } catch (error: any) {
+      if (!options?.silent) {
+        toast.error(error.message || 'Fehler beim Aktualisieren des Logos');
+      }
+      return false;
+    } finally {
+      setFetchingFavicons(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(item.id);
+        return newSet;
+      });
+    }
+  };
+
+  const handleBatchIconFetch = async () => {
+    const items = software.filter(item => selectedSoftware.has(item.id));
+    if (items.length === 0) {
+      toast.error('Bitte wählen Sie mindestens einen Eintrag aus.');
+      return;
+    }
+
+    let successCount = 0;
+    for (const item of items) {
+      const result = await handleFetchIcon(item, { silent: true });
+      if (result) successCount += 1;
+    }
+
+    if (successCount > 0) {
+      toast.success(`Icons für ${successCount} Einträge aktualisiert`);
+    } else {
+      toast.error('Keine Icons konnten aktualisiert werden.');
+    }
+  };
+
+  const handleGenerateTranslation = async (item: SoftwareWithCategories, options?: { silent?: boolean }) => {
+    if (!hasValidApiKey) {
+      if (!options?.silent) {
+        toast.error('Kein KI-API-Key konfiguriert. Bitte in den Einstellungen hinterlegen.');
+      }
+      return false;
+    }
+
+    if (translationRequests.has(item.id)) {
+      return false;
+    }
+
+    setTranslationRequests(prev => new Set(prev).add(item.id));
+
+    try {
+      const response = await fetch('/api/ai/fill-software', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ softwareName: item.name }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.error || 'Fehler bei der KI-Anfrage');
+      }
+
+      const data = await response.json();
+
+      const translationPayload: Record<string, string> = {};
+      const fields: Array<keyof typeof data> = [
+        'nameEn',
+        'shortDescriptionEn',
+        'descriptionEn',
+        'featuresEn',
+        'alternativesEn',
+        'notesEn',
+      ];
+
+      let hasNewContent = false;
+
+      fields.forEach(field => {
+        const value = data[field];
+        if (typeof value === 'string' && value.trim().length > 0) {
+          translationPayload[field] = value;
+          hasNewContent = true;
+        }
+      });
+
+      if (!hasNewContent) {
+        if (!options?.silent) {
+          toast.error('KI konnte keine Übersetzungsdaten liefern.');
+        }
+        return false;
+      }
+
+      const updateResponse = await fetch(`/api/software/${item.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(translationPayload),
+      });
+
+      if (!updateResponse.ok) {
+        throw new Error('Übersetzung konnte nicht gespeichert werden');
+      }
+
+      queryClient.invalidateQueries({ queryKey: ['software'] });
+      if (!options?.silent) {
+        toast.success(`Übersetzung für ${item.name} erstellt`);
+      }
+      return true;
+    } catch (error: any) {
+      if (!options?.silent) {
+        toast.error(error.message || 'Fehler beim Generieren der Übersetzung');
+      }
+      return false;
+    } finally {
+      setTranslationRequests(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(item.id);
+        return newSet;
+      });
+    }
+  };
+
+  const handleBatchTranslations = async () => {
+    if (!hasValidApiKey) {
+      toast.error('Kein KI-API-Key konfiguriert.');
+      return;
+    }
+
+    const items = software.filter(item => selectedSoftware.has(item.id));
+    if (items.length === 0) {
+      toast.error('Bitte wählen Sie mindestens einen Eintrag aus.');
+      return;
+    }
+
+    let successCount = 0;
+    for (const item of items) {
+      if (hasTranslation(item)) continue;
+      const result = await handleGenerateTranslation(item, { silent: true });
+      if (result) successCount += 1;
+    }
+
+    if (successCount > 0) {
+      toast.success(`Übersetzungen für ${successCount} Einträge erstellt`);
+    } else {
+      toast.error('Es konnten keine Übersetzungen erstellt werden.');
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-900">Software-Liste</h2>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {selectedSoftware.size > 0 && (
-            <Button 
-              variant="destructive"
-              onClick={() => setIsDeleteSelectedDialogOpen(true)}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              Ausgewählte löschen ({selectedSoftware.size})
-            </Button>
+            <>
+              <Button 
+                variant="outline"
+                onClick={handleBatchIconFetch}
+                disabled={selectedSoftware.size === 0}
+              >
+                Ausgewählte Icon holen
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={handleBatchTranslations}
+                disabled={selectedSoftware.size === 0 || !hasValidApiKey}
+              >
+                Ausgewählte Übersetzungen generieren
+              </Button>
+              <Button 
+                variant="destructive"
+                onClick={() => setIsDeleteSelectedDialogOpen(true)}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                Ausgewählte löschen ({selectedSoftware.size})
+              </Button>
+            </>
           )}
         </div>
       </div>
 
-      <div className="flex justify-between items-center mb-4">
-        <div className="relative w-72">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4">
+        <div className="relative w-full md:w-72">
           <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
@@ -524,6 +849,40 @@ export function AdminSoftwareList() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
+        </div>
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <label htmlFor="sortOption" className="font-medium">Sortierung</label>
+            <select
+              id="sortOption"
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value as typeof sortOption)}
+              className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+            >
+              <option value="name-asc">Name A-Z</option>
+              <option value="name-desc">Name Z-A</option>
+              <option value="missing-logo">Ohne Icon zuerst</option>
+              <option value="missing-translation">Ohne Übersetzung zuerst</option>
+            </select>
+          </div>
+          <label className="inline-flex items-center gap-2 text-sm text-gray-600">
+            <input
+              type="checkbox"
+              checked={filterMissingLogo}
+              onChange={(e) => setFilterMissingLogo(e.target.checked)}
+              className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+            />
+            Nur ohne Icon
+          </label>
+          <label className="inline-flex items-center gap-2 text-sm text-gray-600">
+            <input
+              type="checkbox"
+              checked={filterMissingTranslation}
+              onChange={(e) => setFilterMissingTranslation(e.target.checked)}
+              className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+            />
+            Nur ohne Übersetzung
+          </label>
         </div>
       </div>
 
@@ -538,7 +897,10 @@ export function AdminSoftwareList() {
                   <input
                     type="checkbox"
                     onChange={handleSelectAll}
-                    checked={selectedSoftware.size === software.length}
+                    checked={
+                      displayedSoftware.length > 0 &&
+                      displayedSoftware.every(item => selectedSoftware.has(item.id))
+                    }
                     className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                   />
                 </th>
@@ -553,7 +915,7 @@ export function AdminSoftwareList() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {software.map((item) => (
+              {displayedSoftware.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3">
                     <input
@@ -564,14 +926,17 @@ export function AdminSoftwareList() {
                     />
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-center">
-                    {item.logo ? (
+                    {item.logo && !failedLogos.has(item.id) ? (
                       <img 
                         src={item.logo} 
                         alt={`${item.name} Logo`}
                         className="h-8 w-8 object-contain mx-auto"
-                        onError={(e) => {
-                          // Fallback falls Logo nicht geladen werden kann
-                          e.currentTarget.style.display = 'none';
+                        onError={() => {
+                          setFailedLogos(prev => {
+                            const next = new Set(prev);
+                            next.add(item.id);
+                            return next;
+                          });
                         }}
                       />
                     ) : (
@@ -579,82 +944,7 @@ export function AdminSoftwareList() {
                         variant="ghost"
                         size="sm"
                         onClick={async () => {
-                          if (fetchingFavicons.has(item.id)) return;
-                          
-                          setFetchingFavicons(prev => new Set(prev).add(item.id));
-                          
-                          try {
-                            let websiteUrl = item.url;
-                            
-                            // Wenn keine URL vorhanden ist, verwende KI um die URL zu ermitteln
-                            if (!websiteUrl || websiteUrl.trim().length === 0) {
-                              if (!hasValidApiKey) {
-                                toast.error('Keine URL vorhanden und kein API-Key konfiguriert. Bitte URL manuell hinzufügen.');
-                                return;
-                              }
-                              
-                              // Verwende KI um URL zu ermitteln
-                              const aiResponse = await fetch('/api/ai/fill-software', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ softwareName: item.name }),
-                              });
-                              
-                              if (!aiResponse.ok) {
-                                throw new Error('Fehler bei der KI-Anfrage');
-                              }
-                              
-                              const aiData = await aiResponse.json();
-                              websiteUrl = aiData.url || '';
-                              
-                              if (!websiteUrl || websiteUrl.trim().length === 0) {
-                                toast.error('KI konnte keine URL für diese Software finden.');
-                                return;
-                              }
-                            }
-                            
-                            // Lade Favicon herunter
-                            const faviconResponse = await fetch('/api/software/fetch-favicon', {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ websiteUrl }),
-                            });
-                            
-                            if (!faviconResponse.ok) {
-                              const error = await faviconResponse.json();
-                              throw new Error(error.error || 'Fehler beim Herunterladen des Favicons');
-                            }
-                            
-                            const faviconData = await faviconResponse.json();
-                            
-                            // Aktualisiere Software mit neuem Logo (und URL falls durch KI ermittelt)
-                            const updateData: any = { logo: faviconData.logoUrl };
-                            if (websiteUrl !== item.url) {
-                              updateData.url = websiteUrl;
-                            }
-                            
-                            const updateResponse = await fetch(`/api/software/${item.id}`, {
-                              method: 'PATCH',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify(updateData),
-                            });
-                            
-                            if (!updateResponse.ok) {
-                              throw new Error('Fehler beim Aktualisieren des Logos');
-                            }
-                            
-                            // Aktualisiere die Software-Liste
-                            queryClient.invalidateQueries({ queryKey: ['software'] });
-                            toast.success('Favicon erfolgreich heruntergeladen und gespeichert');
-                          } catch (error: any) {
-                            toast.error(`Fehler: ${error.message || 'Unbekannter Fehler'}`);
-                          } finally {
-                            setFetchingFavicons(prev => {
-                              const newSet = new Set(prev);
-                              newSet.delete(item.id);
-                              return newSet;
-                            });
-                          }
+                          await handleFetchIcon(item);
                         }}
                         disabled={fetchingFavicons.has(item.id)}
                         className="h-8 w-8 p-0"
@@ -674,16 +964,25 @@ export function AdminSoftwareList() {
                     </div>
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-center">
-                    {((item.nameEn && item.nameEn.trim().length > 0) || 
-                      (item.shortDescriptionEn && item.shortDescriptionEn.trim().length > 0) || 
-                      (item.descriptionEn && item.descriptionEn.trim().length > 0)) ? (
+                    {hasTranslation(item) ? (
                       <div className="flex items-center justify-center">
                         <CheckCircle2 className="h-5 w-5 text-green-600" title="Übersetzung vorhanden" />
                       </div>
                     ) : (
-                      <div className="flex items-center justify-center">
-                        <XCircle className="h-5 w-5 text-gray-400" title="Keine Übersetzung" />
-                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleGenerateTranslation(item)}
+                        disabled={!hasValidApiKey || translationRequests.has(item.id)}
+                        className="flex items-center justify-center mx-auto text-gray-500 hover:text-green-600"
+                        title={hasValidApiKey ? 'Übersetzung mit KI erstellen' : 'API-Key erforderlich'}
+                      >
+                        {translationRequests.has(item.id) ? (
+                          <div className="h-4 w-4 border-2 border-green-600 border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <XCircle className="h-5 w-5" />
+                        )}
+                      </Button>
                     )}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{item.categories.map(category => category.name).join(', ')}</td>
@@ -850,6 +1149,39 @@ export function AdminSoftwareList() {
                     <Download className="h-4 w-4 mr-2" />
                     {isFetchingFavicon ? 'Lädt...' : 'Favicon laden'}
                   </Button>
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <Label>DSGVO-Konformität</Label>
+                <div className="flex flex-col gap-2">
+                  <select
+                    value={dataPrivacyStatus}
+                    onChange={(e) => setDataPrivacyStatus(e.target.value)}
+                    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                  >
+                    {dataPrivacyOptions.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <span className={`inline-block h-3 w-3 rounded-full ${dataPrivacyOptions.find(opt => opt.id === dataPrivacyStatus)?.colorClass || 'bg-gray-300'}`} />
+                    <span>
+                      {dataPrivacyOptions.find(opt => opt.id === dataPrivacyStatus)?.description}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2 pt-2">
+                    <Checkbox
+                      id="edit-inhouseHosted"
+                      checked={inhouseHosted}
+                      onCheckedChange={(checked) => setInhouseHosted(Boolean(checked))}
+                    />
+                    <Label htmlFor="edit-inhouseHosted" className="font-normal cursor-pointer">
+                      Inhouse gehostet
+                    </Label>
+                  </div>
                 </div>
               </div>
 
@@ -1233,6 +1565,8 @@ export function AdminSoftwareList() {
                 if (logoInput && editingSoftware) {
                   logoInput.value = editingSoftware.logo || '';
                 }
+                setInhouseHosted(Boolean(editingSoftware?.inhouseHosted));
+                setDataPrivacyStatus(editingSoftware?.dataPrivacyStatus || 'EU_HOSTED');
               }}>
                 Abbrechen
               </Button>

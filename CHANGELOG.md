@@ -5,6 +5,24 @@ Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/),
 und dieses Projekt folgt [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2025-12-12
+
+### 🐛 Bugfixes
+
+#### 🔧 Fixed
+- **GitHub Actions Workflows**: Alle Workflows wurden robuster gemacht und schlagen nicht mehr fehl, wenn optionale Secrets fehlen.
+- **Docker Build Workflow**: Push zu GitHub Container Registry (ghcr.io) ist jetzt optional - Build wird immer durchgeführt, auch wenn Push-Berechtigung fehlt.
+- **Docker Hub Login**: Login-Step schlägt nicht mehr fehl, wenn Docker Hub Secrets nicht vorhanden sind.
+- **Deployment Workflow**: Deployment schlägt nicht mehr fehl, wenn SSH-Secrets nicht vorhanden sind.
+- **Test-Script**: Test-Script in package.json hinzugefügt für CI-Kompatibilität.
+
+#### 📝 Changed
+- Workflows verwenden jetzt `continue-on-error: true` für optionale Steps.
+- Build wird immer durchgeführt, Push nur wenn Login erfolgreich war.
+- Bessere Fehlerbehandlung für optionale Secrets.
+
+---
+
 ## [1.2.1] - 2025-12-11
 
 ### 🔐 Security Update

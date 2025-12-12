@@ -7,19 +7,19 @@ und dieses Projekt folgt [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [1.2.2] - 2025-12-12
 
-### 🐛 Bugfixes
+### 🔐 Security Update
 
-#### 🔧 Fixed
-- **GitHub Actions Workflows**: Alle Workflows wurden robuster gemacht und schlagen nicht mehr fehl, wenn optionale Secrets fehlen.
-- **Docker Build Workflow**: Push zu GitHub Container Registry (ghcr.io) ist jetzt optional - Build wird immer durchgeführt, auch wenn Push-Berechtigung fehlt.
-- **Docker Hub Login**: Login-Step schlägt nicht mehr fehl, wenn Docker Hub Secrets nicht vorhanden sind.
-- **Deployment Workflow**: Deployment schlägt nicht mehr fehl, wenn SSH-Secrets nicht vorhanden sind.
-- **Test-Script**: Test-Script in package.json hinzugefügt für CI-Kompatibilität.
+#### 🔒 Security
+- **Kritische Sicherheitslücken behoben**: Next.js auf Version 15.1.11 aktualisiert, um CVE-2025-55182 (React Server Components) und CVE-2025-66478 (Next.js App Router) zu beheben.
+- Diese Schwachstellen ermöglichten die Ausführung beliebigen Programmcodes aus der Ferne ohne Authentifizierung (CVSS 10.0).
+- Betroffene Versionen: Next.js 15.1.6 → aktualisiert auf 15.1.11 (neueste gepatchte Version).
+- `eslint-config-next` ebenfalls auf 15.1.11 aktualisiert für Konsistenz.
 
 #### 📝 Changed
-- Workflows verwenden jetzt `continue-on-error: true` für optionale Steps.
-- Build wird immer durchgeführt, Push nur wenn Login erfolgreich war.
-- Bessere Fehlerbehandlung für optionale Secrets.
+- `package.json`: Next.js Version von `^15.1.6` auf `15.1.11` gepinnt (exakte Version für Sicherheit).
+- `package-lock.json`: Lockfile aktualisiert.
+
+**Wichtig**: Bitte aktualisieren Sie Ihre Installation umgehend, um die Sicherheitslücken zu schließen.
 
 ---
 

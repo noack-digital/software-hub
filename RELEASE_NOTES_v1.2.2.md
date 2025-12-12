@@ -1,43 +1,33 @@
 # Release Notes v1.2.2
 
 **Veröffentlichungsdatum:** 12. Dezember 2025  
-**Typ:** 🐛 Bugfix Release
+**Typ:** 🔐 Security Update (kritisch)
 
-## 🐛 Behobene Probleme
+## ⚠️ WICHTIG: Sofortiges Update erforderlich
 
-### GitHub Actions Workflows
+Dieses Release behebt **kritische Sicherheitslücken** (CVSS 10.0), die die Ausführung beliebigen Programmcodes aus der Ferne ohne Authentifizierung ermöglichten.
 
-Alle GitHub Actions Workflows wurden überarbeitet und sind jetzt deutlich robuster:
+## 🔒 Behobene Sicherheitslücken
 
-#### ✅ Docker Build Workflow
-- **Problem**: Workflow schlug fehl mit `permission_denied: write_package` beim Push zu GitHub Container Registry
-- **Lösung**: Push zu ghcr.io ist jetzt optional - Build wird immer durchgeführt, auch wenn keine Push-Berechtigung vorhanden ist
-- Login-Step mit `continue-on-error: true` versehen
-- Push nur wenn Login erfolgreich war
+### CVE-2025-55182 (React Server Components)
+- **Schweregrad:** Kritisch (CVSS 10.0)
+- **Betroffen:** React Server Components in Version 19.0, 19.1.0, 19.1.1 und 19.2.0
+- **Pakete:** `react-server-dom-webpack`, `react-server-dom-parcel`, `react-server-dom-turbopack`
 
-#### ✅ Docker Hub Workflow
-- **Problem**: Workflow schlug fehl, wenn Docker Hub Secrets nicht vorhanden waren
-- **Lösung**: Login-Step schlägt nicht mehr fehl, wenn Secrets fehlen
-- Build wird immer durchgeführt, Push nur wenn Login erfolgreich war
-
-#### ✅ Deployment Workflow
-- **Problem**: Deployment schlug fehl, wenn SSH-Secrets nicht vorhanden waren
-- **Lösung**: Deployment-Step mit `continue-on-error: true` versehen
-- Workflow läuft durch, auch wenn Deployment nicht möglich ist
-
-#### ✅ Test-Script
-- Test-Script in `package.json` hinzugefügt für CI-Kompatibilität
-- Verhindert Fehler in Workflows, die `npm test` ausführen
+### CVE-2025-66478 (Next.js App Router)
+- **Schweregrad:** Kritisch (CVSS 10.0)
+- **Betroffen:** Next.js 15.x, 16.x, 14.3.0-canary.77 und spätere Versionen
+- **Betroffen:** Next.js-Anwendungen, die den App Router verwenden
 
 ## 📦 Änderungen
 
-### Workflows
-- Alle optionalen Steps verwenden jetzt `continue-on-error: true`
-- Bessere Fehlerbehandlung für fehlende Secrets
-- Build wird immer durchgeführt, Push nur wenn möglich
-
 ### Dependencies
-- Keine Änderungen an Dependencies (bleibt bei Next.js 15.1.11)
+- **Next.js:** `15.1.6` → `15.1.11` (neueste gepatchte Version)
+- **eslint-config-next:** `15.1.6` → `15.1.11` (für Konsistenz)
+
+### Versionierung
+- Version auf `1.2.2` erhöht
+- Exakte Version gepinnt (kein Caret `^`) für maximale Sicherheit
 
 ## 🚀 Update-Anleitung
 
@@ -45,7 +35,10 @@ Alle GitHub Actions Workflows wurden überarbeitet und sind jetzt deutlich robus
 
 ```bash
 # Im Projektverzeichnis
-git pull origin main
+npm install next@15.1.11 eslint-config-next@15.1.11
+
+# Oder mit npm ci für saubere Installation
+rm -rf node_modules package-lock.json
 npm install
 ```
 
@@ -57,19 +50,32 @@ docker compose build
 docker compose up -d
 ```
 
+### Für Production-Deployments:
+
+1. **Sofortiges Update empfohlen** – diese Schwachstellen sind aktiv ausnutzbar
+2. Container/Service neu starten nach dem Update
+3. Build-Cache löschen falls nötig: `rm -rf .next`
+
+## 📚 Weitere Informationen
+
+- **React Security Advisory:** https://react.dev/blog/2025/12/03/critical-security-vulnerability-in-react-server-components
+- **Next.js Security Advisory:** https://nextjs.org/blog/CVE-2025-66478
+- **Sicherheitsforschung:** https://react2shell.com/
+- **Wiz.io Analyse:** https://www.wiz.io/blog/critical-vulnerability-in-react-cve-2025-55182
+
 ## ✅ Verifizierung
 
-Nach dem Update sollten die GitHub Actions erfolgreich durchlaufen:
+Nach dem Update können Sie die installierte Version prüfen:
 
-1. Gehe zu: https://github.com/noack-digital/software-hub/actions
-2. Die Workflows sollten jetzt erfolgreich sein, auch ohne optionale Secrets
-3. Build wird durchgeführt, Push nur wenn Berechtigungen vorhanden sind
+```bash
+npm ls next
+# Sollte zeigen: next@15.1.11
+```
 
 ## 🔄 Migration von v1.2.1
 
-Keine Breaking Changes. Einfach die Änderungen pullen und neu bauen.
+Keine Breaking Changes. Einfach die Dependencies aktualisieren und neu bauen.
 
 ---
 
-**Diese Version behebt alle GitHub Actions Probleme und macht die Workflows robuster.**
-
+**Bitte aktualisieren Sie umgehend, um Ihre Installation zu schützen.**

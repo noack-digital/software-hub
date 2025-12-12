@@ -32,6 +32,7 @@ jobs:
 
       # Anmelden bei Docker Hub (nur wenn Secrets vorhanden)
       - name: Login to Docker Hub
+        id: login
         if: github.event_name != 'pull_request'
         continue-on-error: true
         uses: docker/login-action@v3
@@ -54,13 +55,24 @@ jobs:
             type=semver,pattern={{major}}
             type=sha
 
-      # Build und Push Docker-Image (Push nur wenn nicht Pull Request)
+      # Prüfe ob Login erfolgreich war
+      - name: Check Docker Hub login status
+        id: check-login
+        if: github.event_name != 'pull_request'
+        run: |
+          if [ "${{ steps.login.outcome }}" == "success" ] || [ "${{ steps.login.outcome }}" == "skipped" ]; then
+            echo "can_push=true" >> $GITHUB_OUTPUT
+          else
+            echo "can_push=false" >> $GITHUB_OUTPUT
+          fi
+
+      # Build und Push Docker-Image (Push nur wenn Login erfolgreich war)
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' && steps.check-login.outputs.can_push == 'true' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha

@@ -5,6 +5,24 @@ Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/),
 und dieses Projekt folgt [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2025-12-11
+
+### 🔐 Security Update
+
+#### 🔒 Security
+- **Kritische Sicherheitslücken behoben**: Next.js auf Version 15.1.9 aktualisiert, um CVE-2025-55182 (React Server Components) und CVE-2025-66478 (Next.js App Router) zu beheben.
+- Diese Schwachstellen ermöglichten die Ausführung beliebigen Programmcodes aus der Ferne ohne Authentifizierung (CVSS 10.0).
+- Betroffene Versionen: Next.js 15.1.6 → aktualisiert auf 15.1.9 (gepatcht).
+- `eslint-config-next` ebenfalls auf 15.1.9 aktualisiert für Konsistenz.
+
+#### 📝 Changed
+- `package.json`: Next.js Version von `^15.1.6` auf `15.1.9` gepinnt (exakte Version für Sicherheit).
+- `package-lock.json`: Lockfile aktualisiert.
+
+**Wichtig**: Bitte aktualisieren Sie Ihre Installation umgehend, um die Sicherheitslücken zu schließen.
+
+---
+
 ## [1.2.0] - 2025-11-18
 
 ### 🚀 Feature Release – Demo-Datensatz & Inhouse-Ampel

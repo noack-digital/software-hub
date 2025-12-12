@@ -10,13 +10,13 @@ und dieses Projekt folgt [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ### 🔐 Security Update
 
 #### 🔒 Security
-- **Kritische Sicherheitslücken behoben**: Next.js auf Version 15.1.9 aktualisiert, um CVE-2025-55182 (React Server Components) und CVE-2025-66478 (Next.js App Router) zu beheben.
+- **Kritische Sicherheitslücken behoben**: Next.js auf Version 15.1.11 aktualisiert, um CVE-2025-55182 (React Server Components) und CVE-2025-66478 (Next.js App Router) zu beheben.
 - Diese Schwachstellen ermöglichten die Ausführung beliebigen Programmcodes aus der Ferne ohne Authentifizierung (CVSS 10.0).
-- Betroffene Versionen: Next.js 15.1.6 → aktualisiert auf 15.1.9 (gepatcht).
-- `eslint-config-next` ebenfalls auf 15.1.9 aktualisiert für Konsistenz.
+- Betroffene Versionen: Next.js 15.1.6 → aktualisiert auf 15.1.11 (neueste gepatchte Version).
+- `eslint-config-next` ebenfalls auf 15.1.11 aktualisiert für Konsistenz.
 
 #### 📝 Changed
-- `package.json`: Next.js Version von `^15.1.6` auf `15.1.9` gepinnt (exakte Version für Sicherheit).
+- `package.json`: Next.js Version von `^15.1.6` auf `15.1.11` gepinnt (exakte Version für Sicherheit).
 - `package-lock.json`: Lockfile aktualisiert.
 
 **Wichtig**: Bitte aktualisieren Sie Ihre Installation umgehend, um die Sicherheitslücken zu schließen.

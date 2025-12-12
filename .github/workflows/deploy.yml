@@ -10,7 +10,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && secrets.SERVER_HOST != null && secrets.SERVER_USERNAME != null && secrets.SERVER_SSH_KEY != null }}
     
     steps:
       - name: Checkout repository

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build --no-lint",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "prisma": {
     "seed": "node prisma/seed.js"

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedding Test</title>
+</head>
+<body>
+    <h1>Software Hub Embedding Test</h1>
+    
+    <h2>Normal Embed (mit Header und Footer)</h2>
+    <iframe src="http://localhost:3004/?embed=true" width="800" height="600" frameborder="0"></iframe>
+    
+    <h2>Embed ohne Header</h2>
+    <iframe src="http://localhost:3004/?embed=true&hideHeader=true" width="800" height="600" frameborder="0"></iframe>
+    
+    <h2>Embed ohne Header und Footer</h2>
+    <iframe src="http://localhost:3004/?embed=true&hideHeader=true&hideFooter=true" width="800" height="600" frameborder="0"></iframe>
+    
+    <h2>Embed mit Kategorie-Filter</h2>
+    <iframe src="http://localhost:3004/?embed=true&hideHeader=true&hideFooter=true&categoryId=1" width="800" height="600" frameborder="0"></iframe>
+</body>
+</html>

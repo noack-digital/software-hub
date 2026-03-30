@@ -1,0 +1,49 @@
+services:
+  software-hub-php-db:
+    image: mariadb:10.11
+    container_name: software-hub-php-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${DB_NAME:-software_hub}
+      MYSQL_USER: ${DB_USER:-software_hub}
+      MYSQL_PASSWORD: ${DB_PASS:-SoftwareHub2024}
+    volumes:
+      - shub_php_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - software-hub-php-net
+
+  software-hub-php-app:
+    build:
+      context: ./software-hub-main/software-hub-php
+    container_name: software-hub-php-app
+    restart: unless-stopped
+    depends_on:
+      software-hub-php-db:
+        condition: service_healthy
+    environment:
+      DB_HOST: software-hub-php-db
+      DB_NAME: ${DB_NAME:-software_hub}
+      DB_USER: ${DB_USER:-software_hub}
+      DB_PASS: ${DB_PASS:-SoftwareHub2024}
+      APP_URL: https://software-hub.hnee.de
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - ./software-hub-main/software-hub-php/uploads:/var/www/html/uploads
+      - shub_php_sessions:/var/lib/php/sessions
+    networks:
+      - software-hub-php-net
+
+volumes:
+  shub_php_db_data:
+  shub_php_sessions:
+
+networks:
+  software-hub-php-net:
+    driver: bridge

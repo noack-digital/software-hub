@@ -1,0 +1,14 @@
+{
+    "name": "software-hub/php",
+    "description": "Software Hub - PHP Version",
+    "type": "project",
+    "require": {
+        "php": ">=8.0",
+        "phpoffice/phpspreadsheet": "^1.29"
+    },
+    "autoload": {
+        "psr-4": {
+            "SoftwareHub\\": "includes/"
+        }
+    }
+}

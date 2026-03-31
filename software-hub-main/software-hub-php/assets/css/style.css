@@ -595,7 +595,7 @@ a:hover {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
 }
 
 .badge-secondary {
@@ -604,11 +604,27 @@ a:hover {
 }
 
 .software-card-footer-new {
-    padding: 1.5rem;
-    padding-top: 0;
+    padding: 10px 1.5rem 1.5rem;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
     flex-shrink: 0;
+}
+
+.card-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.card-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    cursor: help;
 }
 
 .btn-details {

@@ -474,41 +474,20 @@ function renderSoftwareCard(item) {
     const hostingInfo = hostingIcons[item.hosting_location] || null;
 
     // Type icons (smaller for inline)
+    const webIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
+    const desktopIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
+    const mobileIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>`;
     const typeIcons = {
-        Web: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`,
-        Desktop: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`,
-        Mobile: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>`
+        Web: webIcon, WEB: webIcon,
+        Desktop: desktopIcon, DESKTOP: desktopIcon,
+        Mobile: mobileIcon, MOBILE: mobileIcon
     };
 
     return `
         <div class="card software-card-new slide-up">
             <!-- Card content -->
             <div class="software-card-content">
-                <!-- Badges row at top (right aligned) -->
-                ${showDsgvo || showBadge || hostingInfo ? `
-                    <div class="card-badges-top">
-                        ${showDsgvo ? `
-                            <div class="privacy-badge-inline" style="display:flex;align-items:center;gap:0.35rem;">
-                                <span style="font-size:0.8rem;color:var(--color-gray-500);">${currentLanguage === 'en' ? 'Privacy' : 'Datenschutz'}:</span>
-                                <span class="privacy-dot" style="background-color:${privacyDotColor};cursor:help;" title="${escapeHtml(privacyTooltip)}"></span>
-                                ${hostingInfo ? `
-                                    <span style="margin-left:0.5rem;font-size:0.8rem;color:var(--color-gray-500);">Hosting:</span>
-                                    ${item.hosting_location === 'HNEE' && inhouseLogo
-                                        ? `<img src="${escapeHtml(inhouseLogo)}" alt="HNEE" title="HNEE" style="width:16px;height:16px;object-fit:contain;cursor:help;">`
-                                        : `<span style="cursor:help;font-size:1rem;line-height:1;" title="${escapeHtml(hostingInfo.label)}">${hostingInfo.icon}</span>`
-                                    }
-                                ` : ''}
-                            </div>
-                        ` : ''}
-                        ${showBadge && item.available ? `
-                            <div class="availability-badge" style="background-color:${badgeColor};color:${badgeTextColor}">
-                                ${badgeInner}
-                            </div>
-                        ` : ''}
-                    </div>
-                ` : ''}
-
-                <!-- Logo + Name + External Link with Types on the right side -->
+                <!-- Logo + Name + External Link -->
                 <div class="software-header-row">
                     <div class="software-title-group">
                         ${item.logo ? `
@@ -521,31 +500,50 @@ function renderSoftwareCard(item) {
                             </a>
                         ` : ''}
                     </div>
-                    ${types.length > 0 ? `
-                        <div class="software-type-icons">
-                            ${types.map(type => `
-                                <span class="type-icon" title="${t(`software.${type.toLowerCase()}`)}">
-                                    ${typeIcons[type] || ''}
-                                </span>
-                            `).join('')}
-                        </div>
-                    ` : ''}
                 </div>
 
                 <!-- Short description -->
                 ${shortDesc ? `<p class="software-description">${escapeHtml(shortDesc)}</p>` : ''}
 
                 <!-- Category badges -->
-                <div class="software-categories">
-                    ${item.categories?.map(cat => {
-                        const catName = currentLanguage === 'en' && cat.name_en ? cat.name_en : cat.name;
-                        return `<span class="badge badge-secondary">${escapeHtml(catName)}</span>`;
-                    }).join('') || ''}
-                </div>
+                ${item.categories?.length ? `
+                    <div class="software-categories">
+                        ${item.categories.map(cat => {
+                            const catName = currentLanguage === 'en' && cat.name_en ? cat.name_en : cat.name;
+                            return `<span class="badge badge-secondary">${escapeHtml(catName)}</span>`;
+                        }).join('')}
+                    </div>
+                ` : ''}
             </div>
 
-            <!-- Card footer with single button -->
+            <!-- Card footer: meta row + button -->
             <div class="software-card-footer-new">
+                <div class="card-meta-row">
+                    ${showDsgvo ? `
+                        <span class="card-meta-item" title="${escapeHtml(privacyTooltip)}">
+                            <span style="font-size:0.75rem;color:var(--color-gray-500);">${currentLanguage === 'en' ? 'Privacy' : 'Datenschutz'}:</span>
+                            <span class="privacy-dot" style="background-color:${privacyDotColor};"></span>
+                        </span>
+                    ` : ''}
+                    ${hostingInfo ? `
+                        <span class="card-meta-item" title="${escapeHtml(hostingInfo.label)}">
+                            <span style="font-size:0.75rem;color:var(--color-gray-500);">Hosting:</span>
+                            ${item.hosting_location === 'HNEE' && inhouseLogo
+                                ? `<img src="${escapeHtml(inhouseLogo)}" alt="HNEE" style="width:14px;height:14px;object-fit:contain;">`
+                                : `<span style="font-size:0.9rem;line-height:1;">${hostingInfo.icon}</span>`
+                            }
+                        </span>
+                    ` : ''}
+                    ${types.length > 0 ? `
+                        <span class="card-meta-item">
+                            ${types.map(type => `
+                                <span title="${t(`software.${type.toLowerCase()}`)}" style="display:inline-flex;color:var(--color-gray-500);">
+                                    ${typeIcons[type] || ''}
+                                </span>
+                            `).join('')}
+                        </span>
+                    ` : ''}
+                </div>
                 <button class="btn btn-primary btn-details" onclick="showSoftwareDetails('${item.id}')">
                     ${t('software.showDetails')}
                 </button>

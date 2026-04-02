@@ -66,9 +66,11 @@
     "inhouse": "Inhouse gehostet",
     "privacyStatus": "Datenschutz-Status",
     "privacy": {
+      "COMPLIANT": "Konform / DSGVO-konform",
       "DSGVO_COMPLIANT": "DSGVO-konform",
-      "EU_HOSTED": "EU-gehostet",
-      "NON_EU": "Nicht-EU",
+      "PARTIAL": "Teilweise konform",
+      "IN_PROGRESS": "In Umsetzung",
+      "NON_COMPLIANT": "Nicht konform",
       "UNKNOWN": "Unbekannt"
     },
     "name": "Name",

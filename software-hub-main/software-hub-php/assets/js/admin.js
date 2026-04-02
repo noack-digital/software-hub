@@ -999,10 +999,15 @@ function renderSoftwareList() {
             label: t('software.privacyStatus'),
             render: (item) => {
                 const status = item.data_privacy_status || item.privacy_status || 'UNKNOWN';
-                const statusClass = status === 'DSGVO_COMPLIANT' ? 'privacy-dsgvo' :
-                                   status === 'EU_HOSTED' ? 'privacy-eu' : 'privacy-non-eu';
+                const colors = {
+                    'COMPLIANT': '#22c55e', 'DSGVO_COMPLIANT': '#22c55e',
+                    'PARTIAL': '#eab308',
+                    'IN_PROGRESS': '#f97316',
+                    'NON_COMPLIANT': '#ef4444'
+                };
+                const color = colors[status] || '#9ca3af';
                 const statusText = t(`software.privacy.${status}`) || status;
-                return `<span class="privacy-indicator ${statusClass}">${statusText}</span>`;
+                return `<span style="display:inline-flex;align-items:center;gap:0.35rem;"><span class="privacy-dot" style="background:${color};"></span> ${statusText}</span>`;
             }
         },
         {
@@ -1320,6 +1325,17 @@ async function openSoftwareModal(id = null) {
             document.getElementById('softwareFeaturesEn').value = item.features_en || '';
             document.getElementById('softwareReasonHnee').value = item.reason_hnee || '';
             document.getElementById('softwareReasonHneeEn').value = item.reason_hnee_en || '';
+
+            // Costs & license fields
+            document.getElementById('softwareCosts').value = item.costs || 'kostenlos';
+            document.getElementById('softwareCostModel').value = item.cost_model || '';
+            document.getElementById('softwareCostPrice').value = item.cost_price || '';
+            document.getElementById('softwareAlternatives').value = item.alternatives || '';
+            document.getElementById('softwareAlternativesEn').value = item.alternatives_en || '';
+            document.getElementById('softwareTutorials').value = item.tutorials || '';
+            document.getElementById('softwareAccessInfo').value = item.access_info || '';
+            document.getElementById('softwareNotes').value = item.notes || '';
+            document.getElementById('softwareNotesEn').value = item.notes_en || '';
 
             // Steckbrief preview
             const steckbriefPreview = document.getElementById('steckbriefPreview');
@@ -1646,6 +1662,15 @@ async function saveSoftware(e) {
         features_en: document.getElementById('softwareFeaturesEn').value,
         reason_hnee: document.getElementById('softwareReasonHnee').value,
         reason_hnee_en: document.getElementById('softwareReasonHneeEn').value,
+        costs: document.getElementById('softwareCosts').value,
+        cost_model: document.getElementById('softwareCostModel').value,
+        cost_price: document.getElementById('softwareCostPrice').value,
+        alternatives: document.getElementById('softwareAlternatives').value,
+        alternatives_en: document.getElementById('softwareAlternativesEn').value,
+        tutorials: document.getElementById('softwareTutorials').value,
+        access_info: document.getElementById('softwareAccessInfo').value,
+        notes: document.getElementById('softwareNotes').value,
+        notes_en: document.getElementById('softwareNotesEn').value,
         privacy_status: privacyStatus,
         privacy_note: document.getElementById('privacyNote').value,
         hosting_location: hostingLocation,
@@ -2873,9 +2898,15 @@ function openUserModal(id = null) {
     form.reset();
     document.getElementById('userId').value = '';
 
+    const passwordInput = document.getElementById('userPassword');
+    const passwordHint = document.getElementById('passwordHint');
+
     if (id) {
         title.textContent = t('users.edit');
-        passwordGroup.classList.add('hidden');
+        passwordGroup.classList.remove('hidden');
+        passwordInput.required = false;
+        passwordInput.placeholder = '••••••••';
+        if (passwordHint) passwordHint.style.display = '';
         const item = AdminState.users.find(u => u.id === id);
         if (item) {
             document.getElementById('userId').value = item.id;
@@ -2886,6 +2917,9 @@ function openUserModal(id = null) {
     } else {
         title.textContent = t('users.new');
         passwordGroup.classList.remove('hidden');
+        passwordInput.required = true;
+        passwordInput.placeholder = '';
+        if (passwordHint) passwordHint.style.display = 'none';
     }
 
     openModal('userModal');
@@ -2902,9 +2936,16 @@ async function saveUser(e) {
         role: document.getElementById('userRole').value
     };
 
-    // Include password only for new users
-    if (!id) {
-        data.password = document.getElementById('userPassword').value;
+    // Include password if filled in (required for new users, optional for edit)
+    const password = document.getElementById('userPassword').value;
+    const passwordConfirm = document.getElementById('userPasswordConfirm').value;
+    if (password) {
+        if (password !== passwordConfirm) {
+            hideLoading();
+            showToast('Passwörter stimmen nicht überein', 'error');
+            return;
+        }
+        data.password = password;
     }
 
     try {

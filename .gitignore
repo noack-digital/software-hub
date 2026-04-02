@@ -1,0 +1,34 @@
+# Environment & Secrets
+.env
+
+# Uploads (user data)
+software-hub-main/software-hub-php/uploads/*
+!software-hub-main/software-hub-php/uploads/.gitkeep
+
+# PHP vendor dependencies (install via composer)
+software-hub-main/software-hub-php/vendor/
+
+# Backup files
+*.backup-*
+*.tar.gz
+*.sql
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker volumes
+db_data/
+
+# Test files
+software-hub-main/test-*.html
+
+# CSS/JS backups
+software-hub-main/software-hub-php/assets/css/*.backup-*
+software-hub-main/software-hub-php/assets/js/*.backup-*

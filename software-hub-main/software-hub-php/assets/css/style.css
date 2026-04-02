@@ -1,8 +1,7 @@
 /* Software Hub - CSS Styles */
-/* Basierend auf dem Tailwind-Design der Original-App */
 
 :root {
-    /* Teal color scheme matching Next.js version */
+    /* Teal color scheme */
     --color-primary: #004d44;
     --color-primary-dark: #003833;
     --color-primary-light: #99f6e4;
@@ -445,7 +444,7 @@ a:hover {
     align-items: center;
 }
 
-/* New Next.js-style Software Card */
+/* Software Card */
 .software-card-new {
     position: relative;
     display: flex;

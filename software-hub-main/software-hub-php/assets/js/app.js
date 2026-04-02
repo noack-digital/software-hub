@@ -425,7 +425,7 @@ function renderSoftwareGrid() {
 }
 
 /**
- * Render a single software card (Next.js style)
+ * Render a single software card
  */
 function renderSoftwareCard(item) {
     const name = currentLanguage === 'en' && item.name_en ? item.name_en : item.name;

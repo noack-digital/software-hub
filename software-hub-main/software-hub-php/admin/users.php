@@ -66,6 +66,11 @@ if ($currentUser['role'] !== 'ADMIN') {
                 <div class="form-group" id="passwordGroup">
                     <label class="form-label" for="userPassword" data-t="users.password">Passwort</label>
                     <input type="password" id="userPassword" class="form-input" minlength="6">
+                    <p class="text-xs text-gray-500 mt-1" id="passwordHint" style="display:none;">Nur ausfüllen, wenn das Passwort geändert werden soll.</p>
+                </div>
+                <div class="form-group" id="passwordConfirmGroup">
+                    <label class="form-label" for="userPasswordConfirm">Passwort bestätigen</label>
+                    <input type="password" id="userPasswordConfirm" class="form-input" minlength="6">
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="userRole" data-t="users.role">Rolle</label>

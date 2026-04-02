@@ -188,6 +188,67 @@ require_once __DIR__ . '/../includes/admin-header.php';
             </div>
         </div>
 
+        <!-- 2b. Kosten & Lizenzen -->
+        <div class="card mb-4">
+            <div class="card-header"><h4>Kosten &amp; Lizenzen</h4></div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Kosten</label>
+                        <select id="softwareCosts" class="form-select">
+                            <option value="kostenlos">Kostenlos</option>
+                            <option value="kostenpflichtig">Kostenpflichtig</option>
+                            <option value="abo">Abo / Lizenz</option>
+                            <option value="einmalig">Einmalige Kosten</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Kostenmodell</label>
+                        <input type="text" id="softwareCostModel" class="form-input" placeholder="z.B. Campuslizenz, pro Nutzer, ...">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Preis</label>
+                    <input type="text" id="softwareCostPrice" class="form-input" placeholder="z.B. 49€/Jahr, kostenlos für Studierende, ...">
+                </div>
+            </div>
+        </div>
+
+        <!-- 2c. Weitere Informationen -->
+        <div class="card mb-4">
+            <div class="card-header"><h4>Weitere Informationen</h4></div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Alternativen</label>
+                        <input type="text" id="softwareAlternatives" class="form-input" placeholder="Kommasepariert">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Alternatives (EN)</label>
+                        <input type="text" id="softwareAlternativesEn" class="form-input" placeholder="Comma-separated">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tutorials / Anleitungen (URLs)</label>
+                    <textarea id="softwareTutorials" class="form-textarea" rows="2" placeholder="URLs zu Anleitungen, eine pro Zeile"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Zugangsinformationen</label>
+                    <textarea id="softwareAccessInfo" class="form-textarea" rows="2" placeholder="Wie erhält man Zugang zu dieser Software?"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Anmerkungen</label>
+                        <textarea id="softwareNotes" class="form-textarea" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notes (EN)</label>
+                        <textarea id="softwareNotesEn" class="form-textarea" rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 3. Steckbrief -->
         <div class="card mb-4">
             <div class="card-header"><h4>Steckbrief / Anleitungen (PDF)</h4></div>

@@ -304,6 +304,7 @@ function renderCategoryFilter() {
     }).join('');
 
     container.innerHTML = allButton + categoryButtons;
+    container.classList.add('collapsed');
 
     // Add click event listeners
     container.querySelectorAll('.filter-btn').forEach(btn => {
@@ -312,6 +313,8 @@ function renderCategoryFilter() {
             selectCategory(categoryId);
         });
     });
+
+    applyFilterOverflow(container);
 }
 
 /**
@@ -334,6 +337,7 @@ function renderTargetGroupFilter() {
     }).join('');
 
     container.innerHTML = allButton + targetGroupButtons;
+    container.classList.add('collapsed');
 
     // Add click event listeners
     container.querySelectorAll('.filter-btn').forEach(btn => {
@@ -342,6 +346,8 @@ function renderTargetGroupFilter() {
             selectTargetGroup(targetGroupId);
         });
     });
+
+    applyFilterOverflow(container);
 }
 
 /**
@@ -520,27 +526,21 @@ function renderSoftwareCard(item) {
             <div class="software-card-footer-new">
                 <div class="card-meta-row">
                     ${showDsgvo ? `
-                        <span class="card-meta-item" title="${escapeHtml(privacyTooltip)}">
-                            <span style="font-size:0.75rem;color:var(--color-gray-500);">${currentLanguage === 'en' ? 'Privacy' : 'Datenschutz'}:</span>
-                            <span class="privacy-dot" style="background-color:${privacyDotColor};"></span>
+                        <span class="card-meta-badge" data-tip="${escapeHtml(privacyTooltip)}">
+                            ${currentLanguage === 'en' ? 'Privacy' : 'Datenschutz'}: <span class="privacy-dot" style="background-color:${privacyDotColor};"></span>
                         </span>
                     ` : ''}
                     ${hostingInfo ? `
-                        <span class="card-meta-item" title="${escapeHtml(hostingInfo.label)}">
-                            <span style="font-size:0.75rem;color:var(--color-gray-500);">Hosting:</span>
-                            ${item.hosting_location === 'HNEE' && inhouseLogo
-                                ? `<img src="${escapeHtml(inhouseLogo)}" alt="HNEE" style="width:14px;height:14px;object-fit:contain;">`
+                        <span class="card-meta-badge" data-tip="${escapeHtml(hostingInfo.label)}">
+                            Hosting: ${item.hosting_location === 'HNEE' && inhouseLogo
+                                ? `<img src="${escapeHtml(inhouseLogo)}" alt="HNEE" style="width:14px;height:14px;object-fit:contain;vertical-align:middle;">`
                                 : `<span style="font-size:0.9rem;line-height:1;">${hostingInfo.icon}</span>`
                             }
                         </span>
                     ` : ''}
                     ${types.length > 0 ? `
-                        <span class="card-meta-item">
-                            ${types.map(type => `
-                                <span title="${t(`software.${type.toLowerCase()}`)}" style="display:inline-flex;color:var(--color-gray-500);">
-                                    ${typeIcons[type] || ''}
-                                </span>
-                            `).join('')}
+                        <span class="card-meta-badge" data-tip="${types.map(type => t('software.' + type.toLowerCase())).join(', ')}">
+                            Typ: ${types.map(type => `<span style="display:inline-flex;vertical-align:middle;">${typeIcons[type] || ''}</span>`).join(' ')}
                         </span>
                     ` : ''}
                 </div>
@@ -1068,6 +1068,48 @@ function showToast(message, type = 'info') {
 /**
  * Escape HTML
  */
+/**
+ * Apply overflow detection to filter button rows.
+ * Hides buttons that don't fit in the first row and shows a "Weitere..." toggle.
+ */
+function applyFilterOverflow(container) {
+    if (!container) return;
+
+    // Clean up previous state
+    container.querySelector('.filter-more-btn')?.remove();
+    container.classList.remove('collapsed');
+    container.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('overflow-hidden'));
+
+    const buttons = Array.from(container.querySelectorAll('.filter-btn'));
+    if (buttons.length <= 1) return;
+
+    // Measure: find the top of the first button row
+    const firstTop = buttons[0].getBoundingClientRect().top;
+    const overflowing = buttons.filter(btn => Math.abs(btn.getBoundingClientRect().top - firstTop) > 5);
+
+    if (overflowing.length === 0) return;
+
+    // Mark overflowing buttons
+    overflowing.forEach(btn => btn.classList.add('overflow-hidden'));
+    container.classList.add('collapsed');
+
+    // Create toggle button
+    const moreBtn = document.createElement('button');
+    moreBtn.className = 'filter-btn filter-more-btn';
+    const moreText = (currentLanguage === 'en' ? 'More' : 'Weitere') + ' (' + overflowing.length + ')';
+    const lessText = currentLanguage === 'en' ? 'Show less' : 'Weniger';
+    moreBtn.textContent = moreText;
+
+    moreBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        container.classList.toggle('collapsed');
+        moreBtn.textContent = container.classList.contains('collapsed') ? moreText : lessText;
+    });
+
+    // Insert before the first hidden button
+    overflowing[0].parentNode.insertBefore(moreBtn, overflowing[0]);
+}
+
 function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');

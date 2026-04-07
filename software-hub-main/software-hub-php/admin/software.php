@@ -228,22 +228,55 @@ require_once __DIR__ . '/../includes/admin-header.php';
                         <input type="text" id="softwareAlternativesEn" class="form-input" placeholder="Comma-separated">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Tutorials / Anleitungen (URLs)</label>
-                    <textarea id="softwareTutorials" class="form-textarea" rows="2" placeholder="URLs zu Anleitungen, eine pro Zeile"></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Zugangsinformationen</label>
-                    <textarea id="softwareAccessInfo" class="form-textarea" rows="2" placeholder="Wie erhält man Zugang zu dieser Software?"></textarea>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Anmerkungen</label>
-                        <textarea id="softwareNotes" class="form-textarea" rows="2"></textarea>
+                <div class="editor-pair">
+                    <div class="editor-col">
+                        <label class="form-label">Tutorials / Anleitungen</label>
+                        <div id="editorTutorials" class="quill-editor"></div>
+                        <textarea id="softwareTutorials" style="display:none;"></textarea>
                     </div>
-                    <div class="form-group">
+                    <div class="editor-mid">
+                        <button type="button" class="btn-translate-field" onclick="translateField('tutorials')" title="Mit KI übersetzen">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>
+                        </button>
+                    </div>
+                    <div class="editor-col">
+                        <label class="form-label">Tutorials / Guides (EN)</label>
+                        <div id="editorTutorialsEn" class="quill-editor"></div>
+                        <textarea id="softwareTutorialsEn" style="display:none;"></textarea>
+                    </div>
+                </div>
+                <div class="editor-pair">
+                    <div class="editor-col">
+                        <label class="form-label">Zugangsinformationen</label>
+                        <div id="editorAccessInfo" class="quill-editor"></div>
+                        <textarea id="softwareAccessInfo" style="display:none;"></textarea>
+                    </div>
+                    <div class="editor-mid">
+                        <button type="button" class="btn-translate-field" onclick="translateField('access_info')" title="Mit KI übersetzen">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>
+                        </button>
+                    </div>
+                    <div class="editor-col">
+                        <label class="form-label">Access Information (EN)</label>
+                        <div id="editorAccessInfoEn" class="quill-editor"></div>
+                        <textarea id="softwareAccessInfoEn" style="display:none;"></textarea>
+                    </div>
+                </div>
+                <div class="editor-pair">
+                    <div class="editor-col">
+                        <label class="form-label">Anmerkungen</label>
+                        <div id="editorNotes" class="quill-editor"></div>
+                        <textarea id="softwareNotes" style="display:none;"></textarea>
+                    </div>
+                    <div class="editor-mid">
+                        <button type="button" class="btn-translate-field" onclick="translateField('notes')" title="Mit KI übersetzen">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>
+                        </button>
+                    </div>
+                    <div class="editor-col">
                         <label class="form-label">Notes (EN)</label>
-                        <textarea id="softwareNotesEn" class="form-textarea" rows="2"></textarea>
+                        <div id="editorNotesEn" class="quill-editor"></div>
+                        <textarea id="softwareNotesEn" style="display:none;"></textarea>
                     </div>
                 </div>
             </div>

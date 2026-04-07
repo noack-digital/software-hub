@@ -53,8 +53,8 @@ class TargetGroup
             $id,
             $data['name'],
             $data['description'] ?? null,
-            $data['nameEn'] ?? null,
-            $data['descriptionEn'] ?? null
+            $data['nameEn'] ?? $data['name_en'] ?? null,
+            $data['descriptionEn'] ?? $data['description_en'] ?? null
         ]);
 
         logAudit('create', 'target_group', $id, $data);
@@ -83,8 +83,8 @@ class TargetGroup
         $stmt->execute([
             $data['name'] ?? null,
             $data['description'] ?? null,
-            $data['nameEn'] ?? null,
-            $data['descriptionEn'] ?? null,
+            $data['nameEn'] ?? $data['name_en'] ?? null,
+            $data['descriptionEn'] ?? $data['description_en'] ?? null,
             $id
         ]);
 

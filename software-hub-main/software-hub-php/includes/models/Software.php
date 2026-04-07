@@ -181,9 +181,9 @@ class Software
 
         $stmt = $this->db->prepare(
             "INSERT INTO software (id, name, url, logo, short_description, description, types, costs, cost_model, cost_price,
-             tutorials, access_info, features, alternatives, notes, available, data_privacy_status, inhouse_hosted, hosting_location, privacy_note,
+             tutorials, tutorials_en, access_info, access_info_en, features, alternatives, notes, available, data_privacy_status, inhouse_hosted, hosting_location, privacy_note,
              name_en, short_description_en, description_en, features_en, alternatives_en, notes_en, reason_hnee, reason_hnee_en, steckbrief_path, steckbrief_original_name, show_account_request, user_id)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
 
         $stmt->execute([
@@ -198,7 +198,9 @@ class Software
             $data['cost_model'] ?? null,
             $data['cost_price'] ?? null,
             $data['tutorials'] ?? null,
+            $data['tutorials_en'] ?? null,
             $data['access_info'] ?? $data['accessInfo'] ?? null,
+            $data['access_info_en'] ?? null,
             $data['features'] ?? null,
             $data['alternatives'] ?? null,
             $data['notes'] ?? null,
@@ -268,7 +270,9 @@ class Software
              cost_model = COALESCE(?, cost_model),
              cost_price = COALESCE(?, cost_price),
              tutorials = COALESCE(?, tutorials),
+             tutorials_en = COALESCE(?, tutorials_en),
              access_info = COALESCE(?, access_info),
+             access_info_en = COALESCE(?, access_info_en),
              features = COALESCE(?, features),
              alternatives = COALESCE(?, alternatives),
              notes = COALESCE(?, notes),
@@ -302,7 +306,9 @@ class Software
             $data['cost_model'] ?? null,
             $data['cost_price'] ?? null,
             $data['tutorials'] ?? null,
+            $data['tutorials_en'] ?? null,
             $data['access_info'] ?? $data['accessInfo'] ?? null,
+            $data['access_info_en'] ?? null,
             $data['features'] ?? null,
             $data['alternatives'] ?? null,
             $data['notes'] ?? null,

@@ -44,8 +44,8 @@ class Department
             $id,
             $data['name'],
             $data['description'] ?? null,
-            $data['nameEn'] ?? null,
-            $data['descriptionEn'] ?? null
+            $data['nameEn'] ?? $data['name_en'] ?? null,
+            $data['descriptionEn'] ?? $data['description_en'] ?? null
         ]);
 
         logAudit('create', 'department', $id, $data);
@@ -71,8 +71,8 @@ class Department
         $stmt->execute([
             $data['name'] ?? null,
             $data['description'] ?? null,
-            $data['nameEn'] ?? null,
-            $data['descriptionEn'] ?? null,
+            $data['nameEn'] ?? $data['name_en'] ?? null,
+            $data['descriptionEn'] ?? $data['description_en'] ?? null,
             $id
         ]);
 

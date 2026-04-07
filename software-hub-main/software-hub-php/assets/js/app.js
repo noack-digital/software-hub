@@ -700,24 +700,28 @@ function renderDetailPage(item) {
                 </div>
             ` : ''}
 
-            ${item.tutorials ? `
+            ${(() => {
+                const tutorials = currentLanguage === 'en' && item.tutorials_en ? item.tutorials_en : item.tutorials;
+                return tutorials ? `
                 <div class="detail-section">
                     <h4>${t('software.tutorials')}</h4>
-                    <p>${formatTutorials(item.tutorials)}</p>
-                </div>
-            ` : ''}
+                    <div class="rich-content">${sanitizeHtml(tutorials)}</div>
+                </div>` : '';
+            })()}
 
-            ${item.access_info ? `
+            ${(() => {
+                const accessInfo = currentLanguage === 'en' && item.access_info_en ? item.access_info_en : item.access_info;
+                return accessInfo ? `
                 <div class="detail-section">
                     <h4>${t('software.accessInfo')}</h4>
-                    <p>${escapeHtml(item.access_info)}</p>
-                </div>
-            ` : ''}
+                    <div class="rich-content">${sanitizeHtml(accessInfo)}</div>
+                </div>` : '';
+            })()}
 
             ${notes ? `
                 <div class="detail-section">
                     <h4>${t('software.notes')}</h4>
-                    <p>${escapeHtml(notes)}</p>
+                    <div class="rich-content">${sanitizeHtml(notes)}</div>
                 </div>
             ` : ''}
 

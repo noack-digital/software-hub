@@ -1074,6 +1074,9 @@ function initQuillEditors() {
         'editorDescription', 'editorDescriptionEn',
         'editorFeatures', 'editorFeaturesEn',
         'editorReasonHnee', 'editorReasonHneeEn',
+        'editorTutorials', 'editorTutorialsEn',
+        'editorAccessInfo', 'editorAccessInfoEn',
+        'editorNotes', 'editorNotesEn',
         'editorPrivacyNote'
     ];
     editorIds.forEach(id => {
@@ -1118,6 +1121,12 @@ const quillTextareaMap = {
     'editorFeaturesEn': 'softwareFeaturesEn',
     'editorReasonHnee': 'softwareReasonHnee',
     'editorReasonHneeEn': 'softwareReasonHneeEn',
+    'editorTutorials': 'softwareTutorials',
+    'editorTutorialsEn': 'softwareTutorialsEn',
+    'editorAccessInfo': 'softwareAccessInfo',
+    'editorAccessInfoEn': 'softwareAccessInfoEn',
+    'editorNotes': 'softwareNotes',
+    'editorNotesEn': 'softwareNotesEn',
     'editorPrivacyNote': 'privacyNote'
 };
 
@@ -1333,7 +1342,9 @@ async function openSoftwareModal(id = null) {
             document.getElementById('softwareAlternatives').value = item.alternatives || '';
             document.getElementById('softwareAlternativesEn').value = item.alternatives_en || '';
             document.getElementById('softwareTutorials').value = item.tutorials || '';
+            document.getElementById('softwareTutorialsEn').value = item.tutorials_en || '';
             document.getElementById('softwareAccessInfo').value = item.access_info || '';
+            document.getElementById('softwareAccessInfoEn').value = item.access_info_en || '';
             document.getElementById('softwareNotes').value = item.notes || '';
             document.getElementById('softwareNotesEn').value = item.notes_en || '';
 
@@ -1668,7 +1679,9 @@ async function saveSoftware(e) {
         alternatives: document.getElementById('softwareAlternatives').value,
         alternatives_en: document.getElementById('softwareAlternativesEn').value,
         tutorials: document.getElementById('softwareTutorials').value,
+        tutorials_en: document.getElementById('softwareTutorialsEn').value,
         access_info: document.getElementById('softwareAccessInfo').value,
+        access_info_en: document.getElementById('softwareAccessInfoEn').value,
         notes: document.getElementById('softwareNotes').value,
         notes_en: document.getElementById('softwareNotesEn').value,
         privacy_status: privacyStatus,
@@ -5058,7 +5071,10 @@ async function translateField(fieldName) {
     const editorMap = {
         'description': { de: 'editorDescription', en: 'editorDescriptionEn' },
         'features': { de: 'editorFeatures', en: 'editorFeaturesEn' },
-        'reason_hnee': { de: 'editorReasonHnee', en: 'editorReasonHneeEn' }
+        'reason_hnee': { de: 'editorReasonHnee', en: 'editorReasonHneeEn' },
+        'tutorials': { de: 'editorTutorials', en: 'editorTutorialsEn' },
+        'access_info': { de: 'editorAccessInfo', en: 'editorAccessInfoEn' },
+        'notes': { de: 'editorNotes', en: 'editorNotesEn' }
     };
 
     const mapping = editorMap[fieldName];

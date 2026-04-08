@@ -1406,7 +1406,8 @@ async function openSoftwareModal(id = null) {
             initCategoryCheckboxes(item.categories ? item.categories.map(c => c.id) : []);
 
             // Target groups checkboxes
-            initTargetGroupCheckboxes(item.target_groups ? item.target_groups.map(t => t.id) : []);
+            const tgs = item.targetGroups || item.target_groups || [];
+            initTargetGroupCheckboxes(tgs.map(t => t.id));
 
             // Departments checkboxes
             initDepartmentCheckboxes(item.departments ? item.departments.map(d => d.id) : []);

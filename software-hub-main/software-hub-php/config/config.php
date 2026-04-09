@@ -17,12 +17,18 @@ ini_set('session.cookie_httponly', '1');
 ini_set('session.use_strict_mode', '1');
 ini_set('session.cookie_path', '/'); // Cookie für gesamte Domain verfügbar
 
-// Datenbankverbindung
-define('DB_HOST', $_ENV['DB_HOST'] ?? 'localhost');
-define('DB_NAME', $_ENV['DB_NAME'] ?? 'software_hub');
-define('DB_USER', $_ENV['DB_USER'] ?? 'software_hub');
-define('DB_PASS', $_ENV['DB_PASS'] ?? 'SoftwareHub2024');
+// Datenbankverbindung – alle Werte müssen über Umgebungsvariablen gesetzt sein
+define('DB_HOST', $_ENV['DB_HOST'] ?? 'software-hub-php-db');
+define('DB_NAME', $_ENV['DB_NAME'] ?? '');
+define('DB_USER', $_ENV['DB_USER'] ?? '');
+define('DB_PASS', $_ENV['DB_PASS'] ?? '');
 define('DB_CHARSET', 'utf8mb4');
+
+if (empty(DB_NAME) || empty(DB_USER) || empty(DB_PASS)) {
+    error_log('FATAL: DB credentials missing - check environment variables');
+    http_response_code(500);
+    exit('Server configuration error');
+}
 
 // Anwendungseinstellungen
 define('APP_NAME', 'Software Hub');

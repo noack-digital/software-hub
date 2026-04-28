@@ -1129,7 +1129,11 @@ function sanitizeHtml(html) {
     if (!html) return '';
     // If it doesn't contain any HTML tags, treat as plain text
     if (!/<[a-z][\s\S]*>/i.test(html)) return escapeHtml(html);
-    const allowed = ['p', 'br', 'b', 'strong', 'i', 'em', 'u', 'ul', 'ol', 'li', 'a', 'span'];
+    const allowed = ['p', 'br', 'b', 'strong', 'i', 'em', 'u', 'ul', 'ol', 'li', 'a', 'span', 'img'];
+    const allowedAttrs = {
+        'a': ['href', 'target', 'rel'],
+        'img': ['src', 'alt', 'width', 'height', 'style']
+    };
     const tmp = document.createElement('div');
     tmp.innerHTML = html;
     // Remove script/style/iframe etc.
@@ -1139,16 +1143,21 @@ function sanitizeHtml(html) {
         if (!allowed.includes(el.tagName.toLowerCase())) {
             el.replaceWith(...el.childNodes);
         } else {
-            // Only allow href on <a> tags, remove all other attributes except target
             const tag = el.tagName.toLowerCase();
+            const tagAllowed = allowedAttrs[tag] || [];
             const attrs = [...el.attributes];
             attrs.forEach(attr => {
-                if (tag === 'a' && (attr.name === 'href' || attr.name === 'target' || attr.name === 'rel')) return;
-                el.removeAttribute(attr.name);
+                if (!tagAllowed.includes(attr.name)) {
+                    el.removeAttribute(attr.name);
+                }
             });
             if (tag === 'a') {
                 el.setAttribute('target', '_blank');
                 el.setAttribute('rel', 'noopener noreferrer');
+            }
+            if (tag === 'img') {
+                el.style.maxWidth = '100%';
+                el.style.height = 'auto';
             }
         }
     });

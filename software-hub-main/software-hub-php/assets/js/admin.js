@@ -1063,11 +1063,75 @@ function renderSoftwareList() {
 const quillToolbar = [
     ['bold', 'italic', 'underline'],
     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-    ['link'],
+    ['link', 'image'],
     ['clean']
 ];
 
 const quillEditors = {};
+
+// Upload an image file to the server and return the local path
+async function uploadEditorImage(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const headers = {};
+    if (AdminState.csrfToken) headers['X-CSRF-Token'] = AdminState.csrfToken;
+    const res = await fetch('/api/upload.php?action=editor-image', {
+        method: 'POST', credentials: 'same-origin', headers, body: formData
+    });
+    const result = await res.json();
+    if (!result.path) throw new Error(result.error || 'Upload fehlgeschlagen');
+    return result.path;
+}
+
+// Custom image handler: opens file picker, uploads, inserts local URL
+function quillImageHandler() {
+    const editor = this.quill;
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = async () => {
+        const file = input.files?.[0];
+        if (!file) return;
+        try {
+            const url = await uploadEditorImage(file);
+            const range = editor.getSelection(true);
+            editor.insertEmbed(range.index, 'image', url, 'user');
+            editor.setSelection(range.index + 1);
+        } catch (e) {
+            showToast('Bild-Upload fehlgeschlagen: ' + e.message, 'error');
+        }
+    };
+    input.click();
+}
+
+// Replace external image URLs in pasted content with local copies
+async function rewriteExternalImages(editor) {
+    const root = editor.root;
+    const images = Array.from(root.querySelectorAll('img'));
+    for (const img of images) {
+        const src = img.getAttribute('src') || '';
+        // Skip already-local images and data URLs (they need to be uploaded though)
+        if (src.startsWith('/uploads/') || src.startsWith(window.location.origin)) continue;
+        try {
+            let blob;
+            if (src.startsWith('data:image/')) {
+                const res = await fetch(src);
+                blob = await res.blob();
+            } else if (src.startsWith('http')) {
+                // Try to fetch external image (may fail due to CORS or auth)
+                const res = await fetch(src, { mode: 'cors' });
+                if (!res.ok) continue;
+                blob = await res.blob();
+            } else continue;
+            const ext = blob.type.split('/')[1] || 'png';
+            const file = new File([blob], `pasted-${Date.now()}.${ext}`, { type: blob.type });
+            const url = await uploadEditorImage(file);
+            img.setAttribute('src', url);
+        } catch (e) {
+            console.warn('External image could not be localized:', src, e);
+        }
+    }
+}
 
 function initQuillEditors() {
     const editorIds = [
@@ -1084,12 +1148,25 @@ function initQuillEditors() {
         if (el && !quillEditors[id]) {
             quillEditors[id] = new Quill('#' + id, {
                 theme: 'snow',
-                modules: { toolbar: quillToolbar },
+                modules: {
+                    toolbar: {
+                        container: quillToolbar,
+                        handlers: { image: quillImageHandler }
+                    }
+                },
                 placeholder: ''
             });
             // Fix: Quill sets height:100% on .ql-container which breaks layout
             const container = el.querySelector('.ql-container');
             if (container) container.style.height = 'auto';
+            // Auto-localize external images on paste/drop
+            const editor = quillEditors[id];
+            editor.root.addEventListener('paste', () => {
+                setTimeout(() => rewriteExternalImages(editor), 100);
+            });
+            editor.root.addEventListener('drop', () => {
+                setTimeout(() => rewriteExternalImages(editor), 100);
+            });
         }
     });
 }

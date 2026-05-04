@@ -89,6 +89,21 @@ try {
             jsonResponse(['path' => $relativePath, 'original_name' => $originalName]);
             break;
 
+        case 'editor-image':
+            // Bild-Upload aus dem Rich-Text-Editor
+            if (!isset($_FILES['file'])) {
+                jsonError('Keine Datei hochgeladen');
+            }
+            $imgTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+            $result = handleFileUpload($_FILES['file'], UPLOAD_DIR . 'editor/', $imgTypes);
+            if ($result['success']) {
+                $relativePath = '/uploads/editor/' . $result['filename'];
+                jsonResponse(['path' => $relativePath, 'url' => $result['url']]);
+            } else {
+                jsonError($result['error']);
+            }
+            break;
+
         case 'font':
             // Schriftart-Upload (.woff2, .woff, .ttf)
             if (!isset($_FILES['file'])) {

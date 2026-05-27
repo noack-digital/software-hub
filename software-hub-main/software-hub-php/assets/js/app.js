@@ -16,6 +16,7 @@ let targetGroups = [];
 let settings = {};
 let selectedCategoryId = null;
 let selectedTargetGroupId = null;
+let documentationOpen = false;
 
 /**
  * Initialize the application
@@ -104,6 +105,11 @@ function parseUrlParameters() {
     if (urlParams.has('software')) {
         window._pendingSoftwareId = urlParams.get('software');
     }
+
+    // Open end-user documentation
+    if (urlParams.has('docs')) {
+        window._pendingDocumentation = true;
+    }
 }
 
 /**
@@ -123,6 +129,11 @@ function applyUrlParameters() {
         showSoftwareDetails(window._pendingSoftwareId);
         delete window._pendingSoftwareId;
 
+    }
+
+    if (window._pendingDocumentation) {
+        showDocumentationPage(false);
+        delete window._pendingDocumentation;
     }
 }
 
@@ -171,7 +182,9 @@ async function changeLanguage(lang) {
     // Re-render current page content
     const page = document.body.dataset.page;
     if (page === 'home') {
-        if (currentDetailItem) {
+        if (documentationOpen) {
+            renderDocumentationPage();
+        } else if (currentDetailItem) {
             renderDetailPage(currentDetailItem);
         } else {
             renderSoftwareGrid();
@@ -179,6 +192,12 @@ async function changeLanguage(lang) {
             renderTargetGroupFilter();
         }
     }
+}
+
+function setListVisibility(visible) {
+    document.querySelectorAll('.search-section, .filter-section, #softwareGrid, #emptyState').forEach(el => {
+        el.style.display = visible ? '' : 'none';
+    });
 }
 
 /**
@@ -575,6 +594,7 @@ async function showSoftwareDetails(id) {
 
     // Update URL
     const url = new URL(window.location);
+    url.searchParams.delete('docs');
     url.searchParams.set('software', id);
     history.pushState({ software: id }, '', url);
 
@@ -585,6 +605,10 @@ async function showSoftwareDetails(id) {
  * Render the detail landing page content
  */
 function renderDetailPage(item) {
+    documentationOpen = false;
+    const documentationPage = document.getElementById('documentationPage');
+    if (documentationPage) documentationPage.classList.add('hidden');
+
     const name = currentLanguage === 'en' && item.name_en ? item.name_en : item.name;
     const shortDesc = currentLanguage === 'en' && item.short_description_en ? item.short_description_en : item.short_description;
     const description = currentLanguage === 'en' && item.description_en ? item.description_en : item.description;
@@ -604,7 +628,7 @@ function renderDetailPage(item) {
     const content = document.getElementById('detailPageContent');
 
     // Hide main content, show detail page
-    document.querySelectorAll('.search-section, .filter-section, #softwareGrid, #emptyState').forEach(el => el.style.display = 'none');
+    setListVisibility(false);
     const footer = document.getElementById('footer');
     if (footer) footer.style.display = 'none';
     detailPage.classList.remove('hidden');
@@ -766,6 +790,221 @@ function renderDetailPage(item) {
     window.scrollTo(0, 0);
 }
 
+function showDocumentationPage(pushState = true) {
+    currentDetailItem = null;
+    documentationOpen = true;
+
+    const detailPage = document.getElementById('softwareDetailPage');
+    if (detailPage) detailPage.classList.add('hidden');
+
+    setListVisibility(false);
+    const footer = document.getElementById('footer');
+    if (footer) footer.style.display = 'none';
+
+    const documentationPage = document.getElementById('documentationPage');
+    if (documentationPage) documentationPage.classList.remove('hidden');
+
+    if (pushState) {
+        const url = new URL(window.location);
+        url.searchParams.delete('software');
+        url.searchParams.set('docs', '1');
+        history.pushState({ docs: true }, '', url);
+    }
+
+    renderDocumentationPage();
+    window.scrollTo(0, 0);
+}
+
+function closeDocumentationPage(pushState = true) {
+    documentationOpen = false;
+
+    const documentationPage = document.getElementById('documentationPage');
+    if (documentationPage) documentationPage.classList.add('hidden');
+
+    setListVisibility(true);
+    const footer = document.getElementById('footer');
+    if (footer && !(settings && settings.show_footer === 'false')) footer.style.display = '';
+
+    if (pushState) {
+        const url = new URL(window.location);
+        url.searchParams.delete('docs');
+        history.pushState({}, '', url.search ? url : window.location.pathname);
+    }
+}
+
+function renderDocumentationPage() {
+    const content = document.getElementById('documentationContent');
+    if (!content) return;
+
+    const docs = getDocumentationContent();
+
+    content.innerHTML = `
+        <div class="documentation-content">
+            <section class="documentation-hero">
+                <h1>${escapeHtml(docs.title)}</h1>
+                <p>${escapeHtml(docs.intro)}</p>
+            </section>
+
+            <section class="documentation-section">
+                <h2>${escapeHtml(docs.quickStart.title)}</h2>
+                <div class="documentation-steps">
+                    ${docs.quickStart.steps.map(step => `
+                        <div class="documentation-step">
+                            <strong>${escapeHtml(step.title)}</strong>
+                            <p>${escapeHtml(step.text)}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            </section>
+
+            ${docs.sections.map(section => `
+                <section class="documentation-section">
+                    <h2>${escapeHtml(section.title)}</h2>
+                    ${section.text ? `<p>${escapeHtml(section.text)}</p>` : ''}
+                    ${section.items ? `<ul>${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}
+                </section>
+            `).join('')}
+
+            <section class="documentation-section">
+                <div class="documentation-callout">
+                    <strong>${escapeHtml(docs.help.title)}</strong>
+                    <p>${escapeHtml(docs.help.text)}</p>
+                </div>
+            </section>
+        </div>
+    `;
+}
+
+function getDocumentationContent() {
+    if (currentLanguage === 'en') {
+        return {
+            title: 'Using the Software Hub',
+            intro: 'The Software Hub helps you find approved software and digital tools for your work or studies at HNEE. You can search, filter, compare key information, and open detailed guidance for each entry.',
+            quickStart: {
+                title: 'Quick Start',
+                steps: [
+                    { title: 'Search', text: 'Enter a software name, purpose, or keyword in the search field.' },
+                    { title: 'Filter', text: 'Use categories and target groups to narrow the list to relevant tools.' },
+                    { title: 'Open Details', text: 'Select "Show Details" to see access information, privacy notes, contacts, and guides.' }
+                ]
+            },
+            sections: [
+                {
+                    title: 'Finding Software',
+                    items: [
+                        'Use the search field for names, short descriptions, and descriptions.',
+                        'Click a category to show tools for a specific topic, such as research, teaching, or collaboration.',
+                        'Click a target group to show tools that are relevant for students, employees, teachers, or administrators.',
+                        'Select "All" in the filter rows to return to the complete catalog.'
+                    ]
+                },
+                {
+                    title: 'Understanding Cards',
+                    items: [
+                        'Each card shows the software name, a short description, categories, type, availability, and privacy status.',
+                        'The privacy indicator gives a quick orientation. Move the pointer over it to see additional notes where available.',
+                        'The type indicator shows whether a tool is web-based, desktop software, or mobile software.',
+                        'Use the external-link icon to open the provider or product website when a URL is available.'
+                    ]
+                },
+                {
+                    title: 'Using the Detail Page',
+                    items: [
+                        'The detail page explains what the software is used for and why it is offered at HNEE.',
+                        'The costs, hosting location, privacy status, target groups, and departments are summarized near the top.',
+                        'Use the access information to learn how to get started or where to request access.',
+                        'If a PDF guide is available, you can preview it and download it directly from the detail page.'
+                    ]
+                },
+                {
+                    title: 'Requesting an Account',
+                    items: [
+                        'Some software entries include an account request form.',
+                        'Fill in your first name, last name, username, and email address.',
+                        'The button opens your email program with a prepared message to the responsible contact person.',
+                        'Review the email before sending it, especially if your request needs extra context.'
+                    ]
+                },
+                {
+                    title: 'Language and Links',
+                    items: [
+                        'Use the DE/EN switcher in the header to change the interface language.',
+                        'Direct links to software details can be shared; the selected entry opens automatically.',
+                        'Footer links such as imprint or privacy policy are shown at the bottom when configured.'
+                    ]
+                }
+            ],
+            help: {
+                title: 'Need help?',
+                text: 'If information is missing or you are unsure which tool is right for your use case, use the contact persons shown in the software detail page or contact the responsible HNEE service team.'
+            }
+        };
+    }
+
+    return {
+        title: 'Bedienung des Software-Hubs',
+        intro: 'Der Software-Hub hilft Ihnen dabei, freigegebene Software und digitale Werkzeuge für Arbeit, Lehre, Forschung oder Studium an der HNEE zu finden. Sie können suchen, filtern, zentrale Angaben vergleichen und für jede Software Detailinformationen öffnen.',
+        quickStart: {
+            title: 'Schnelleinstieg',
+            steps: [
+                { title: 'Suchen', text: 'Geben Sie einen Softwarenamen, einen Einsatzzweck oder ein Stichwort in das Suchfeld ein.' },
+                { title: 'Filtern', text: 'Nutzen Sie Kategorien und Zielgruppen, um die Liste auf passende Werkzeuge einzugrenzen.' },
+                { title: 'Details öffnen', text: 'Wählen Sie "Details anzeigen", um Zugang, Datenschutz, Kontakte und Anleitungen zu sehen.' }
+            ]
+        },
+        sections: [
+            {
+                title: 'Software finden',
+                items: [
+                    'Das Suchfeld durchsucht Namen, Kurzbeschreibungen und Beschreibungen der Software-Einträge.',
+                    'Mit den Kategorien grenzen Sie die Auswahl thematisch ein, zum Beispiel auf Forschung, Lehre oder Zusammenarbeit.',
+                    'Mit den Zielgruppen sehen Sie Software, die für Studierende, Mitarbeitende, Lehrende oder Verwaltung relevant ist.',
+                    'Mit "Alle" in den Filterzeilen kehren Sie wieder zur vollständigen Übersicht zurück.'
+                ]
+            },
+            {
+                title: 'Karten verstehen',
+                items: [
+                    'Jede Karte zeigt Name, Kurzbeschreibung, Kategorien, Software-Typ, Verfügbarkeit und Datenschutzstatus.',
+                    'Die Datenschutzanzeige dient als schnelle Orientierung. Wenn weitere Hinweise hinterlegt sind, erscheinen sie beim Darüberfahren mit dem Mauszeiger.',
+                    'Der Typ zeigt, ob es sich um eine Web-Anwendung, Desktop-Software oder mobile Software handelt.',
+                    'Über das externe Link-Symbol öffnen Sie die Produkt- oder Anbieter-Webseite, sofern eine URL hinterlegt ist.'
+                ]
+            },
+            {
+                title: 'Detailseite nutzen',
+                items: [
+                    'Die Detailseite beschreibt, wofür die Software eingesetzt wird und warum sie an der HNEE angeboten wird.',
+                    'Kosten, Hosting-Ort, Datenschutzstatus, Zielgruppen und Abteilungen sind oben zusammengefasst.',
+                    'Im Bereich Zugang / Nutzung erfahren Sie, wie Sie starten oder wo Sie Zugriff beantragen können.',
+                    'Wenn ein PDF-Steckbrief vorhanden ist, können Sie ihn direkt ansehen und herunterladen.'
+                ]
+            },
+            {
+                title: 'Nutzerkonto beantragen',
+                items: [
+                    'Einige Software-Einträge enthalten ein Formular zur Nutzerkonto-Anfrage.',
+                    'Tragen Sie Vorname, Nachname, Benutzername und E-Mail-Adresse ein.',
+                    'Der Button öffnet Ihr E-Mail-Programm mit einer vorbereiteten Nachricht an die zuständige Ansprechperson.',
+                    'Prüfen Sie die E-Mail vor dem Absenden und ergänzen Sie bei Bedarf weitere Informationen.'
+                ]
+            },
+            {
+                title: 'Sprache und Links',
+                items: [
+                    'Mit dem DE/EN-Schalter im Kopfbereich wechseln Sie die Sprache der Oberfläche.',
+                    'Direktlinks zu Software-Details können geteilt werden; der gewählte Eintrag wird automatisch geöffnet.',
+                    'Footer-Links wie Impressum oder Datenschutz erscheinen unten auf der Seite, sofern sie konfiguriert sind.'
+                ]
+            }
+        ],
+        help: {
+            title: 'Sie brauchen Hilfe?',
+            text: 'Wenn Angaben fehlen oder Sie unsicher sind, welche Software für Ihren Zweck geeignet ist, nutzen Sie die Ansprechpersonen auf der Detailseite oder wenden Sie sich an das zuständige HNEE-Service-Team.'
+        }
+    };
+}
+
 /**
  * Render account request form (Feature 2)
  */
@@ -869,22 +1108,28 @@ function sendAccountRequest(softwareName) {
 /**
  * Close the detail page and return to the software list
  */
-function closeDetailPage() {
+function closeDetailPage(pushState = true) {
     currentDetailItem = null;
+    documentationOpen = false;
 
     // Hide detail page
     const detailPage = document.getElementById('softwareDetailPage');
     detailPage.classList.add('hidden');
+    const documentationPage = document.getElementById('documentationPage');
+    if (documentationPage) documentationPage.classList.add('hidden');
 
     // Show main content again
-    document.querySelectorAll('.search-section, .filter-section, #softwareGrid').forEach(el => el.style.display = '');
+    setListVisibility(true);
     const footer = document.getElementById('footer');
     if (footer && !(settings && settings.show_footer === 'false')) footer.style.display = '';
 
     // Update URL back
-    const url = new URL(window.location);
-    url.searchParams.delete('software');
-    history.pushState({}, '', url.search ? url : window.location.pathname);
+    if (pushState) {
+        const url = new URL(window.location);
+        url.searchParams.delete('software');
+        url.searchParams.delete('docs');
+        history.pushState({}, '', url.search ? url : window.location.pathname);
+    }
 }
 
 /**
@@ -970,10 +1215,20 @@ function setupHomeEventListeners() {
         btn.addEventListener('click', () => changeLanguage(btn.dataset.lang));
     });
 
+    const documentationLink = document.getElementById('documentationLink');
+    if (documentationLink) {
+        documentationLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            showDocumentationPage();
+        });
+    }
+
     // Browser back/forward for detail page
     window.addEventListener('popstate', (e) => {
         const params = new URLSearchParams(window.location.search);
-        if (params.has('software')) {
+        if (params.has('docs')) {
+            showDocumentationPage(false);
+        } else if (params.has('software')) {
             const id = params.get('software');
             const item = software.find(s => s.id === id);
             if (item) {
@@ -981,7 +1236,11 @@ function setupHomeEventListeners() {
                 renderDetailPage(item);
             }
         } else {
-            closeDetailPage();
+            if (documentationOpen) {
+                closeDocumentationPage(false);
+            } else {
+                closeDetailPage(false);
+            }
         }
     });
 }

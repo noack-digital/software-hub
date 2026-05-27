@@ -117,6 +117,34 @@ a:hover {
     gap: 1rem;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.header-doc-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.125rem;
+    padding: 0 0.75rem;
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius);
+    background: white;
+    color: var(--color-gray-700);
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.header-doc-link:hover {
+    background: var(--color-gray-100);
+    color: var(--color-primary-dark);
+}
+
 /* Language Switcher */
 .language-switcher {
     display: flex;
@@ -1062,6 +1090,96 @@ a:hover {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.75rem;
+}
+
+/* End-user Documentation */
+.documentation-page {
+    padding: 2rem 0;
+    min-height: calc(100vh - 64px);
+}
+
+.documentation-page.hidden {
+    display: none;
+}
+
+.documentation-content {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 960px;
+    margin: 0 auto 2rem;
+}
+
+.documentation-hero,
+.documentation-section {
+    background: white;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.documentation-hero {
+    padding: 2rem;
+}
+
+.documentation-hero h1 {
+    margin-bottom: 0.75rem;
+}
+
+.documentation-hero p {
+    max-width: 760px;
+    color: var(--color-gray-600);
+    line-height: 1.7;
+}
+
+.documentation-section {
+    padding: 1.5rem;
+}
+
+.documentation-section h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.documentation-section p,
+.documentation-section li {
+    color: var(--color-gray-600);
+    line-height: 1.7;
+}
+
+.documentation-section ul,
+.documentation-section ol {
+    padding-left: 1.25rem;
+}
+
+.documentation-section li + li {
+    margin-top: 0.45rem;
+}
+
+.documentation-callout {
+    padding: 1rem;
+    border-left: 4px solid var(--color-primary);
+    background: var(--color-gray-50);
+    border-radius: 0.5rem;
+}
+
+.documentation-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.documentation-step {
+    padding: 1rem;
+    border: 1px solid var(--color-gray-200);
+    border-radius: 0.5rem;
+    background: var(--color-gray-50);
+}
+
+.documentation-step strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--color-gray-900);
 }
 
 /* Modal */

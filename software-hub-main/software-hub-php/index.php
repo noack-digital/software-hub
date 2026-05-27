@@ -115,6 +115,9 @@ $isLoggedIn = Auth::isLoggedIn();
                         <button data-lang="de" class="active">DE</button>
                         <button data-lang="en">EN</button>
                     </div>
+                    <a href="?docs=1" id="documentationLink" class="header-doc-link" data-t="navigation.documentation">
+                        Dokumentation
+                    </a>
                 </div>
             </div>
         </div>
@@ -184,6 +187,27 @@ $isLoggedIn = Auth::isLoggedIn();
             </div>
             <div id="detailPageContent">
                 <!-- Content rendered by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- End-user Documentation Page (hidden by default) -->
+    <div id="documentationPage" class="documentation-page hidden">
+        <div class="container">
+            <div class="detail-page-header">
+                <a href="#" class="back-link" onclick="closeDocumentationPage(); return false;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    <span data-t="software.backToList">Zurück zu den Softwares</span>
+                </a>
+                <button class="detail-close-btn" onclick="closeDocumentationPage()" title="Schließen">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div id="documentationContent">
+                <!-- Documentation rendered by JavaScript -->
             </div>
         </div>
     </div>

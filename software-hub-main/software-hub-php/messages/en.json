@@ -14,7 +14,8 @@
     "users": "Users",
     "settings": "Settings",
     "importExport": "Import/Export",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "documentation": "Documentation"
   },
   "common": {
     "search": "Search...",

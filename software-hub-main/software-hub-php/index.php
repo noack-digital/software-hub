@@ -85,7 +85,7 @@ $isLoggedIn = Auth::isLoggedIn();
     <?php if (isset($faviconFiles['ico'])): ?>
     <link rel="shortcut icon" href="<?= $faviconFiles['ico'] ?>">
     <?php endif; ?>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?= filemtime(__DIR__ . '/assets/css/style.css') ?>">
     <?php if ($bgColor && $bgColor !== '#f9fafb'): ?>
     <style>body { background-color: <?= htmlspecialchars($bgColor) ?>; }</style>
     <?php endif; ?>
@@ -115,8 +115,12 @@ $isLoggedIn = Auth::isLoggedIn();
                         <button data-lang="de" class="active">DE</button>
                         <button data-lang="en">EN</button>
                     </div>
-                    <a href="?docs=1" id="documentationLink" class="header-doc-link" data-t="navigation.documentation">
-                        Dokumentation
+                    <a href="?docs=1" id="documentationLink" class="header-doc-link" data-t-title="navigation.documentation" aria-label="Dokumentation" title="Dokumentation">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.1 9a3 3 0 1 1 5.8 1c-.6 1.2-1.9 1.6-2.5 2.6-.3.4-.4.8-.4 1.4"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
                     </a>
                 </div>
             </div>
@@ -233,7 +237,7 @@ $isLoggedIn = Auth::isLoggedIn();
         <div class="spinner"></div>
     </div>
 
-    <script src="assets/js/app.js"></script>
+    <script src="assets/js/app.js?v=<?= filemtime(__DIR__ . '/assets/js/app.js') ?>"></script>
     <script>
         // Initialize home page
         document.addEventListener('DOMContentLoaded', init);

@@ -217,6 +217,12 @@ function updateLanguageUI() {
     document.querySelectorAll('[data-t-placeholder]').forEach(el => {
         el.placeholder = t(el.dataset.tPlaceholder);
     });
+
+    document.querySelectorAll('[data-t-title]').forEach(el => {
+        const translated = t(el.dataset.tTitle);
+        el.title = translated;
+        el.setAttribute('aria-label', translated);
+    });
 }
 
 /**

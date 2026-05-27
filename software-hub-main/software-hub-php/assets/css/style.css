@@ -129,20 +129,23 @@ a:hover {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 2.125rem;
-    padding: 0 0.75rem;
+    width: 2.125rem;
+    height: 2.125rem;
+    padding: 0;
     border: 1px solid var(--color-gray-300);
-    border-radius: var(--border-radius);
+    border-radius: 9999px;
     background: white;
     color: var(--color-gray-700);
-    font-size: 0.875rem;
-    font-weight: 500;
-    white-space: nowrap;
+    flex: 0 0 auto;
 }
 
 .header-doc-link:hover {
     background: var(--color-gray-100);
     color: var(--color-primary-dark);
+}
+
+.header-doc-link svg {
+    display: block;
 }
 
 /* Language Switcher */

@@ -600,6 +600,27 @@ if ($currentUser['role'] !== 'ADMIN') {
                 </div>
             </div>
 
+            <!-- Parent Page Script (SharePoint etc.) -->
+            <div class="form-section">
+                <h4 class="form-section-title">Parent-Seite (SharePoint / iFrame-Host)</h4>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                    Zusätzlich auf der einbettenden Seite einfügen, damit beim Öffnen von Software-Details automatisch zum iFrame gescrollt wird.
+                    Dem iFrame die ID <code>software-hub-iframe</code> geben (siehe iFrame-Code oben).
+                </p>
+                <div class="form-group">
+                    <div style="position: relative;">
+                        <pre id="parentCode" style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.875rem; border: 1px solid var(--border-color); margin: 0;"></pre>
+                        <button class="btn btn-sm btn-secondary" style="position: absolute; top: 0.5rem; right: 0.5rem;" onclick="copyToClipboard('parentCode')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            Kopieren
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- WordPress -->
             <div class="form-section">
                 <h4 class="form-section-title">WordPress-Integration</h4>

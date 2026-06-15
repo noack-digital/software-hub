@@ -4237,27 +4237,48 @@ function setupEmbedTab() {
 
         // iFrame Code
         document.getElementById('iframeCode').textContent =
-            '<iframe src="' + url + '"\n' +
+            '<iframe id="software-hub-iframe"\n' +
+            '        src="' + url + '"\n' +
             '        width="100%"\n' +
             '        height="800"\n' +
             '        frameborder="0"\n' +
             '        style="border: none;">\n' +
             '</iframe>';
 
-        // JavaScript Loader
+        // JavaScript Loader (includes parent scroll handler)
         document.getElementById('jsCode').textContent =
             '<div id="software-hub-container"></div>\n' +
             '<script>\n' +
             '  (function() {\n' +
             '    var iframe = document.createElement("iframe");\n' +
+            '    iframe.id = "software-hub-iframe";\n' +
             '    iframe.src = "' + url + '";\n' +
             '    iframe.width = "100%";\n' +
             '    iframe.height = "800";\n' +
             '    iframe.frameBorder = "0";\n' +
             '    iframe.style.border = "none";\n' +
             '    document.getElementById("software-hub-container").appendChild(iframe);\n' +
+            '    window.addEventListener("message", function(event) {\n' +
+            '      if (!event.data || event.data.type !== "software-hub:navigate") return;\n' +
+            '      if (event.data.origin && event.data.origin !== "' + baseUrl + '") return;\n' +
+            '      iframe.scrollIntoView({ behavior: "smooth", block: "start" });\n' +
+            '    });\n' +
             '  })();\n' +
             '</script>';
+
+        // Parent page script (for SharePoint / plain iframe embeds)
+        const parentCodeEl = document.getElementById('parentCode');
+        if (parentCodeEl) {
+            parentCodeEl.textContent =
+                '<script>\n' +
+                'window.addEventListener("message", function(event) {\n' +
+                '  if (!event.data || event.data.type !== "software-hub:navigate") return;\n' +
+                '  if (event.data.origin && event.data.origin !== "' + baseUrl + '") return;\n' +
+                '  var iframe = document.getElementById("software-hub-iframe");\n' +
+                '  if (iframe) iframe.scrollIntoView({ behavior: "smooth", block: "start" });\n' +
+                '});\n' +
+                '</script>';
+        }
 
         // WordPress Shortcode
         document.getElementById('wpCode').textContent =

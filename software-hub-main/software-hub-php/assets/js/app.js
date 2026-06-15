@@ -201,6 +201,33 @@ function setListVisibility(visible) {
 }
 
 /**
+ * Scroll to top after view change (list → detail/docs).
+ * Uses rAF so layout is settled after hiding the list; notifies parent iframe host.
+ */
+function scrollToTopView(targetSelector) {
+    const scroll = () => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+
+        const target = targetSelector ? document.querySelector(targetSelector) : null;
+        if (target) {
+            target.scrollIntoView({ block: 'start', inline: 'nearest' });
+        }
+    };
+
+    requestAnimationFrame(() => requestAnimationFrame(scroll));
+
+    if (window.parent !== window) {
+        window.parent.postMessage({
+            type: 'software-hub:navigate',
+            action: 'scroll-top',
+            origin: window.location.origin
+        }, '*');
+    }
+}
+
+/**
  * Update language UI
  */
 function updateLanguageUI() {
@@ -793,7 +820,7 @@ function renderDetailPage(item) {
         ${renderAccountRequestForm(item)}
     `;
 
-    window.scrollTo(0, 0);
+    scrollToTopView('#softwareDetailPage .detail-page-header');
 }
 
 function showDocumentationPage(pushState = true) {
@@ -818,7 +845,7 @@ function showDocumentationPage(pushState = true) {
     }
 
     renderDocumentationPage();
-    window.scrollTo(0, 0);
+    scrollToTopView('#documentationPage .detail-page-header');
 }
 
 function closeDocumentationPage(pushState = true) {

@@ -46,7 +46,7 @@ class FooterLink
      */
     public function create(array $data): array
     {
-        $id = generateId();
+        $id = Database::generateId();
         $text = $data['text'] ?? '';
         $text_en = $data['text_en'] ?? null;
         $url = $data['url'] ?? '';

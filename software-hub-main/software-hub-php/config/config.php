@@ -15,7 +15,11 @@ date_default_timezone_set('Europe/Berlin');
 // Session-Konfiguration
 ini_set('session.cookie_httponly', '1');
 ini_set('session.use_strict_mode', '1');
-ini_set('session.cookie_path', '/'); // Cookie für gesamte Domain verfügbar
+ini_set('session.cookie_path', '/');
+if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+    ini_set('session.cookie_secure', '1');
+}
+ini_set('session.cookie_samesite', 'Lax');
 
 // Datenbankverbindung – alle Werte müssen über Umgebungsvariablen gesetzt sein
 define('DB_HOST', $_ENV['DB_HOST'] ?? 'software-hub-php-db');

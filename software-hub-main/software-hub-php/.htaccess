@@ -22,6 +22,10 @@ Options -Indexes
 # Block access to includes directory (except through PHP)
 RewriteRule ^includes/ - [F,L]
 RewriteRule ^config/ - [F,L]
+RewriteRule ^scripts/ - [F,L]
+
+# Block test and maintenance PHP scripts in webroot
+RewriteRule ^test-.*\.php$ - [F,L]
 
 # Allow direct access to existing files and directories
 RewriteCond %{REQUEST_FILENAME} -f [OR]

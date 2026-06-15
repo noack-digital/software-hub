@@ -9,17 +9,13 @@ set_time_limit(60);
 
 header('Content-Type: application/json');
 
-if (!Auth::isLoggedIn()) {
-    http_response_code(401);
-    jsonResponse(['error' => 'Nicht authentifiziert'], false);
-    exit;
-}
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     jsonResponse(['error' => 'Methode nicht erlaubt'], false);
     exit;
 }
+
+requireAdminCsrf();
 
 $input = json_decode(file_get_contents('php://input'), true);
 $text = trim($input['text'] ?? '');

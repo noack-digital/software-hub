@@ -27,6 +27,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // Upload Logo or Favicon
 if ($method === 'POST') {
+    requireCsrf();
     if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
         jsonResponse(['error' => 'Keine Datei hochgeladen'], false);
         exit;
@@ -72,6 +73,9 @@ if ($method === 'POST') {
             jsonResponse(['error' => 'Fehler beim Speichern der Datei'], false);
             exit;
         }
+        if ($extension === 'svg') {
+            sanitizeSvgUpload($targetPath);
+        }
 
         jsonResponse([
             'success' => true,
@@ -90,6 +94,9 @@ if ($method === 'POST') {
         if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
             jsonResponse(['error' => 'Fehler beim Speichern der Datei'], false);
             exit;
+        }
+        if ($extension === 'svg') {
+            sanitizeSvgUpload($targetPath);
         }
 
         // Save logo path to settings
@@ -117,6 +124,7 @@ if ($method === 'POST') {
 
 // Delete Logo or Favicon
 elseif ($method === 'DELETE') {
+    requireCsrf();
     $type = $_GET['type'] ?? 'logo';
     $rootPath = dirname(__DIR__);
 

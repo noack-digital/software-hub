@@ -1446,10 +1446,18 @@ function sanitizeHtml(html) {
             if (tag === 'a') {
                 el.setAttribute('target', '_blank');
                 el.setAttribute('rel', 'noopener noreferrer');
+                const href = el.getAttribute('href') || '';
+                if (href && !/^(https?:|mailto:|tel:|#)/i.test(href.trim())) {
+                    el.removeAttribute('href');
+                }
             }
             if (tag === 'img') {
                 el.style.maxWidth = '100%';
                 el.style.height = 'auto';
+                const src = el.getAttribute('src') || '';
+                if (src && !/^(https?:|\/)/i.test(src.trim())) {
+                    el.removeAttribute('src');
+                }
             }
         }
     });

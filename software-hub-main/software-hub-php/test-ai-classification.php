@@ -1,15 +1,16 @@
 <?php
 /**
- * Test AI Classification
- * This script tests the AI classification functionality
+ * Test AI Classification (Admin only, CLI or authenticated admin)
  */
 
 require_once __DIR__ . '/includes/init.php';
 require_once __DIR__ . '/includes/AIHelper.php';
 
-// Login required
-if (!Auth::isLoggedIn()) {
-    die('Please login first at <a href="/admin/">Admin Panel</a>');
+if (PHP_SAPI !== 'cli') {
+    if (!Auth::isLoggedIn() || !Auth::isAdmin()) {
+        http_response_code(403);
+        exit('Forbidden');
+    }
 }
 
 // Get categories and target groups

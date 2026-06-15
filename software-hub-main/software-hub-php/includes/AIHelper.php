@@ -274,16 +274,22 @@ class AIHelper
      */
     private function followRedirects(string $url): ?string
     {
+        if (!isSafeExternalUrl($url)) {
+            return null;
+        }
         try {
             $ch = curl_init($url);
             curl_setopt_array($ch, [
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_MAXREDIRS => 5,
+                CURLOPT_MAXREDIRS => 3,
                 CURLOPT_TIMEOUT => 10,
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                CURLOPT_NOBODY => true // HEAD request only, no body needed
+                CURLOPT_SSL_VERIFYPEER => true,
+                CURLOPT_SSL_VERIFYHOST => 2,
+                CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+                CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+                CURLOPT_USERAGENT => 'Software-Hub/1.0',
+                CURLOPT_NOBODY => true
             ]);
 
             curl_exec($ch);

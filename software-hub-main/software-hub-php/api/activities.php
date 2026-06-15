@@ -1,7 +1,7 @@
 <?php
 /**
  * Activities API Endpoint
- * View recent audit log activities
+ * View recent audit log activities (Admin only)
  */
 
 declare(strict_types=1);
@@ -9,18 +9,18 @@ declare(strict_types=1);
 require_once __DIR__ . '/../includes/init.php';
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+setApiCorsHeaders('GET, OPTIONS');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
+requireAdmin();
+
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
-        $limit = min(max($limit, 1), 100); // Between 1 and 100
+        $limit = min(max($limit, 1), 100);
 
         $db = Database::getInstance();
 
@@ -43,7 +43,6 @@ try {
         $stmt->execute([$limit]);
         $activities = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Parse JSON changes
         foreach ($activities as &$activity) {
             if ($activity['changes']) {
                 $activity['changes'] = json_decode($activity['changes'], true);

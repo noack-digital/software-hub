@@ -8,9 +8,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../includes/init.php';
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, X-CSRF-Token');
+setApiCorsHeaders('GET, POST, OPTIONS');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
@@ -27,6 +25,7 @@ try {
                 jsonError('Methode nicht erlaubt', 405);
             }
             requireCsrf();
+            checkRateLimit('login:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'), 10, 300);
 
             $data = getJsonBody();
             if (empty($data['email']) || empty($data['password'])) {
@@ -70,6 +69,7 @@ try {
                 jsonError('Methode nicht erlaubt', 405);
             }
             requireCsrf();
+            checkRateLimit('reset:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'), 5, 600);
 
             $data = getJsonBody();
             if (empty($data['email'])) {

@@ -14,9 +14,7 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, X-CSRF-Token');
+setApiCorsHeaders('GET, POST, OPTIONS');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
@@ -404,7 +402,7 @@ function importData(PDO $db, array $data): void {
             );
 
             foreach ($data['software'] as $sw) {
-                $id = $sw['id'] ?? generateId();
+                $id = $sw['id'] ?? Database::generateId();
                 $types = is_array($sw['types'] ?? null) ? json_encode($sw['types']) : ($sw['types'] ?? '[]');
 
                 $swStmt->execute([

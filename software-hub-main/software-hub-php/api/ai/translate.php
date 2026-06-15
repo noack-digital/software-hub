@@ -9,38 +9,34 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../includes/init.php';
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+setApiCorsHeaders('POST, OPTIONS');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-if (!Auth::isAdmin()) {
-    jsonError('Nicht autorisiert', 401);
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    jsonError('Methode nicht erlaubt', 405);
 }
 
+requireAdminCsrf();
+
 try {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $data = getJsonBody();
+    $data = getJsonBody();
 
-        if (empty($data['text'])) {
-            jsonError('Text ist erforderlich');
-        }
+    if (empty($data['text'])) {
+        jsonError('Text ist erforderlich');
+    }
 
-        $text = $data['text'];
-        $targetLang = $data['targetLang'] ?? 'en';
+    $text = $data['text'];
+    $targetLang = $data['targetLang'] ?? 'en';
 
-        $result = AI::translate($text, $targetLang);
+    $result = AI::translate($text, $targetLang);
 
-        if ($result['success']) {
-            jsonResponse($result);
-        } else {
-            jsonError($result['error'], 400);
-        }
+    if ($result['success']) {
+        jsonResponse($result);
     } else {
-        jsonError('Methode nicht erlaubt', 405);
+        jsonError($result['error'], 400);
     }
 } catch (Exception $e) {
     error_log("AI Translate Error: " . $e->getMessage());

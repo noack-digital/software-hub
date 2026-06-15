@@ -20,6 +20,13 @@ if (!Auth::isLoggedIn()) {
 $currentUser = Auth::getCurrentUser();
 $isAdmin = $currentUser['role'] === 'ADMIN';
 
+// Admin-only pages
+$adminOnlyPages = ['software', 'categories', 'target-groups', 'departments', 'settings', 'users'];
+if (in_array($currentPage ?? '', $adminOnlyPages, true) && !$isAdmin) {
+    header('Location: dashboard.php');
+    exit;
+}
+
 // Get current page from filename if not set
 if (!isset($currentPage)) {
     $currentPage = basename($_SERVER['PHP_SELF'], '.php');

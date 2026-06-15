@@ -8,9 +8,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../includes/init.php';
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+setApiCorsHeaders('GET, OPTIONS');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
@@ -19,6 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     jsonError('Methode nicht erlaubt', 405);
 }
+
+requireAdmin();
 
 $db = Database::getInstance();
 

@@ -211,11 +211,15 @@ function handleFileUpload(array $file, string $targetDir, array $allowedTypes = 
     $mimeType = finfo_file($finfo, $file['tmp_name']);
     finfo_close($finfo);
 
-    if (!in_array($mimeType, $allowedTypes)) {
+    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if ($extension === 'svg' && !in_array($mimeType, $allowedTypes, true)) {
+        $mimeType = 'image/svg+xml';
+    }
+
+    if (!in_array($mimeType, $allowedTypes, true)) {
         return ['success' => false, 'error' => 'Dateityp nicht erlaubt'];
     }
 
-    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
     $newFilename = Database::generateId() . '.' . $extension;
     $targetPath = $targetDir . $newFilename;
 

@@ -1781,8 +1781,11 @@ async function saveSoftware(e) {
             // Manual upload takes precedence
             console.log('Manual logo file selected, uploading:', logoFile.name);
             const uploadResult = await AdminAPI.uploadFile(logoFile);
-            data.logo = uploadResult.path;
-            console.log('Logo uploaded successfully:', uploadResult.path);
+            data.logo = uploadResult.path || uploadResult.url;
+            if (!data.logo) {
+                throw new Error('Logo-Upload fehlgeschlagen: Kein Pfad in der Serverantwort');
+            }
+            console.log('Logo uploaded successfully:', data.logo);
         } else {
             // Check for manually fetched favicon
             const fetchedLogo = document.getElementById('softwareName').dataset.fetchedLogo;

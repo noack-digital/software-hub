@@ -109,7 +109,7 @@ require_once __DIR__ . '/../includes/admin-header.php';
                         </button>
                     </div>
                     <div id="logoPreview"></div>
-                    <input type="file" id="softwareLogo" class="form-input" accept="image/*">
+                    <input type="file" id="softwareLogo" class="form-input" accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml,.svg">
                 </div>
                 <div class="form-row">
                     <div class="form-group"><label class="form-label" for="softwareShortDescription" data-t="software.shortDescription">Kurzbeschreibung</label><input type="text" id="softwareShortDescription" class="form-input"></div>

@@ -39,7 +39,8 @@ try {
 
             $result = handleFileUpload($_FILES['file'], UPLOAD_DIR . 'logos/');
             if ($result['success']) {
-                jsonResponse(['url' => $result['url']]);
+                $relativePath = '/uploads/logos/' . $result['filename'];
+                jsonResponse(['path' => $relativePath, 'url' => $relativePath]);
             } else {
                 jsonError($result['error']);
             }

@@ -977,8 +977,8 @@ function getDocumentationContent() {
                     title: 'Suggesting Software',
                     items: [
                         'If a tool is missing from the catalog, click the plus icon in the header (next to the language switcher) to open the suggestion form.',
-                        'Enter your name and email address so administrators can contact you if they have questions.',
-                        'Provide the software name (required) and, if available, the product website URL.',
+                        'Enter your name and email address (required) so administrators can contact you if they have questions.',
+                        'Provide the software name (required). All other fields such as website URL, descriptions, categories, or uploads are optional.',
                         'Complete as many details as possible: short and full descriptions, categories, target groups, departments, privacy status, costs, access information, contacts, logo, or PDF guides.',
                         'After you submit the form, an administrator reviews your entry. It will only appear in the public catalog once it has been approved.',
                         'You will not receive an automatic confirmation email; approved software becomes visible like any other catalog entry.'
@@ -1052,8 +1052,8 @@ function getDocumentationContent() {
                 title: 'Software vorschlagen',
                 items: [
                     'Fehlt eine Software im Katalog, öffnen Sie über das Plus-Symbol im Kopfbereich (neben dem Sprachschalter) das Formular „Software vorschlagen“.',
-                    'Tragen Sie Ihren Namen und Ihre E-Mail-Adresse ein, damit Administratoren bei Rückfragen Kontakt aufnehmen können.',
-                    'Geben Sie den Namen der Software an (Pflichtfeld) und optional die Webadresse des Produkts an.',
+                    'Tragen Sie Ihren Namen und Ihre E-Mail-Adresse ein (Pflichtfelder), damit Administratoren bei Rückfragen Kontakt aufnehmen können.',
+                    'Geben Sie den Namen der Software an (Pflichtfeld). Alle weiteren Angaben wie Webadresse, Beschreibungen, Kategorien oder Uploads sind optional.',
                     'Ergänzen Sie möglichst viele Angaben: Kurz- und Vollbeschreibung, Kategorien, Zielgruppen, Abteilungen, Datenschutzstatus, Kosten, Zugangsinformationen, Ansprechpersonen, Logo oder PDF-Steckbrief.',
                     'Nach dem Absenden prüft eine Administratorin oder ein Administrator Ihre Einreichung. Erst nach der Freigabe erscheint die Software im öffentlichen Katalog.',
                     'Eine automatische Bestätigungs-E-Mail erhalten Sie nicht; freigegebene Software wird wie jeder andere Katalogeintrag sichtbar.'
@@ -1723,7 +1723,7 @@ function renderSubmissionContactsList(contacts = []) {
             </select>
             <input type="text" class="form-input contact-first-name" placeholder="${escapeHtml(t('submission.contactFirstName'))}" value="${escapeHtml(c.first_name || c.firstName || '')}">
             <input type="text" class="form-input contact-last-name" placeholder="${escapeHtml(t('submission.contactLastName'))}" value="${escapeHtml(c.last_name || c.lastName || '')}">
-            <input type="url" class="form-input contact-profile-url" placeholder="${escapeHtml(t('submission.contactProfile'))}" value="${escapeHtml(c.profile_url || c.profileUrl || '')}">
+            <input type="text" class="form-input contact-profile-url" placeholder="${escapeHtml(t('submission.contactProfile'))}" value="${escapeHtml(c.profile_url || c.profileUrl || '')}" inputmode="url">
             <input type="email" class="form-input contact-email" placeholder="${escapeHtml(t('submission.contactEmail'))}" value="${escapeHtml(c.email || '')}">
             <div class="flex flex-wrap gap-2">
                 <label class="form-checkbox text-xs"><input type="checkbox" class="contact-role-admin" ${roles.includes('administration') ? 'checked' : ''}> ${escapeHtml(t('submission.contactAdmin'))}</label>
@@ -1752,7 +1752,7 @@ function addSubmissionContactRow() {
         </select>
         <input type="text" class="form-input contact-first-name" placeholder="${escapeHtml(t('submission.contactFirstName'))}">
         <input type="text" class="form-input contact-last-name" placeholder="${escapeHtml(t('submission.contactLastName'))}">
-        <input type="url" class="form-input contact-profile-url" placeholder="${escapeHtml(t('submission.contactProfile'))}">
+        <input type="text" class="form-input contact-profile-url" placeholder="${escapeHtml(t('submission.contactProfile'))}" inputmode="url">
         <input type="email" class="form-input contact-email" placeholder="${escapeHtml(t('submission.contactEmail'))}">
         <div class="flex flex-wrap gap-2">
             <label class="form-checkbox text-xs"><input type="checkbox" class="contact-role-admin"> ${escapeHtml(t('submission.contactAdmin'))}</label>
@@ -1833,6 +1833,18 @@ async function submitSoftwareSuggestion(e) {
     if (document.getElementById('submissionHoneypot')?.value) {
         closeSubmissionModal();
         showToast(t('submission.success'), 'success');
+        return;
+    }
+
+    const submitterName = document.getElementById('submitterName')?.value.trim() || '';
+    const submitterEmail = document.getElementById('submitterEmail')?.value.trim() || '';
+    const softwareName = document.getElementById('submissionName')?.value.trim() || '';
+    if (!submitterName || !submitterEmail || !softwareName) {
+        showToast(t('submission.requiredFieldsError'), 'error');
+        return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(submitterEmail)) {
+        showToast(t('submission.invalidEmailError'), 'error');
         return;
     }
 

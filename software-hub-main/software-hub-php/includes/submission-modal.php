@@ -11,7 +11,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>
-        <form id="submissionForm" onsubmit="submitSoftwareSuggestion(event)">
+        <form id="submissionForm" onsubmit="submitSoftwareSuggestion(event)" novalidate>
             <div class="modal-body submission-modal-body">
                 <input type="text" name="_website" id="submissionHoneypot" class="submission-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
 
@@ -34,12 +34,12 @@
                 <div class="card mb-4">
                     <div class="card-header"><h4 data-t="software.basicInfo">Grundinformationen</h4></div>
                     <div class="card-body">
-                        <p class="text-sm text-gray-500 mb-3" id="submissionSoftwareBasicHint" data-t="submission.softwareBasicInfoHint">Bitte geben Sie hier den Namen und die Webadresse der Software ein, die Sie für den Software Hub vorschlagen möchten.</p>
+                        <p class="text-sm text-gray-500 mb-3" id="submissionSoftwareBasicHint" data-t="submission.softwareBasicInfoHint">Bitte geben Sie hier den Namen der Software ein, die Sie für den Software Hub vorschlagen möchten. Alle weiteren Angaben sind optional.</p>
                         <div class="form-row">
                             <div class="form-group"><label class="form-label" for="submissionName" id="labelSubmissionName">Name der Software</label><input type="text" id="submissionName" class="form-input" data-t-placeholder="submission.softwareNamePlaceholder" placeholder="z. B. Adobe Acrobat Pro" required></div>
                             <div class="form-group"><label class="form-label" for="submissionNameEn" id="labelSubmissionNameEn">Name der Software (EN)</label><input type="text" id="submissionNameEn" class="form-input" data-t-placeholder="submission.softwareNamePlaceholder" placeholder="z. B. Adobe Acrobat Pro"></div>
                         </div>
-                        <div class="form-group"><label class="form-label" for="submissionUrl" id="labelSubmissionUrl">URL / Webseite der Software</label><input type="url" id="submissionUrl" class="form-input" data-t-placeholder="submission.softwareUrlPlaceholder" placeholder="https://www.beispiel-software.de"></div>
+                        <div class="form-group"><label class="form-label" for="submissionUrl" id="labelSubmissionUrl">URL / Webseite der Software</label><input type="text" id="submissionUrl" class="form-input" data-t-placeholder="submission.softwareUrlPlaceholder" placeholder="https://www.beispiel-software.de" inputmode="url" autocomplete="url"></div>
                         <div class="form-group">
                             <label class="form-label" data-t="software.logo">Logo</label>
                             <div id="submissionLogoPreview"></div>

@@ -6,6 +6,7 @@
 /.DS_Store
 *.log
 *.sql
+!software-hub-php/migrations/*.sql
 software-hub-php/uploads/
 software-hub-php/test-results/
 

@@ -974,6 +974,17 @@ function getDocumentationContent() {
                     ]
                 },
                 {
+                    title: 'Suggesting Software',
+                    items: [
+                        'If a tool is missing from the catalog, click the plus icon in the header (next to the language switcher) to open the suggestion form.',
+                        'Enter your name and email address so administrators can contact you if they have questions.',
+                        'Provide the software name (required) and, if available, the product website URL.',
+                        'Complete as many details as possible: short and full descriptions, categories, target groups, departments, privacy status, costs, access information, contacts, logo, or PDF guides.',
+                        'After you submit the form, an administrator reviews your entry. It will only appear in the public catalog once it has been approved.',
+                        'You will not receive an automatic confirmation email; approved software becomes visible like any other catalog entry.'
+                    ]
+                },
+                {
                     title: 'Language and Links',
                     items: [
                         'Use the DE/EN switcher in the header to change the interface language.',
@@ -984,7 +995,7 @@ function getDocumentationContent() {
             ],
             help: {
                 title: 'Need help?',
-                text: 'If information is missing or you are unsure which tool is right for your use case, use the contact persons shown in the software detail page or contact the responsible HNEE service team.'
+                text: 'If information is missing or you are unsure which tool is right for your use case, use the contact persons shown in the software detail page, submit a software suggestion, or contact the responsible HNEE service team.'
             }
         };
     }
@@ -1038,6 +1049,17 @@ function getDocumentationContent() {
                 ]
             },
             {
+                title: 'Software vorschlagen',
+                items: [
+                    'Fehlt eine Software im Katalog, öffnen Sie über das Plus-Symbol im Kopfbereich (neben dem Sprachschalter) das Formular „Software vorschlagen“.',
+                    'Tragen Sie Ihren Namen und Ihre E-Mail-Adresse ein, damit Administratoren bei Rückfragen Kontakt aufnehmen können.',
+                    'Geben Sie den Namen der Software an (Pflichtfeld) und optional die Webadresse des Produkts an.',
+                    'Ergänzen Sie möglichst viele Angaben: Kurz- und Vollbeschreibung, Kategorien, Zielgruppen, Abteilungen, Datenschutzstatus, Kosten, Zugangsinformationen, Ansprechpersonen, Logo oder PDF-Steckbrief.',
+                    'Nach dem Absenden prüft eine Administratorin oder ein Administrator Ihre Einreichung. Erst nach der Freigabe erscheint die Software im öffentlichen Katalog.',
+                    'Eine automatische Bestätigungs-E-Mail erhalten Sie nicht; freigegebene Software wird wie jeder andere Katalogeintrag sichtbar.'
+                ]
+            },
+            {
                 title: 'Sprache und Links',
                 items: [
                     'Mit dem DE/EN-Schalter im Kopfbereich wechseln Sie die Sprache der Oberfläche.',
@@ -1048,7 +1070,7 @@ function getDocumentationContent() {
         ],
         help: {
             title: 'Sie brauchen Hilfe?',
-            text: 'Wenn Angaben fehlen oder Sie unsicher sind, welche Software für Ihren Zweck geeignet ist, nutzen Sie die Ansprechpersonen auf der Detailseite oder wenden Sie sich an das zuständige HNEE-Service-Team.'
+            text: 'Wenn Angaben fehlen oder Sie unsicher sind, welche Software für Ihren Zweck geeignet ist, nutzen Sie die Ansprechpersonen auf der Detailseite, reichen Sie einen Software-Vorschlag ein oder wenden Sie sich an das zuständige HNEE-Service-Team.'
         }
     };
 }

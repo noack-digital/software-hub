@@ -11,6 +11,7 @@ Ein webbasiertes Software-Verzeichnis für Hochschulen und Organisationen. Entwi
 - **Rich-Text-Editor** (Quill) für Beschreibungsfelder
 - **PDF-Steckbriefe** Upload mit Vorschau und Download
 - **Benutzerkonto-Antragsformular** mit konfigurierbarem E-Mail-Empfänger
+- **Software-Vorschläge** über ein öffentliches Formular im Frontend; Moderation und Freigabe im Admin-Bereich
 - **Admin-Backend** mit Dashboard, Benutzerverwaltung, Branding-Einstellungen
 - **Batch-Operationen** (Übersetzen, Optimieren, Löschen)
 - **Docker-basiert** (PHP 8.3 + Apache, MariaDB 10.11)
@@ -44,7 +45,16 @@ docker compose up -d --build
 
 Die Anwendung ist unter `http://localhost:8080` erreichbar.
 
-### 4. Erstanmeldung
+### 4. Datenbank-Migrationen (bei Updates)
+
+Bei bestehenden Installationen neue SQL-Migrationen ausführen:
+
+```bash
+docker compose exec -T db mariadb -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" < software-hub-main/software-hub-php/migrations/001_software_submissions.sql
+docker compose exec -T db mariadb -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" < software-hub-main/software-hub-php/migrations/002_fix_submission_departments_collation.sql
+```
+
+### 5. Erstanmeldung
 
 Standard-Login nach der Installation:
 - **E-Mail:** admin@example.com
@@ -70,6 +80,13 @@ Unter **Einstellungen → KI** im Admin-Backend:
 - Google Gemini API Key oder Mistral API Key hinterlegen
 - KI-Provider auswählen
 - Optimierungs-Prompt anpassen
+
+### Eingereichte Software (Admin)
+
+Unter **Eingereichte Software** im Admin-Menü:
+- Offene Vorschläge werden mit einem roten Badge angezeigt
+- Einreichungen bearbeiten, in der Vorschau prüfen, freigeben oder ablehnen
+- Bei Freigabe wird automatisch ein neuer Software-Katalogeintrag angelegt
 
 ### Branding
 

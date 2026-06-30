@@ -92,6 +92,7 @@ $isLoggedIn = Auth::isLoggedIn();
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
 </head>
 <body data-page="home">
     <!-- Header -->
@@ -115,6 +116,13 @@ $isLoggedIn = Auth::isLoggedIn();
                         <button data-lang="de" class="active">DE</button>
                         <button data-lang="en">EN</button>
                     </div>
+                    <button type="button" id="suggestSoftwareBtn" class="header-suggest-link" aria-label="Software vorschlagen">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span data-t="submission.suggest">Software vorschlagen</span>
+                    </button>
                     <a href="?docs=1" id="documentationLink" class="header-doc-link" data-t-title="navigation.documentation" aria-label="Dokumentation" title="Dokumentation">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <circle cx="12" cy="12" r="10"></circle>
@@ -232,11 +240,15 @@ $isLoggedIn = Auth::isLoggedIn();
     <!-- Toast Container -->
     <div id="toastContainer" class="toast-container"></div>
 
+    <?php require_once __DIR__ . '/includes/submission-modal.php'; ?>
+
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay" style="display: none;">
         <div class="spinner"></div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <script>window.TRANSLATIONS_VERSION = '<?= filemtime(__DIR__ . '/messages/de.json') ?>';</script>
     <script src="assets/js/app.js?v=<?= filemtime(__DIR__ . '/assets/js/app.js') ?>"></script>
     <script>
         // Initialize home page

@@ -26,6 +26,7 @@ require_once __DIR__ . '/models/TargetGroup.php';
 require_once __DIR__ . '/models/Department.php';
 require_once __DIR__ . '/models/User.php';
 require_once __DIR__ . '/models/FooterLink.php';
+require_once __DIR__ . '/models/SoftwareSubmission.php';
 
 // Session starten
 Auth::startSession();

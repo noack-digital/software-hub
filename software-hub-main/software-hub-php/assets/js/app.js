@@ -110,6 +110,11 @@ function parseUrlParameters() {
     if (urlParams.has('docs')) {
         window._pendingDocumentation = true;
     }
+
+    // Admin preview of submission
+    if (urlParams.has('submission_preview')) {
+        window._pendingSubmissionPreview = urlParams.get('submission_preview') || sessionStorage.getItem('submissionPreviewId');
+    }
 }
 
 /**
@@ -135,6 +140,11 @@ function applyUrlParameters() {
         showDocumentationPage(false);
         delete window._pendingDocumentation;
     }
+
+    if (window._pendingSubmissionPreview) {
+        showSubmissionPreview(window._pendingSubmissionPreview);
+        delete window._pendingSubmissionPreview;
+    }
 }
 
 /**
@@ -142,9 +152,8 @@ function applyUrlParameters() {
  */
 async function loadTranslations() {
     try {
-        // Determine base path (handle both root and /admin/ pages)
-        const basePath = window.location.pathname.includes('/admin/') ? '..' : '.';
-        const response = await fetch(`${basePath}/messages/${currentLanguage}.json`);
+        const version = window.TRANSLATIONS_VERSION || Date.now();
+        const response = await fetch(`/messages/${currentLanguage}.json?v=${version}`);
         translations = await response.json();
     } catch (error) {
         console.error('Failed to load translations:', error);
@@ -190,6 +199,10 @@ async function changeLanguage(lang) {
             renderSoftwareGrid();
             renderCategoryFilter();
             renderTargetGroupFilter();
+        }
+        if (document.getElementById('submissionModal')?.classList.contains('active')) {
+            updateSubmissionModalI18n();
+            loadSubmissionFormOptions();
         }
     }
 }
@@ -250,6 +263,8 @@ function updateLanguageUI() {
         el.title = translated;
         el.setAttribute('aria-label', translated);
     });
+
+    updateSubmissionModalI18n();
 }
 
 /**
@@ -1256,6 +1271,9 @@ function setupHomeEventListeners() {
         });
     }
 
+    document.getElementById('suggestSoftwareBtn')?.addEventListener('click', openSubmissionModal);
+    document.getElementById('submissionAddContactBtn')?.addEventListener('click', addSubmissionContactRow);
+
     // Browser back/forward for detail page
     window.addEventListener('popstate', (e) => {
         const params = new URLSearchParams(window.location.search);
@@ -1484,6 +1502,424 @@ async function apiRequest(endpoint, options = {}) {
 
     return data;
 }
+
+// --- Software Submission (public) ---
+
+let submissionQuillEditors = {};
+let submissionDepartments = [];
+let submissionQuillInitialized = false;
+
+function setLabelText(id, text, required = false) {
+    const el = document.getElementById(id);
+    if (el) {
+        el.textContent = text + (required ? t('submission.requiredMark') : '');
+    }
+}
+
+function updateSubmissionModalI18n() {
+    const modal = document.getElementById('submissionModal');
+    if (!modal) return;
+
+    modal.querySelectorAll('[data-t]').forEach(el => {
+        el.textContent = t(el.dataset.t);
+    });
+    modal.querySelectorAll('[data-t-title]').forEach(el => {
+        const translated = t(el.dataset.tTitle);
+        el.title = translated;
+        el.setAttribute('aria-label', translated);
+    });
+    modal.querySelectorAll('[data-t-placeholder]').forEach(el => {
+        el.placeholder = t(el.dataset.tPlaceholder);
+    });
+
+    setLabelText('labelSubmitterName', t('submission.submitterName'), true);
+    setLabelText('labelSubmitterEmail', t('submission.submitterEmail'), true);
+    setLabelText('labelSubmissionName', t('submission.labelNameDe'), true);
+    setLabelText('labelSubmissionNameEn', t('submission.labelNameEn'));
+    setLabelText('labelSubmissionUrl', t('submission.softwareUrl'), false);
+    setLabelText('labelSubmissionShortDescription', t('submission.labelShortDescriptionDe'));
+    setLabelText('labelSubmissionShortDescriptionEn', t('submission.labelShortDescriptionEn'));
+    setLabelText('labelSubmissionDescription', t('submission.labelDescriptionDe'));
+    setLabelText('labelSubmissionDescriptionEn', t('submission.labelDescriptionEn'));
+    setLabelText('labelSubmissionFeatures', t('submission.labelFeaturesDe'));
+    setLabelText('labelSubmissionFeaturesEn', t('submission.labelFeaturesEn'));
+    setLabelText('labelSubmissionReasonHnee', t('submission.labelReasonHneeDe'));
+    setLabelText('labelSubmissionReasonHneeEn', t('submission.labelReasonHneeEn'));
+    setLabelText('labelSubmissionAlternatives', t('submission.labelAlternativesDe'));
+    setLabelText('labelSubmissionAlternativesEn', t('submission.labelAlternativesEn'));
+    setLabelText('labelSubmissionTutorials', t('submission.labelTutorialsDe'));
+    setLabelText('labelSubmissionTutorialsEn', t('submission.labelTutorialsEn'));
+    setLabelText('labelSubmissionAccessInfo', t('submission.labelAccessInfoDe'));
+    setLabelText('labelSubmissionAccessInfoEn', t('submission.labelAccessInfoEn'));
+    setLabelText('labelSubmissionNotes', t('submission.labelNotesDe'));
+    setLabelText('labelSubmissionNotesEn', t('submission.labelNotesEn'));
+
+    const hostingDe = document.getElementById('labelHostingDE');
+    if (hostingDe) hostingDe.textContent = t('submission.hostingGermany');
+    const hostingNonEu = document.getElementById('labelHostingNonEU');
+    if (hostingNonEu) hostingNonEu.textContent = t('submission.hostingNonEu');
+
+    const costsSelect = document.getElementById('submissionCosts');
+    if (costsSelect) {
+        const current = costsSelect.value;
+        const options = {
+            kostenlos: t('submission.costFree'),
+            kostenpflichtig: t('submission.costPaid'),
+            abo: t('submission.costSubscription'),
+            einmalig: t('submission.costOneTime')
+        };
+        costsSelect.innerHTML = Object.entries(options).map(([value, label]) =>
+            `<option value="${value}">${escapeHtml(label)}</option>`
+        ).join('');
+        costsSelect.value = current;
+    }
+
+    const contacts = getSubmissionContactsFromForm();
+    if (contacts.length || document.querySelector('#submissionContactsList .software-contact-row')) {
+        renderSubmissionContactsList(contacts.length ? contacts : []);
+    }
+}
+
+const submissionQuillMap = {
+    subEditorDescription: 'submissionDescription',
+    subEditorDescriptionEn: 'submissionDescriptionEn',
+    subEditorFeatures: 'submissionFeatures',
+    subEditorFeaturesEn: 'submissionFeaturesEn',
+    subEditorReasonHnee: 'submissionReasonHnee',
+    subEditorReasonHneeEn: 'submissionReasonHneeEn',
+    subEditorTutorials: 'submissionTutorials',
+    subEditorTutorialsEn: 'submissionTutorialsEn',
+    subEditorAccessInfo: 'submissionAccessInfo',
+    subEditorAccessInfoEn: 'submissionAccessInfoEn',
+    subEditorNotes: 'submissionNotes',
+    subEditorNotesEn: 'submissionNotesEn',
+    subEditorPrivacyNote: 'submissionPrivacyNote'
+};
+
+const submissionQuillToolbar = [
+    ['bold', 'italic', 'underline'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['link'],
+    ['clean']
+];
+
+function initSubmissionQuillEditors() {
+    if (submissionQuillInitialized || typeof Quill === 'undefined') return;
+    Object.keys(submissionQuillMap).forEach(editorId => {
+        const el = document.getElementById(editorId);
+        if (el && !submissionQuillEditors[editorId]) {
+            submissionQuillEditors[editorId] = new Quill('#' + editorId, {
+                theme: 'snow',
+                modules: { toolbar: submissionQuillToolbar }
+            });
+        }
+    });
+    submissionQuillInitialized = true;
+}
+
+function syncSubmissionQuillToTextareas() {
+    for (const [editorId, textareaId] of Object.entries(submissionQuillMap)) {
+        const editor = submissionQuillEditors[editorId];
+        const textarea = document.getElementById(textareaId);
+        if (editor && textarea) {
+            textarea.value = editor.root.innerHTML;
+        }
+    }
+}
+
+function loadSubmissionTextareasToQuill(data = {}) {
+    const fieldMap = {
+        subEditorDescription: data.description,
+        subEditorDescriptionEn: data.description_en || data.descriptionEn,
+        subEditorFeatures: data.features,
+        subEditorFeaturesEn: data.features_en || data.featuresEn,
+        subEditorReasonHnee: data.reason_hnee || data.reasonHnee,
+        subEditorReasonHneeEn: data.reason_hnee_en || data.reasonHneeEn,
+        subEditorTutorials: data.tutorials,
+        subEditorTutorialsEn: data.tutorials_en || data.tutorialsEn,
+        subEditorAccessInfo: data.access_info || data.accessInfo,
+        subEditorAccessInfoEn: data.access_info_en || data.accessInfoEn,
+        subEditorNotes: data.notes,
+        subEditorNotesEn: data.notes_en || data.notesEn,
+        subEditorPrivacyNote: data.privacy_note || data.privacyNote
+    };
+    for (const [editorId, html] of Object.entries(fieldMap)) {
+        const editor = submissionQuillEditors[editorId];
+        if (editor) {
+            editor.root.innerHTML = html || '';
+        }
+    }
+}
+
+function loadSubmissionFormOptions() {
+    const selectedCategories = getSubmissionCheckedValues('submissionCategoryCheckboxes');
+    const selectedTargetGroups = getSubmissionCheckedValues('submissionTargetGroupCheckboxes');
+    const selectedDepartments = getSubmissionCheckedValues('submissionDepartmentCheckboxes');
+
+    return (async () => {
+        try {
+            const deptRes = await fetch(`${API_BASE}/departments.php`);
+            const deptData = await deptRes.json();
+            submissionDepartments = deptData.data || deptData || [];
+        } catch (e) {
+            submissionDepartments = [];
+        }
+        renderSubmissionCheckboxes('submissionCategoryCheckboxes', categories, 'sub-cat', selectedCategories);
+        renderSubmissionCheckboxes('submissionTargetGroupCheckboxes', targetGroups, 'sub-tg', selectedTargetGroups);
+        renderSubmissionCheckboxes('submissionDepartmentCheckboxes', submissionDepartments, 'sub-dept', selectedDepartments);
+    })();
+}
+
+function renderSubmissionCheckboxes(containerId, items, prefix, selected = []) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = (items || []).map(item => {
+        const label = currentLanguage === 'en' && item.name_en ? item.name_en : item.name;
+        const checked = selected.includes(item.id) ? 'checked' : '';
+        return `<label class="form-checkbox"><input type="checkbox" value="${escapeHtml(item.id)}" id="${prefix}-${escapeHtml(item.id)}" ${checked}><span>${escapeHtml(label)}</span></label>`;
+    }).join('');
+}
+
+function getSubmissionCheckedValues(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return [];
+    return Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+}
+
+function renderSubmissionContactsList(contacts = []) {
+    const container = document.getElementById('submissionContactsList');
+    if (!container) return;
+    const salutationOptions = ['', 'Herr', 'Frau', 'Dr.', 'Prof.'];
+    const parseRoles = (r) => { if (!r) return []; return String(r).split(',').map(s => s.trim()).filter(Boolean); };
+    const rows = contacts.length ? contacts : [{ salutation: '', first_name: '', last_name: '', profile_url: '', email: '', contact_roles: '' }];
+    container.innerHTML = rows.map(c => {
+        const roles = parseRoles(c.contact_roles || c.contactRoles);
+        return `
+        <div class="software-contact-row grid gap-2" style="grid-template-columns: auto 1fr 1fr 1fr 1fr auto auto; align-items: center;">
+            <select class="form-input contact-salutation" style="min-width: 5rem;">
+                ${salutationOptions.map(s => `<option value="${s}" ${(c.salutation || '') === s ? 'selected' : ''}>${s || '–'}</option>`).join('')}
+            </select>
+            <input type="text" class="form-input contact-first-name" placeholder="${escapeHtml(t('submission.contactFirstName'))}" value="${escapeHtml(c.first_name || c.firstName || '')}">
+            <input type="text" class="form-input contact-last-name" placeholder="${escapeHtml(t('submission.contactLastName'))}" value="${escapeHtml(c.last_name || c.lastName || '')}">
+            <input type="url" class="form-input contact-profile-url" placeholder="${escapeHtml(t('submission.contactProfile'))}" value="${escapeHtml(c.profile_url || c.profileUrl || '')}">
+            <input type="email" class="form-input contact-email" placeholder="${escapeHtml(t('submission.contactEmail'))}" value="${escapeHtml(c.email || '')}">
+            <div class="flex flex-wrap gap-2">
+                <label class="form-checkbox text-xs"><input type="checkbox" class="contact-role-admin" ${roles.includes('administration') ? 'checked' : ''}> ${escapeHtml(t('submission.contactAdmin'))}</label>
+                <label class="form-checkbox text-xs"><input type="checkbox" class="contact-role-training" ${roles.includes('training') ? 'checked' : ''}> ${escapeHtml(t('submission.contactTraining'))}</label>
+            </div>
+            <button type="button" class="btn btn-danger btn-sm remove-contact" title="${escapeHtml(t('submission.contactRemove'))}">×</button>
+        </div>`;
+    }).join('');
+    container.querySelectorAll('.remove-contact').forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.closest('.software-contact-row').remove();
+            if (!container.querySelectorAll('.software-contact-row').length) addSubmissionContactRow();
+        });
+    });
+}
+
+function addSubmissionContactRow() {
+    const container = document.getElementById('submissionContactsList');
+    if (!container) return;
+    const row = document.createElement('div');
+    row.className = 'software-contact-row grid gap-2';
+    row.style.cssText = 'grid-template-columns: auto 1fr 1fr 1fr 1fr auto auto; align-items: center;';
+    row.innerHTML = `
+        <select class="form-input contact-salutation" style="min-width: 5rem;">
+            <option value="">–</option><option value="Herr">Herr</option><option value="Frau">Frau</option><option value="Dr.">Dr.</option><option value="Prof.">Prof.</option>
+        </select>
+        <input type="text" class="form-input contact-first-name" placeholder="${escapeHtml(t('submission.contactFirstName'))}">
+        <input type="text" class="form-input contact-last-name" placeholder="${escapeHtml(t('submission.contactLastName'))}">
+        <input type="url" class="form-input contact-profile-url" placeholder="${escapeHtml(t('submission.contactProfile'))}">
+        <input type="email" class="form-input contact-email" placeholder="${escapeHtml(t('submission.contactEmail'))}">
+        <div class="flex flex-wrap gap-2">
+            <label class="form-checkbox text-xs"><input type="checkbox" class="contact-role-admin"> ${escapeHtml(t('submission.contactAdmin'))}</label>
+            <label class="form-checkbox text-xs"><input type="checkbox" class="contact-role-training"> ${escapeHtml(t('submission.contactTraining'))}</label>
+        </div>
+        <button type="button" class="btn btn-danger btn-sm remove-contact" title="${escapeHtml(t('submission.contactRemove'))}">×</button>
+    `;
+    row.querySelector('.remove-contact').addEventListener('click', () => {
+        row.remove();
+        if (!container.querySelectorAll('.software-contact-row').length) addSubmissionContactRow();
+    });
+    container.appendChild(row);
+}
+
+function getSubmissionContactsFromForm() {
+    const rows = document.querySelectorAll('#submissionContactsList .software-contact-row');
+    const contacts = [];
+    rows.forEach((row, i) => {
+        const first = row.querySelector('.contact-first-name')?.value?.trim() ?? '';
+        const last = row.querySelector('.contact-last-name')?.value?.trim() ?? '';
+        if (!first && !last) return;
+        const roles = [];
+        if (row.querySelector('.contact-role-admin')?.checked) roles.push('administration');
+        if (row.querySelector('.contact-role-training')?.checked) roles.push('training');
+        contacts.push({
+            salutation: row.querySelector('.contact-salutation')?.value || null,
+            first_name: first,
+            last_name: last,
+            profile_url: row.querySelector('.contact-profile-url')?.value?.trim() || null,
+            email: row.querySelector('.contact-email')?.value?.trim() || null,
+            contact_roles: roles.length ? roles.join(',') : null,
+            sort_order: i
+        });
+    });
+    return contacts;
+}
+
+function resetSubmissionForm() {
+    document.getElementById('submissionForm')?.reset();
+    document.getElementById('submissionLogoPath').value = '';
+    document.getElementById('submissionSteckbriefPath').value = '';
+    document.getElementById('submissionSteckbriefOriginalName').value = '';
+    document.getElementById('submissionLogoPreview').innerHTML = '';
+    document.querySelector('input[name="subPrivacyStatus"][value="UNKNOWN"]')?.click();
+    document.querySelectorAll('input[name="subHostingLocation"]').forEach(r => { r.checked = false; });
+    renderSubmissionContactsList([]);
+    loadSubmissionTextareasToQuill({});
+}
+
+async function openSubmissionModal() {
+    await loadSubmissionFormOptions();
+    initSubmissionQuillEditors();
+    resetSubmissionForm();
+    updateSubmissionModalI18n();
+    openModal('submissionModal');
+}
+
+function closeSubmissionModal() {
+    closeModal('submissionModal');
+}
+
+async function uploadSubmissionFile(file, action) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await fetch(`${API_BASE}/submission-upload.php?action=${action}`, {
+        method: 'POST',
+        body: formData
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error || 'Upload fehlgeschlagen');
+    }
+    return data;
+}
+
+async function submitSoftwareSuggestion(e) {
+    e.preventDefault();
+    if (document.getElementById('submissionHoneypot')?.value) {
+        closeSubmissionModal();
+        showToast(t('submission.success'), 'success');
+        return;
+    }
+
+    showLoading();
+    syncSubmissionQuillToTextareas();
+
+    const types = [];
+    if (document.getElementById('subTypeWeb')?.checked) types.push('WEB');
+    if (document.getElementById('subTypeDesktop')?.checked) types.push('DESKTOP');
+    if (document.getElementById('subTypeMobile')?.checked) types.push('MOBILE');
+
+    let privacyStatus = 'UNKNOWN';
+    const privacyRadio = document.querySelector('input[name="subPrivacyStatus"]:checked');
+    if (privacyRadio) privacyStatus = privacyRadio.value;
+
+    let hostingLocation = 'UNKNOWN';
+    const hostingRadio = document.querySelector('input[name="subHostingLocation"]:checked');
+    if (hostingRadio) hostingLocation = hostingRadio.value;
+
+    const data = {
+        submitter_name: document.getElementById('submitterName').value.trim(),
+        submitter_email: document.getElementById('submitterEmail').value.trim(),
+        name: document.getElementById('submissionName').value.trim(),
+        name_en: document.getElementById('submissionNameEn').value.trim(),
+        url: document.getElementById('submissionUrl').value.trim() || null,
+        short_description: document.getElementById('submissionShortDescription').value.trim(),
+        short_description_en: document.getElementById('submissionShortDescriptionEn').value.trim(),
+        description: document.getElementById('submissionDescription').value,
+        description_en: document.getElementById('submissionDescriptionEn').value,
+        features: document.getElementById('submissionFeatures').value,
+        features_en: document.getElementById('submissionFeaturesEn').value,
+        reason_hnee: document.getElementById('submissionReasonHnee').value,
+        reason_hnee_en: document.getElementById('submissionReasonHneeEn').value,
+        costs: document.getElementById('submissionCosts').value,
+        cost_model: document.getElementById('submissionCostModel').value.trim(),
+        cost_price: document.getElementById('submissionCostPrice').value.trim(),
+        alternatives: document.getElementById('submissionAlternatives').value.trim(),
+        alternatives_en: document.getElementById('submissionAlternativesEn').value.trim(),
+        tutorials: document.getElementById('submissionTutorials').value,
+        tutorials_en: document.getElementById('submissionTutorialsEn').value,
+        access_info: document.getElementById('submissionAccessInfo').value,
+        access_info_en: document.getElementById('submissionAccessInfoEn').value,
+        notes: document.getElementById('submissionNotes').value,
+        notes_en: document.getElementById('submissionNotesEn').value,
+        privacy_status: privacyStatus,
+        privacy_note: document.getElementById('submissionPrivacyNote').value,
+        hosting_location: hostingLocation,
+        is_inhouse: hostingLocation === 'HNEE',
+        types,
+        categories: getSubmissionCheckedValues('submissionCategoryCheckboxes'),
+        target_groups: getSubmissionCheckedValues('submissionTargetGroupCheckboxes'),
+        departments: getSubmissionCheckedValues('submissionDepartmentCheckboxes'),
+        contacts: getSubmissionContactsFromForm(),
+        _website: document.getElementById('submissionHoneypot')?.value || ''
+    };
+
+    try {
+        const logoFile = document.getElementById('submissionLogo')?.files[0];
+        if (logoFile) {
+            const uploadResult = await uploadSubmissionFile(logoFile, 'logo');
+            data.logo = uploadResult.path || uploadResult.url;
+        } else if (document.getElementById('submissionLogoPath').value) {
+            data.logo = document.getElementById('submissionLogoPath').value;
+        }
+
+        const steckbriefFile = document.getElementById('submissionSteckbrief')?.files[0];
+        if (steckbriefFile) {
+            const uploadResult = await uploadSubmissionFile(steckbriefFile, 'steckbrief');
+            data.steckbrief_path = uploadResult.path;
+            data.steckbrief_original_name = uploadResult.originalName;
+        } else if (document.getElementById('submissionSteckbriefPath').value) {
+            data.steckbrief_path = document.getElementById('submissionSteckbriefPath').value;
+            data.steckbrief_original_name = document.getElementById('submissionSteckbriefOriginalName').value;
+        }
+
+        await apiRequest('software-submissions.php', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+
+        closeSubmissionModal();
+        showToast(t('submission.success'), 'success');
+    } catch (error) {
+        showToast(error.message || t('errors.networkError'), 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+async function showSubmissionPreview(submissionId) {
+    if (!submissionId) return;
+    try {
+        const response = await fetch(`${API_BASE}/software-submissions.php?id=${encodeURIComponent(submissionId)}`, {
+            credentials: 'same-origin'
+        });
+        if (!response.ok) throw new Error('Preview nicht verfügbar');
+        const item = await response.json();
+        currentDetailItem = item;
+        renderDetailPage(item);
+    } catch (e) {
+        console.error(e);
+        showToast('Vorschau nicht verfügbar', 'error');
+    }
+}
+
+window.openSubmissionModal = openSubmissionModal;
+window.closeSubmissionModal = closeSubmissionModal;
+window.submitSoftwareSuggestion = submitSoftwareSuggestion;
+window.showSubmissionPreview = showSubmissionPreview;
 
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', init);

@@ -21,7 +21,7 @@ $currentUser = Auth::getCurrentUser();
 $isAdmin = $currentUser['role'] === 'ADMIN';
 
 // Admin-only pages
-$adminOnlyPages = ['software', 'categories', 'target-groups', 'departments', 'settings', 'users'];
+$adminOnlyPages = ['software', 'submissions', 'categories', 'target-groups', 'departments', 'settings', 'users'];
 if (in_array($currentPage ?? '', $adminOnlyPages, true) && !$isAdmin) {
     header('Location: dashboard.php');
     exit;
@@ -166,6 +166,19 @@ foreach (['32', '192'] as $size) {
                     </svg>
                     <span data-t="navigation.software">Software</span>
                 </a>
+
+                <?php if ($isAdmin): ?>
+                <!-- Submitted Software (Admin only) -->
+                <a href="submissions.php" class="sidebar-nav-item <?= $currentPage === 'submissions' ? 'active' : '' ?>" data-tooltip="Eingereichte Software">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 5v14"></path>
+                        <path d="M5 12h14"></path>
+                        <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                    </svg>
+                    <span data-t="navigation.submissions">Eingereichte Software</span>
+                    <span class="nav-notification-badge" id="pendingSubmissionsBadge" hidden>0</span>
+                </a>
+                <?php endif; ?>
 
                 <!-- Categories -->
                 <a href="categories.php" class="sidebar-nav-item <?= $currentPage === 'categories' ? 'active' : '' ?>" data-tooltip="Kategorien">

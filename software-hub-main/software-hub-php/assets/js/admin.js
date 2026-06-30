@@ -15,7 +15,8 @@ const AdminState = {
     targetGroups: [],
     users: [],
     settings: {},
-    stats: null
+    stats: null,
+    submissions: []
 };
 
 // ==========================================
@@ -120,6 +121,50 @@ const AdminAPI = {
             method: 'DELETE',
             body: JSON.stringify({ ids })
         });
+    },
+
+    // Software Submissions
+    async getSubmissions(search = '', status = '') {
+        const params = new URLSearchParams();
+        if (search) params.set('search', search);
+        if (status) params.set('status', status);
+        const qs = params.toString();
+        return this.request(`software-submissions.php${qs ? '?' + qs : ''}`);
+    },
+
+    async getSubmissionById(id) {
+        return this.request(`software-submissions.php?id=${id}`);
+    },
+
+    async updateSubmission(id, data) {
+        return this.request('software-submissions.php', {
+            method: 'PATCH',
+            body: JSON.stringify({ ...data, id })
+        });
+    },
+
+    async approveSubmission(id) {
+        return this.request('software-submissions.php?action=approve', {
+            method: 'POST',
+            body: JSON.stringify({ id })
+        });
+    },
+
+    async rejectSubmission(id) {
+        return this.request('software-submissions.php?action=reject', {
+            method: 'POST',
+            body: JSON.stringify({ id })
+        });
+    },
+
+    async deleteSubmission(id) {
+        return this.request(`software-submissions.php?id=${id}`, {
+            method: 'DELETE'
+        });
+    },
+
+    async getPendingSubmissionsCount() {
+        return this.request('software-submissions.php?action=pending-count');
     },
 
     // Categories
@@ -574,6 +619,10 @@ async function initAdminPage() {
         console.warn('Session check failed:', e);
     }
 
+    if (AdminState.currentUser?.role === 'ADMIN') {
+        await updatePendingSubmissionsBadge();
+    }
+
     // Load translations
     await loadTranslations();
     updateLanguageUI();
@@ -641,6 +690,9 @@ async function initAdminPage() {
             break;
         case 'software':
             await initSoftwarePage();
+            break;
+        case 'submissions':
+            await initSubmissionsPage();
             break;
         case 'categories':
             await initCategoriesPage();
@@ -5223,10 +5275,557 @@ async function translateField(fieldName) {
     }
 }
 
+// ==========================================
+// SUBMISSIONS PAGE
+// ==========================================
+
+const submQuillEditors = {};
+const submQuillTextareaMap = {
+    submEditorDescription: 'submSoftwareDescription',
+    submEditorDescriptionEn: 'submSoftwareDescriptionEn',
+    submEditorFeatures: 'submSoftwareFeatures',
+    submEditorFeaturesEn: 'submSoftwareFeaturesEn',
+    submEditorReasonHnee: 'submSoftwareReasonHnee',
+    submEditorReasonHneeEn: 'submSoftwareReasonHneeEn',
+    submEditorTutorials: 'submSoftwareTutorials',
+    submEditorTutorialsEn: 'submSoftwareTutorialsEn',
+    submEditorAccessInfo: 'submSoftwareAccessInfo',
+    submEditorAccessInfoEn: 'submSoftwareAccessInfoEn',
+    submEditorNotes: 'submSoftwareNotes',
+    submEditorNotesEn: 'submSoftwareNotesEn',
+    submEditorPrivacyNote: 'submPrivacyNote'
+};
+
+function initSubmQuillEditors() {
+    Object.keys(submQuillTextareaMap).forEach(id => {
+        const el = document.getElementById(id);
+        if (el && !submQuillEditors[id]) {
+            submQuillEditors[id] = new Quill('#' + id, {
+                theme: 'snow',
+                modules: {
+                    toolbar: {
+                        container: quillToolbar,
+                        handlers: { image: quillImageHandler }
+                    }
+                }
+            });
+        }
+    });
+}
+
+function syncSubmQuillToTextareas() {
+    for (const [editorId, textareaId] of Object.entries(submQuillTextareaMap)) {
+        const editor = submQuillEditors[editorId];
+        const textarea = document.getElementById(textareaId);
+        if (editor && textarea) textarea.value = editor.root.innerHTML;
+    }
+}
+
+function loadSubmTextareasToQuill(item = {}) {
+    const map = {
+        submEditorDescription: item.description,
+        submEditorDescriptionEn: item.description_en || item.descriptionEn,
+        submEditorFeatures: item.features,
+        submEditorFeaturesEn: item.features_en || item.featuresEn,
+        submEditorReasonHnee: item.reason_hnee || item.reasonHnee,
+        submEditorReasonHneeEn: item.reason_hnee_en || item.reasonHneeEn,
+        submEditorTutorials: item.tutorials,
+        submEditorTutorialsEn: item.tutorials_en || item.tutorialsEn,
+        submEditorAccessInfo: item.access_info || item.accessInfo,
+        submEditorAccessInfoEn: item.access_info_en || item.accessInfoEn,
+        submEditorNotes: item.notes,
+        submEditorNotesEn: item.notes_en || item.notesEn,
+        submEditorPrivacyNote: item.privacy_note || item.privacyNote
+    };
+    for (const [editorId, html] of Object.entries(map)) {
+        const editor = submQuillEditors[editorId];
+        if (editor) editor.root.innerHTML = html || '';
+    }
+}
+
+async function updatePendingSubmissionsBadge() {
+    const badge = document.getElementById('pendingSubmissionsBadge');
+    if (!badge || AdminState.currentUser?.role !== 'ADMIN') return;
+    try {
+        const res = await AdminAPI.getPendingSubmissionsCount();
+        const count = res.count || 0;
+        if (count > 0) {
+            badge.textContent = String(count);
+            badge.hidden = false;
+        } else {
+            badge.hidden = true;
+        }
+    } catch (e) {
+        badge.hidden = true;
+    }
+}
+
+async function initSubmissionsPage() {
+    showLoading();
+    try {
+        const [submissionsRes, categoriesRes, targetGroupsRes, departmentsRes] = await Promise.all([
+            AdminAPI.getSubmissions(),
+            AdminAPI.getCategories(),
+            AdminAPI.getTargetGroups(),
+            AdminAPI.getDepartments()
+        ]);
+        AdminState.submissions = submissionsRes.data || [];
+        AdminState.categories = categoriesRes.data || [];
+        AdminState.targetGroups = targetGroupsRes.data || [];
+        AdminState.departments = departmentsRes.data || [];
+        renderSubmissionsList();
+        setupSubmissionsEventListeners();
+        initSubmQuillEditors();
+        await updatePendingSubmissionsBadge();
+    } catch (error) {
+        showToast(t('errors.loadFailed'), 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+function setupSubmissionsEventListeners() {
+    document.getElementById('submissionsSearch')?.addEventListener('input', renderSubmissionsList);
+    document.getElementById('submissionsStatusFilter')?.addEventListener('change', renderSubmissionsList);
+    document.getElementById('submAddContactBtn')?.addEventListener('click', addSubmContactRow);
+}
+
+function getSubmissionStatusBadge(status) {
+    const labels = {
+        pending: t('submission.status.pending'),
+        approved: t('submission.status.approved'),
+        rejected: t('submission.status.rejected')
+    };
+    const classes = { pending: 'badge-warning', approved: 'badge-success', rejected: 'badge-gray' };
+    return `<span class="badge ${classes[status] || 'badge-gray'}">${escapeHtml(labels[status] || status)}</span>`;
+}
+
+function renderSubmissionsList() {
+    const container = document.getElementById('submissionsTableBody');
+    if (!container) return;
+
+    const searchTerm = (document.getElementById('submissionsSearch')?.value || '').toLowerCase();
+    const statusFilter = document.getElementById('submissionsStatusFilter')?.value || '';
+
+    const filtered = AdminState.submissions.filter(item => {
+        if (statusFilter && item.status !== statusFilter) return false;
+        if (searchTerm) {
+            const hay = [item.name, item.submitter_name, item.submitter_email].join(' ').toLowerCase();
+            if (!hay.includes(searchTerm)) return false;
+        }
+        return true;
+    });
+
+    if (!filtered.length) {
+        container.innerHTML = `<p class="text-gray-500 p-4">${t('submission.noSubmissions')}</p>`;
+        return;
+    }
+
+    container.innerHTML = `<table class="data-table"><thead><tr>
+        <th>${t('software.name')}</th>
+        <th>${t('submission.submitterName')}</th>
+        <th>${t('submission.submitterEmail')}</th>
+        <th>${t('common.createdAt')}</th>
+        <th>Status</th>
+        <th>${t('common.actions')}</th>
+    </tr></thead><tbody>
+        ${filtered.map(item => `
+            <tr>
+                <td>${escapeHtml(item.name)}</td>
+                <td>${escapeHtml(item.submitter_name || item.submitterName || '')}</td>
+                <td>${escapeHtml(item.submitter_email || item.submitterEmail || '')}</td>
+                <td>${formatDate(item.created_at)}</td>
+                <td>${getSubmissionStatusBadge(item.status)}</td>
+                <td class="data-table-actions-cell">
+                    <button class="btn btn-ghost btn-sm" onclick="openSubmissionEdit('${item.id}')" title="${t('common.edit')}">✎</button>
+                    ${item.status === 'pending' ? `<button class="btn btn-primary btn-sm" onclick="approveSubmission('${item.id}')" title="${t('submission.approve')}">✓</button>` : ''}
+                    <button class="btn btn-danger btn-sm" onclick="deleteSubmission('${item.id}')" title="${t('common.delete')}">×</button>
+                </td>
+            </tr>
+        `).join('')}
+    </tbody></table>`;
+}
+
+function initSubmCategoryCheckboxes(selected = []) {
+    const container = document.getElementById('submCategoryCheckboxes');
+    if (!container) return;
+    container.innerHTML = AdminState.categories.map(cat => `
+        <label class="form-checkbox"><input type="checkbox" value="${cat.id}" ${selected.includes(cat.id) ? 'checked' : ''}><span>${escapeHtml(cat.name)}</span></label>
+    `).join('');
+}
+
+function initSubmTargetGroupCheckboxes(selected = []) {
+    const container = document.getElementById('submTargetGroupCheckboxes');
+    if (!container) return;
+    container.innerHTML = AdminState.targetGroups.map(tg => `
+        <label class="form-checkbox"><input type="checkbox" value="${tg.id}" ${selected.includes(tg.id) ? 'checked' : ''}><span>${escapeHtml(tg.name)}</span></label>
+    `).join('');
+}
+
+function initSubmDepartmentCheckboxes(selected = []) {
+    const container = document.getElementById('submDepartmentCheckboxes');
+    if (!container) return;
+    container.innerHTML = AdminState.departments.map(dept => `
+        <label class="form-checkbox"><input type="checkbox" value="${dept.id}" ${selected.includes(dept.id) ? 'checked' : ''}><span>${escapeHtml(dept.name)}</span></label>
+    `).join('');
+}
+
+function getSubmSelectedCategories() {
+    return Array.from(document.querySelectorAll('#submCategoryCheckboxes input:checked')).map(cb => cb.value);
+}
+function getSubmSelectedTargetGroups() {
+    return Array.from(document.querySelectorAll('#submTargetGroupCheckboxes input:checked')).map(cb => cb.value);
+}
+function getSubmSelectedDepartments() {
+    return Array.from(document.querySelectorAll('#submDepartmentCheckboxes input:checked')).map(cb => cb.value);
+}
+
+function renderSubmContactsList(contacts) {
+    const container = document.getElementById('submContactsList');
+    if (!container) return;
+    const salutationOptions = ['', 'Herr', 'Frau', 'Dr.', 'Prof.'];
+    const parseRoles = (r) => { if (!r) return []; return String(r).split(',').map(s => s.trim()).filter(Boolean); };
+    container.innerHTML = (contacts.length ? contacts : [{ salutation: '', first_name: '', last_name: '', profile_url: '', email: '', contact_roles: '' }]).map(c => {
+        const roles = parseRoles(c.contact_roles || c.contactRoles);
+        return `
+        <div class="software-contact-row grid gap-2" style="grid-template-columns: auto 1fr 1fr 1fr 1fr auto auto; align-items: center;">
+            <select class="form-input contact-salutation" style="min-width: 5rem;">
+                ${salutationOptions.map(s => `<option value="${s}" ${(c.salutation || '') === s ? 'selected' : ''}>${s || '–'}</option>`).join('')}
+            </select>
+            <input type="text" class="form-input contact-first-name" placeholder="Vorname" value="${escapeHtml(c.first_name || c.firstName || '')}">
+            <input type="text" class="form-input contact-last-name" placeholder="Nachname" value="${escapeHtml(c.last_name || c.lastName || '')}">
+            <input type="url" class="form-input contact-profile-url" placeholder="Link zum Profil" value="${escapeHtml(c.profile_url || c.profileUrl || '')}">
+            <input type="email" class="form-input contact-email" placeholder="E-Mail" value="${escapeHtml(c.email || '')}">
+            <div class="flex flex-wrap gap-2">
+                <label class="form-checkbox text-xs"><input type="checkbox" class="contact-role-admin" ${roles.includes('administration') ? 'checked' : ''}> Admin</label>
+                <label class="form-checkbox text-xs"><input type="checkbox" class="contact-role-training" ${roles.includes('training') ? 'checked' : ''}> Fragen/Schulung</label>
+            </div>
+            <button type="button" class="btn btn-danger btn-sm remove-contact" title="Entfernen">×</button>
+        </div>`;
+    }).join('');
+    container.querySelectorAll('.remove-contact').forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.closest('.software-contact-row').remove();
+            if (!container.querySelectorAll('.software-contact-row').length) addSubmContactRow();
+        });
+    });
+}
+
+function addSubmContactRow() {
+    const container = document.getElementById('submContactsList');
+    if (!container) return;
+    const row = document.createElement('div');
+    row.className = 'software-contact-row grid gap-2';
+    row.style.cssText = 'grid-template-columns: auto 1fr 1fr 1fr 1fr auto auto; align-items: center;';
+    row.innerHTML = `
+        <select class="form-input contact-salutation" style="min-width: 5rem;">
+            <option value="">–</option><option value="Herr">Herr</option><option value="Frau">Frau</option><option value="Dr.">Dr.</option><option value="Prof.">Prof.</option>
+        </select>
+        <input type="text" class="form-input contact-first-name" placeholder="Vorname">
+        <input type="text" class="form-input contact-last-name" placeholder="Nachname">
+        <input type="url" class="form-input contact-profile-url" placeholder="Link zum Profil">
+        <input type="email" class="form-input contact-email" placeholder="E-Mail">
+        <div class="flex flex-wrap gap-2">
+            <label class="form-checkbox text-xs"><input type="checkbox" class="contact-role-admin"> Admin</label>
+            <label class="form-checkbox text-xs"><input type="checkbox" class="contact-role-training"> Fragen/Schulung</label>
+        </div>
+        <button type="button" class="btn btn-danger btn-sm remove-contact" title="Entfernen">×</button>
+    `;
+    row.querySelector('.remove-contact').addEventListener('click', () => {
+        row.remove();
+        if (!container.querySelectorAll('.software-contact-row').length) addSubmContactRow();
+    });
+    container.appendChild(row);
+}
+
+function getSubmContactsFromForm() {
+    const rows = document.querySelectorAll('#submContactsList .software-contact-row');
+    const contacts = [];
+    rows.forEach((row, i) => {
+        const first = row.querySelector('.contact-first-name')?.value?.trim() ?? '';
+        const last = row.querySelector('.contact-last-name')?.value?.trim() ?? '';
+        if (!first && !last) return;
+        const roles = [];
+        if (row.querySelector('.contact-role-admin')?.checked) roles.push('administration');
+        if (row.querySelector('.contact-role-training')?.checked) roles.push('training');
+        contacts.push({
+            salutation: row.querySelector('.contact-salutation')?.value || null,
+            first_name: first,
+            last_name: last,
+            profile_url: row.querySelector('.contact-profile-url')?.value?.trim() || null,
+            email: row.querySelector('.contact-email')?.value?.trim() || null,
+            contact_roles: roles.length ? roles.join(',') : null,
+            sort_order: i
+        });
+    });
+    return contacts;
+}
+
+async function openSubmissionEdit(id) {
+    showLoading();
+    try {
+        const item = await AdminAPI.getSubmissionById(id);
+        document.getElementById('submissionId').value = item.id;
+        document.getElementById('submSubmitterName').value = item.submitter_name || item.submitterName || '';
+        document.getElementById('submSubmitterEmail').value = item.submitter_email || item.submitterEmail || '';
+        document.getElementById('submSoftwareName').value = item.name || '';
+        document.getElementById('submSoftwareNameEn').value = item.name_en || item.nameEn || '';
+        document.getElementById('submSoftwareUrl').value = item.url || '';
+        document.getElementById('submSoftwareShortDescription').value = item.short_description || item.shortDescription || '';
+        document.getElementById('submSoftwareShortDescriptionEn').value = item.short_description_en || item.shortDescriptionEn || '';
+        document.getElementById('submSoftwareCosts').value = item.costs || 'kostenlos';
+        document.getElementById('submSoftwareCostModel').value = item.cost_model || item.costModel || '';
+        document.getElementById('submSoftwareCostPrice').value = item.cost_price || item.costPrice || '';
+        document.getElementById('submSoftwareAlternatives').value = item.alternatives || '';
+        document.getElementById('submSoftwareAlternativesEn').value = item.alternatives_en || item.alternativesEn || '';
+        document.getElementById('submSoftwareLogoPath').value = item.logo || '';
+        document.getElementById('submSoftwareSteckbriefPath').value = item.steckbrief_path || '';
+        document.getElementById('submSoftwareSteckbriefOriginalName').value = item.steckbrief_original_name || '';
+
+        const types = item.types || [];
+        document.getElementById('submTypeWeb').checked = types.includes('WEB');
+        document.getElementById('submTypeDesktop').checked = types.includes('DESKTOP');
+        document.getElementById('submTypeMobile').checked = types.includes('MOBILE');
+
+        const privacy = item.data_privacy_status || item.dataPrivacyStatus || 'UNKNOWN';
+        document.querySelector(`input[name="submPrivacyStatus"][value="${privacy}"]`)?.click();
+        const hosting = item.hosting_location || item.hostingLocation;
+        if (hosting) document.querySelector(`input[name="submHostingLocation"][value="${hosting}"]`)?.click();
+
+        initSubmCategoryCheckboxes((item.categories || []).map(c => c.id));
+        initSubmTargetGroupCheckboxes((item.targetGroups || []).map(tg => tg.id));
+        initSubmDepartmentCheckboxes((item.departments || []).map(d => d.id));
+        renderSubmContactsList(item.contacts || []);
+
+        const logoPreview = document.getElementById('submLogoPreview');
+        if (logoPreview) {
+            logoPreview.innerHTML = item.logo ? `<img src="${escapeHtml(item.logo)}" alt="Logo" style="max-height:48px;margin-bottom:0.5rem;">` : '';
+        }
+        const steckPreview = document.getElementById('submSteckbriefPreview');
+        if (item.steckbrief_path && steckPreview) {
+            steckPreview.style.display = 'block';
+            document.getElementById('submSteckbriefLink').href = item.steckbrief_path;
+            document.getElementById('submSteckbriefFilename').textContent = item.steckbrief_original_name || 'Steckbrief.pdf';
+        } else if (steckPreview) {
+            steckPreview.style.display = 'none';
+        }
+
+        const isPending = item.status === 'pending';
+        document.getElementById('submApproveBtn').style.display = isPending ? '' : 'none';
+        document.getElementById('submRejectBtn').style.display = isPending ? '' : 'none';
+
+        initSubmQuillEditors();
+        loadSubmTextareasToQuill(item);
+
+        document.getElementById('submissionsListView').classList.add('hidden');
+        document.getElementById('submissionEditPage').classList.remove('hidden');
+        document.getElementById('submissionEditTitle').textContent = item.name;
+    } catch (e) {
+        showToast(t('errors.loadFailed'), 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+function closeSubmissionEditPage() {
+    document.getElementById('submissionEditPage')?.classList.add('hidden');
+    document.getElementById('submissionsListView')?.classList.remove('hidden');
+}
+
+async function collectSubmissionFormData() {
+    syncSubmQuillToTextareas();
+    const types = [];
+    if (document.getElementById('submTypeWeb')?.checked) types.push('WEB');
+    if (document.getElementById('submTypeDesktop')?.checked) types.push('DESKTOP');
+    if (document.getElementById('submTypeMobile')?.checked) types.push('MOBILE');
+
+    let privacyStatus = 'UNKNOWN';
+    const privacyRadio = document.querySelector('input[name="submPrivacyStatus"]:checked');
+    if (privacyRadio) privacyStatus = privacyRadio.value;
+
+    let hostingLocation = null;
+    const hostingRadio = document.querySelector('input[name="submHostingLocation"]:checked');
+    if (hostingRadio) hostingLocation = hostingRadio.value;
+
+    const data = {
+        submitter_name: document.getElementById('submSubmitterName').value.trim(),
+        submitter_email: document.getElementById('submSubmitterEmail').value.trim(),
+        name: document.getElementById('submSoftwareName').value.trim(),
+        name_en: document.getElementById('submSoftwareNameEn').value.trim(),
+        url: document.getElementById('submSoftwareUrl').value.trim(),
+        short_description: document.getElementById('submSoftwareShortDescription').value.trim(),
+        short_description_en: document.getElementById('submSoftwareShortDescriptionEn').value.trim(),
+        description: document.getElementById('submSoftwareDescription').value,
+        description_en: document.getElementById('submSoftwareDescriptionEn').value,
+        features: document.getElementById('submSoftwareFeatures').value,
+        features_en: document.getElementById('submSoftwareFeaturesEn').value,
+        reason_hnee: document.getElementById('submSoftwareReasonHnee').value,
+        reason_hnee_en: document.getElementById('submSoftwareReasonHneeEn').value,
+        costs: document.getElementById('submSoftwareCosts').value,
+        cost_model: document.getElementById('submSoftwareCostModel').value.trim(),
+        cost_price: document.getElementById('submSoftwareCostPrice').value.trim(),
+        alternatives: document.getElementById('submSoftwareAlternatives').value.trim(),
+        alternatives_en: document.getElementById('submSoftwareAlternativesEn').value.trim(),
+        tutorials: document.getElementById('submSoftwareTutorials').value,
+        tutorials_en: document.getElementById('submSoftwareTutorialsEn').value,
+        access_info: document.getElementById('submSoftwareAccessInfo').value,
+        access_info_en: document.getElementById('submSoftwareAccessInfoEn').value,
+        notes: document.getElementById('submSoftwareNotes').value,
+        notes_en: document.getElementById('submSoftwareNotesEn').value,
+        privacy_status: privacyStatus,
+        privacy_note: document.getElementById('submPrivacyNote').value,
+        hosting_location: hostingLocation,
+        is_inhouse: hostingLocation === 'HNEE',
+        types,
+        categories: getSubmSelectedCategories(),
+        target_groups: getSubmSelectedTargetGroups(),
+        departments: getSubmSelectedDepartments(),
+        contacts: getSubmContactsFromForm(),
+        logo: document.getElementById('submSoftwareLogoPath').value || null,
+        steckbrief_path: document.getElementById('submSoftwareSteckbriefPath').value || null,
+        steckbrief_original_name: document.getElementById('submSoftwareSteckbriefOriginalName').value || null
+    };
+
+    const logoFile = document.getElementById('submSoftwareLogo')?.files[0];
+    if (logoFile) {
+        const uploadResult = await AdminAPI.uploadFile(logoFile);
+        data.logo = uploadResult.path || uploadResult.url;
+    }
+
+    const steckbriefFile = document.getElementById('submSoftwareSteckbrief')?.files[0];
+    if (steckbriefFile) {
+        const formData = new FormData();
+        formData.append('file', steckbriefFile);
+        const headers = {};
+        if (AdminState.csrfToken) headers['X-CSRF-Token'] = AdminState.csrfToken;
+        const res = await fetch('/api/upload.php?action=steckbrief', { method: 'POST', credentials: 'same-origin', headers, body: formData });
+        const result = await res.json();
+        if (!res.ok) throw new Error(result.error || 'Upload fehlgeschlagen');
+        data.steckbrief_path = result.path;
+        data.steckbrief_original_name = result.originalName;
+    }
+
+    return data;
+}
+
+async function saveSubmission(e) {
+    e.preventDefault();
+    const id = document.getElementById('submissionId').value;
+    if (!id) return;
+    showLoading();
+    try {
+        const data = await collectSubmissionFormData();
+        await AdminAPI.updateSubmission(id, data);
+        const res = await AdminAPI.getSubmissions();
+        AdminState.submissions = res.data || [];
+        showToast(t('submission.saved'), 'success');
+        closeSubmissionEditPage();
+        renderSubmissionsList();
+    } catch (error) {
+        showToast(error.message || t('errors.saveFailed'), 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+async function approveSubmission(id) {
+    const submissionId = id || document.getElementById('submissionId')?.value;
+    if (!submissionId) return;
+    if (!confirm(t('submission.confirmApprove'))) return;
+
+    showLoading();
+    try {
+        if (document.getElementById('submissionEditPage') && !document.getElementById('submissionEditPage').classList.contains('hidden')) {
+            const data = await collectSubmissionFormData();
+            await AdminAPI.updateSubmission(submissionId, data);
+        }
+        const result = await AdminAPI.approveSubmission(submissionId);
+        const res = await AdminAPI.getSubmissions();
+        AdminState.submissions = res.data || [];
+        showToast(t('submission.approved'), 'success');
+        closeSubmissionEditPage();
+        renderSubmissionsList();
+        await updatePendingSubmissionsBadge();
+        if (result.software?.id) {
+            console.log('Approved software id:', result.software.id);
+        }
+    } catch (error) {
+        showToast(error.message || t('errors.saveFailed'), 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+async function rejectSubmission() {
+    const id = document.getElementById('submissionId')?.value;
+    if (!id) return;
+    if (!confirm(t('submission.confirmReject'))) return;
+    showLoading();
+    try {
+        await AdminAPI.rejectSubmission(id);
+        const res = await AdminAPI.getSubmissions();
+        AdminState.submissions = res.data || [];
+        showToast(t('submission.rejected'), 'success');
+        closeSubmissionEditPage();
+        renderSubmissionsList();
+        await updatePendingSubmissionsBadge();
+    } catch (error) {
+        showToast(error.message || t('errors.saveFailed'), 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+async function deleteSubmission(id) {
+    if (!confirm(t('submission.confirmDelete'))) return;
+    showLoading();
+    try {
+        await AdminAPI.deleteSubmission(id);
+        const res = await AdminAPI.getSubmissions();
+        AdminState.submissions = res.data || [];
+        renderSubmissionsList();
+        await updatePendingSubmissionsBadge();
+        showToast(t('common.delete'), 'success');
+    } catch (error) {
+        showToast(error.message || t('errors.deleteFailed'), 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+function previewSubmission() {
+    const id = document.getElementById('submissionId')?.value;
+    if (!id) return;
+    sessionStorage.setItem('submissionPreviewId', id);
+    let overlay = document.getElementById('previewOverlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'previewOverlay';
+        overlay.className = 'preview-overlay';
+        overlay.innerHTML = `
+            <div class="preview-toolbar">
+                <span>Vorschau</span>
+                <button type="button" class="btn btn-ghost btn-sm" onclick="closePreview()">Schließen</button>
+            </div>
+            <iframe id="previewIframe" src="about:blank"></iframe>`;
+        document.body.appendChild(overlay);
+    }
+    overlay.style.display = 'flex';
+    document.getElementById('previewIframe').src = `/?submission_preview=${encodeURIComponent(id)}`;
+}
+
 // Make functions globally accessible
 window.initLoginPage = initLoginPage;
 window.initAdminPage = initAdminPage;
 window.initDashboardPage = initDashboardPage;
+window.initSubmissionsPage = initSubmissionsPage;
+window.openSubmissionEdit = openSubmissionEdit;
+window.closeSubmissionEditPage = closeSubmissionEditPage;
+window.saveSubmission = saveSubmission;
+window.approveSubmission = approveSubmission;
+window.rejectSubmission = rejectSubmission;
+window.deleteSubmission = deleteSubmission;
+window.previewSubmission = previewSubmission;
 window.initSoftwarePage = initSoftwarePage;
 window.initCategoriesPage = initCategoriesPage;
 window.initTargetGroupsPage = initTargetGroupsPage;

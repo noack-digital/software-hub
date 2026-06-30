@@ -148,6 +148,46 @@ a:hover {
     display: block;
 }
 
+.header-suggest-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.875rem;
+    border: 1px solid var(--color-gray-300);
+    border-radius: 9999px;
+    background: white;
+    color: var(--color-gray-700);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+}
+
+.header-suggest-link:hover {
+    background: var(--color-gray-100);
+    color: var(--color-primary-dark);
+    border-color: var(--color-gray-400);
+}
+
+.header-suggest-link svg {
+    display: block;
+    flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+    .header-suggest-link span {
+        display: none;
+    }
+
+    .header-suggest-link {
+        padding: 0;
+        width: 2.125rem;
+        height: 2.125rem;
+        justify-content: center;
+    }
+}
+
 /* Language Switcher */
 .language-switcher {
     display: flex;
@@ -1212,9 +1252,45 @@ a:hover {
     width: 100%;
     max-width: 600px;
     max-height: 90vh;
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
     transform: scale(0.95);
     transition: var(--transition);
+}
+
+.modal.modal-xl {
+    max-width: 960px;
+}
+
+.submission-modal-body {
+    overflow-y: auto;
+    max-height: calc(90vh - 8rem);
+}
+
+.submission-honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.nav-notification-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 0.35rem;
+    margin-left: auto;
+    border-radius: 9999px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1;
 }
 
 .modal-overlay.active .modal {
@@ -1441,6 +1517,11 @@ a:hover {
 .sidebar-nav-item svg {
     width: 1.25rem;
     height: 1.25rem;
+    flex-shrink: 0;
+}
+
+.sidebar-nav-item > span:not(.nav-notification-badge) {
+    flex: 1;
 }
 
 .sidebar-submenu {

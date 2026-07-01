@@ -91,37 +91,6 @@
                 </div>
 
                 <div class="card mb-4">
-                    <div class="card-header"><h4 data-t="submission.moreInfo">Weitere Informationen</h4></div>
-                    <div class="card-body">
-                        <div class="form-row">
-                            <div class="form-group"><label class="form-label" id="labelSubmissionAlternatives" data-t="submission.alternatives">Alternativen</label><input type="text" id="submissionAlternatives" class="form-input"></div>
-                            <div class="form-group"><label class="form-label" id="labelSubmissionAlternativesEn">Alternatives (EN)</label><input type="text" id="submissionAlternativesEn" class="form-input"></div>
-                        </div>
-                        <div class="editor-pair">
-                            <div class="editor-col"><label class="form-label" id="labelSubmissionTutorials" data-t="submission.tutorials">Tutorials / Anleitungen</label><div id="subEditorTutorials" class="quill-editor"></div><textarea id="submissionTutorials" style="display:none;"></textarea></div>
-                            <div class="editor-col"><label class="form-label" id="labelSubmissionTutorialsEn">Tutorials / Guides (EN)</label><div id="subEditorTutorialsEn" class="quill-editor"></div><textarea id="submissionTutorialsEn" style="display:none;"></textarea></div>
-                        </div>
-                        <div class="editor-pair">
-                            <div class="editor-col"><label class="form-label" id="labelSubmissionAccessInfo" data-t="submission.accessInfo">Zugangsinformationen</label><div id="subEditorAccessInfo" class="quill-editor"></div><textarea id="submissionAccessInfo" style="display:none;"></textarea></div>
-                            <div class="editor-col"><label class="form-label" id="labelSubmissionAccessInfoEn">Access Information (EN)</label><div id="subEditorAccessInfoEn" class="quill-editor"></div><textarea id="submissionAccessInfoEn" style="display:none;"></textarea></div>
-                        </div>
-                        <div class="editor-pair">
-                            <div class="editor-col"><label class="form-label" id="labelSubmissionNotes" data-t="submission.notes">Anmerkungen</label><div id="subEditorNotes" class="quill-editor"></div><textarea id="submissionNotes" style="display:none;"></textarea></div>
-                            <div class="editor-col"><label class="form-label" id="labelSubmissionNotesEn">Notes (EN)</label><div id="subEditorNotesEn" class="quill-editor"></div><textarea id="submissionNotesEn" style="display:none;"></textarea></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card mb-4">
-                    <div class="card-header"><h4 data-t="submission.steckbrief">Steckbrief / Anleitungen (PDF)</h4></div>
-                    <div class="card-body">
-                        <input type="file" id="submissionSteckbrief" class="form-input" accept="application/pdf">
-                        <input type="hidden" id="submissionSteckbriefPath" value="">
-                        <input type="hidden" id="submissionSteckbriefOriginalName" value="">
-                    </div>
-                </div>
-
-                <div class="card mb-4">
                     <div class="card-header"><h4 data-t="software.classification">Klassifizierung</h4></div>
                     <div class="card-body classification-body">
                         <div class="form-group">

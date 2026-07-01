@@ -1567,14 +1567,6 @@ function updateSubmissionModalI18n() {
     setLabelText('labelSubmissionFeaturesEn', t('submission.labelFeaturesEn'));
     setLabelText('labelSubmissionReasonHnee', t('submission.labelReasonHneeDe'));
     setLabelText('labelSubmissionReasonHneeEn', t('submission.labelReasonHneeEn'));
-    setLabelText('labelSubmissionAlternatives', t('submission.labelAlternativesDe'));
-    setLabelText('labelSubmissionAlternativesEn', t('submission.labelAlternativesEn'));
-    setLabelText('labelSubmissionTutorials', t('submission.labelTutorialsDe'));
-    setLabelText('labelSubmissionTutorialsEn', t('submission.labelTutorialsEn'));
-    setLabelText('labelSubmissionAccessInfo', t('submission.labelAccessInfoDe'));
-    setLabelText('labelSubmissionAccessInfoEn', t('submission.labelAccessInfoEn'));
-    setLabelText('labelSubmissionNotes', t('submission.labelNotesDe'));
-    setLabelText('labelSubmissionNotesEn', t('submission.labelNotesEn'));
 
     const hostingDe = document.getElementById('labelHostingDE');
     if (hostingDe) hostingDe.textContent = t('submission.hostingGermany');
@@ -1609,12 +1601,6 @@ const submissionQuillMap = {
     subEditorFeaturesEn: 'submissionFeaturesEn',
     subEditorReasonHnee: 'submissionReasonHnee',
     subEditorReasonHneeEn: 'submissionReasonHneeEn',
-    subEditorTutorials: 'submissionTutorials',
-    subEditorTutorialsEn: 'submissionTutorialsEn',
-    subEditorAccessInfo: 'submissionAccessInfo',
-    subEditorAccessInfoEn: 'submissionAccessInfoEn',
-    subEditorNotes: 'submissionNotes',
-    subEditorNotesEn: 'submissionNotesEn',
     subEditorPrivacyNote: 'submissionPrivacyNote'
 };
 
@@ -1657,12 +1643,6 @@ function loadSubmissionTextareasToQuill(data = {}) {
         subEditorFeaturesEn: data.features_en || data.featuresEn,
         subEditorReasonHnee: data.reason_hnee || data.reasonHnee,
         subEditorReasonHneeEn: data.reason_hnee_en || data.reasonHneeEn,
-        subEditorTutorials: data.tutorials,
-        subEditorTutorialsEn: data.tutorials_en || data.tutorialsEn,
-        subEditorAccessInfo: data.access_info || data.accessInfo,
-        subEditorAccessInfoEn: data.access_info_en || data.accessInfoEn,
-        subEditorNotes: data.notes,
-        subEditorNotesEn: data.notes_en || data.notesEn,
         subEditorPrivacyNote: data.privacy_note || data.privacyNote
     };
     for (const [editorId, html] of Object.entries(fieldMap)) {
@@ -1793,8 +1773,6 @@ function getSubmissionContactsFromForm() {
 function resetSubmissionForm() {
     document.getElementById('submissionForm')?.reset();
     document.getElementById('submissionLogoPath').value = '';
-    document.getElementById('submissionSteckbriefPath').value = '';
-    document.getElementById('submissionSteckbriefOriginalName').value = '';
     document.getElementById('submissionLogoPreview').innerHTML = '';
     document.querySelector('input[name="subPrivacyStatus"][value="UNKNOWN"]')?.click();
     document.querySelectorAll('input[name="subHostingLocation"]').forEach(r => { r.checked = false; });
@@ -1881,14 +1859,6 @@ async function submitSoftwareSuggestion(e) {
         costs: document.getElementById('submissionCosts').value,
         cost_model: document.getElementById('submissionCostModel').value.trim(),
         cost_price: document.getElementById('submissionCostPrice').value.trim(),
-        alternatives: document.getElementById('submissionAlternatives').value.trim(),
-        alternatives_en: document.getElementById('submissionAlternativesEn').value.trim(),
-        tutorials: document.getElementById('submissionTutorials').value,
-        tutorials_en: document.getElementById('submissionTutorialsEn').value,
-        access_info: document.getElementById('submissionAccessInfo').value,
-        access_info_en: document.getElementById('submissionAccessInfoEn').value,
-        notes: document.getElementById('submissionNotes').value,
-        notes_en: document.getElementById('submissionNotesEn').value,
         privacy_status: privacyStatus,
         privacy_note: document.getElementById('submissionPrivacyNote').value,
         hosting_location: hostingLocation,
@@ -1908,16 +1878,6 @@ async function submitSoftwareSuggestion(e) {
             data.logo = uploadResult.path || uploadResult.url;
         } else if (document.getElementById('submissionLogoPath').value) {
             data.logo = document.getElementById('submissionLogoPath').value;
-        }
-
-        const steckbriefFile = document.getElementById('submissionSteckbrief')?.files[0];
-        if (steckbriefFile) {
-            const uploadResult = await uploadSubmissionFile(steckbriefFile, 'steckbrief');
-            data.steckbrief_path = uploadResult.path;
-            data.steckbrief_original_name = uploadResult.originalName;
-        } else if (document.getElementById('submissionSteckbriefPath').value) {
-            data.steckbrief_path = document.getElementById('submissionSteckbriefPath').value;
-            data.steckbrief_original_name = document.getElementById('submissionSteckbriefOriginalName').value;
         }
 
         await apiRequest('software-submissions.php', {
